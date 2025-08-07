@@ -4,192 +4,379 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Wedding RSVP</title>
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Playfair+Display&display=swap" rel="stylesheet" />
   <style>
     body {
-      font-family: sans-serif;
+      background: #fff7f5;
+      color: #4b3b3b;
+      font-family: 'Playfair Display', serif;
       margin: 0;
       padding: 2rem;
-      background: #f9f6f2;
-      color: #333;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
     }
     h1, h2 {
+      font-family: 'Great Vibes', cursive;
+      color: #c48b8b;
       text-align: center;
+      margin-bottom: 0.5rem;
+    }
+    p, label {
+      font-size: 1.1rem;
+      margin-bottom: 0.5rem;
     }
     form {
       max-width: 500px;
-      margin: 2rem auto;
+      background: #fff;
+      padding: 2rem;
+      border-radius: 15px;
+      box-shadow: 0 0 10px rgba(196,139,139,0.2);
       display: flex;
       flex-direction: column;
+      margin: 1.5rem auto 3rem;
+      width: 100%;
     }
     input, select, textarea, button {
-      margin-bottom: 1rem;
-      padding: 0.8rem;
-      font-size: 1rem;
+      width: 100%;
+      margin-bottom: 1.2rem;
+      padding: 0.8rem 1rem;
+      font-size: 1.1rem;
+      border-radius: 8px;
+      border: 1px solid #cfc5c5;
+      transition: border-color 0.3s ease;
+      font-family: 'Playfair Display', serif;
+      box-sizing: border-box;
     }
+    input:focus, select:focus, textarea:focus {
+      border-color: #c48b8b;
+      outline: none;
+    }
+    button {
+      background: #c48b8b;
+      color: white;
+      font-weight: 600;
+      border: none;
+      cursor: pointer;
+      transition: background 0.3s ease;
+      font-family: 'Great Vibes', cursive;
+      font-size: 1.3rem;
+      padding: 0.8rem;
+    }
+    button:hover {
+      background: #a96f6f;
+    }
+    /* Center and style invitation text */
+    #invitation-text {
+      font-size: 1.25rem;
+      margin-bottom: 1.5rem;
+      text-align: center;
+      font-style: italic;
+    }
+    /* Fade-in effect */
+    #invitation-section, #guest-list {
+      opacity: 0;
+      max-width: 800px;
+      transition: opacity 0.6s ease;
+      width: 100%;
+    }
+    #invitation-section.show, #guest-list.show {
+      opacity: 1;
+    }
+    /* Admin toggle button */
+    #admin-toggle {
+      position: fixed;
+      top: 1rem;
+      right: 1rem;
+      background: #c48b8b;
+      color: #fff;
+      border: none;
+      padding: 0.6rem 1.2rem;
+      border-radius: 10px;
+      font-family: 'Great Vibes', cursive;
+      font-size: 1.1rem;
+      cursor: pointer;
+      box-shadow: 0 3px 6px rgba(196,139,139,0.4);
+      z-index: 1000;
+      transition: background 0.3s ease;
+    }
+    #admin-toggle:hover {
+      background: #a96f6f;
+    }
+    /* Admin container */
     #admin {
-      margin-top: 4rem;
+      display: none;
+      margin-bottom: 3rem;
+      width: 100%;
+      max-width: 900px;
+    }
+    /* Guest list table */
+    #guest-list {
+      margin-top: 2rem;
+      background: #fff;
+      padding: 1rem 1.5rem;
+      border-radius: 12px;
+      box-shadow: 0 0 10px rgba(196,139,139,0.2);
+      overflow-x: auto;
     }
     table {
       width: 100%;
       border-collapse: collapse;
-      margin-top: 2rem;
+      font-family: 'Playfair Display', serif;
     }
     th, td {
-      padding: 0.6rem;
-      border: 1px solid #ccc;
+      padding: 0.8rem 0.6rem;
+      border: 1px solid #cfc5c5;
       text-align: left;
+      font-size: 1rem;
+      min-width: 90px;
+    }
+    thead {
+      background: #f2dede;
+      color: #7f3b3b;
+    }
+    tbody tr:nth-child(even) {
+      background: #fff0f0;
+    }
+    /* Highlight confirmed rows */
+    tbody tr.confirmed {
+      background: #e7c6c6;
+      font-weight: 600;
+    }
+    #total-headcount {
+      font-weight: 700;
+      font-size: 1.2rem;
+      color: #a05b5b;
+      margin-bottom: 1rem;
+      text-align: right;
+    }
+    /* Responsive */
+    @media (max-width: 600px) {
+      form {
+        padding: 1.5rem 1rem;
+      }
+      #admin-toggle {
+        font-size: 1rem;
+        padding: 0.5rem 1rem;
+      }
+      th, td {
+        font-size: 0.9rem;
+        min-width: 70px;
+      }
     }
   </style>
 </head>
 <body>
   <h1>You're Invited!</h1>
-  <p style="text-align:center">Enter your full name to view your invitation</p>
-  <form id="lookup-form">
-    <input type="text" id="fullName" placeholder="Full Name" required />
-    <button type="submit">Find Invitation</button>
+  <p style="text-align:center; max-width: 600px; margin: 0 auto;">Enter your full name below to view your personalized invitation.</p>
+
+  <form id="lookup-form" aria-label="Lookup Invitation Form">
+    <input type="text" id="fullName" placeholder="Full Name" aria-required="true" autocomplete="name" />
+    <button type="submit" aria-label="Find Invitation">Find Invitation</button>
   </form>
 
-  <div id="invitation-section" style="display:none;">
+  <div id="invitation-section" aria-live="polite" role="region" aria-hidden="true">
     <h2>Your Invitation</h2>
     <p id="invitation-text"></p>
-    <form id="rsvp-form">
+
+    <form id="rsvp-form" aria-label="RSVP Form">
       <label for="guestCount">Number of Guests Attending:</label>
-      <select id="guestCount" required></select>
+      <select id="guestCount" required aria-required="true"></select>
+
       <label for="email">Your Email:</label>
-      <input type="email" id="email" required />
+      <input type="email" id="email" required aria-required="true" autocomplete="email" />
+
       <label for="phone">Your Phone Number:</label>
-      <input type="text" id="phone" />
-      <button type="submit">RSVP</button>
+      <input type="tel" id="phone" autocomplete="tel" />
+
+      <button type="submit" aria-label="Submit RSVP">RSVP</button>
     </form>
   </div>
 
-  <div id="admin">
+  <!-- Admin Toggle Button -->
+  <button id="admin-toggle" aria-expanded="false" aria-controls="admin">Admin</button>
+
+  <div id="admin" role="region" aria-hidden="true" aria-label="Admin Portal">
     <h2>Admin Portal</h2>
-    <form id="admin-auth">
-      <input type="password" id="admin-password" placeholder="Admin Password" required />
-      <button type="submit">Login</button>
+    <form id="admin-auth" aria-label="Admin Login Form">
+      <input type="password" id="admin-password" placeholder="Admin Password" aria-required="true" autocomplete="current-password" />
+      <button type="submit" aria-label="Login as Admin">Login</button>
     </form>
     <div id="guest-list" style="display:none;">
       <h3>Guest List</h3>
+      <p id="total-headcount"></p>
       <table>
-        <thead><tr><th>Name</th><th>Email</th><th>Phone</th><th>RSVP</th><th>Guest Limit</th><th>Invited</th></tr></thead>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Phone</th>
+            <th>RSVP Status</th>
+            <th>Guests Allowed</th>
+            <th>Guests Attending</th>
+          </tr>
+        </thead>
         <tbody id="guest-rows"></tbody>
       </table>
     </div>
   </div>
 
-<script type="module">
-  import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm'
+  <script type="module">
+    import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm'
 
-  const supabase = createClient(
-    'https://hrshdoeovdocwyxcerey.supabase.co',
-    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imhyc2hkb2VvdmRvY3d5eGNlcmV5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQ1ODQyNTEsImV4cCI6MjA3MDE2MDI1MX0.n5x7-0cjS0K7knGXGSjaR0rPG_OUEVmx5loJFSs3niA'
-  );
+    const supabase = createClient(
+      'https://hrshdoeovdocwyxcerey.supabase.co',
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imhyc2hkb2VvdmRvY3d5eGNlcmV5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQ1ODQyNTEsImV4cCI6MjA3MDE2MDI1MX0.n5x7-0cjS0K7knGXGSjaR0rPG_OUEVmx5loJFSs3niA'
+    );
 
-  let currentGuest = null;
+    let currentGuest = null;
 
-  document.getElementById("lookup-form").addEventListener("submit", async (e) => {
-    e.preventDefault();
-    const name = document.getElementById("fullName").value.trim();
+    const invitationSection = document.getElementById("invitation-section");
+    const guestListDiv = document.getElementById("guest-list");
+    const adminSection = document.getElementById("admin");
+    const adminToggleBtn = document.getElementById("admin-toggle");
 
-    const { data, error } = await supabase
-      .from("guests")
-      .select("*")
-      .eq("full_name", name)
-      .single();
+    // Toggle Admin Section
+    adminToggleBtn.addEventListener("click", () => {
+      if (adminSection.style.display === "block") {
+        adminSection.style.display = "none";
+        adminToggleBtn.setAttribute("aria-expanded", "false");
+        guestListDiv.style.display = "none";
+      } else {
+        adminSection.style.display = "block";
+        adminToggleBtn.setAttribute("aria-expanded", "true");
+      }
+    });
 
-    if (error || !data) {
-      alert("Guest not found.");
-      return;
-    }
+    // Lookup invitation by full name
+    document.getElementById("lookup-form").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const name = document.getElementById("fullName").value.trim();
 
-    currentGuest = data;
-    document.getElementById("invitation-text").innerText = data.invitation_text || "You're invited!";
+      const { data, error } = await supabase
+        .from("guests")
+        .select("*")
+        .eq("full_name", name)
+        .single();
 
-    const guestCountSelect = document.getElementById("guestCount");
-    guestCountSelect.innerHTML = "";
-    const limit = currentGuest.guest_limit || 1;
-    for(let i = 1; i <= limit; i++) {
-      const option = document.createElement("option");
-      option.value = i;
-      option.textContent = i;
-      guestCountSelect.appendChild(option);
-    }
+      if (error || !data) {
+        alert("Guest not found.");
+        return;
+      }
 
-    document.getElementById("invitation-section").style.display = "block";
-  });
+      currentGuest = data;
+      document.getElementById("invitation-text").innerText = data.invitation_text || "You're invited!";
 
-  document.getElementById("rsvp-form").addEventListener("submit", async (e) => {
-    e.preventDefault();
-    const email = document.getElementById("email").value.trim();
-    const phone = document.getElementById("phone").value.trim();
-    const guestCount = parseInt(document.getElementById("guestCount").value, 10);
+      const guestCountSelect = document.getElementById("guestCount");
+      guestCountSelect.innerHTML = "";
+      const limit = currentGuest.guest_limit || 1;
+      for(let i = 1; i <= limit; i++) {
+        const option = document.createElement("option");
+        option.value = i;
+        option.textContent = i;
+        guestCountSelect.appendChild(option);
+      }
 
-    if (guestCount > currentGuest.guest_limit) {
-      alert(`You cannot RSVP for more than ${currentGuest.guest_limit} guests.`);
-      return;
-    }
+      invitationSection.style.display = "block";
+      invitationSection.classList.add("show");
+      invitationSection.setAttribute("aria-hidden", "false");
+      // Scroll to invitation section for better UX
+      invitationSection.scrollIntoView({ behavior: "smooth" });
+    });
 
-    const { error } = await supabase
-      .from("guests")
-      .update({ rsvp_status: "Confirmed", email, phone, guest_count: guestCount })
-      .eq("id", currentGuest.id);
+    // RSVP submission
+    document.getElementById("rsvp-form").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const email = document.getElementById("email").value.trim();
+      const phone = document.getElementById("phone").value.trim();
+      const guestCount = parseInt(document.getElementById("guestCount").value, 10);
 
-    if (error) {
-      alert("Failed to RSVP");
-      return;
-    }
+      if (guestCount > currentGuest.guest_limit) {
+        alert(`You cannot RSVP for more than ${currentGuest.guest_limit} guests.`);
+        return;
+      }
 
-    try {
-      await emailjs.send("service_idd3fkn", "template_kgtloh8", {
-        to_email: email,
-        guest_name: currentGuest.full_name,
-        guest_count: guestCount
-      });
-      alert("RSVP Confirmed! A confirmation email has been sent.");
-    } catch (err) {
-      alert("RSVP Confirmed, but failed to send confirmation email.");
-      console.error("EmailJS error:", err);
-    }
-  });
+      const { error } = await supabase
+        .from("guests")
+        .update({ rsvp_status: "Confirmed", email, phone, guest_count: guestCount })
+        .eq("id", currentGuest.id);
 
-  document.getElementById("admin-auth").addEventListener("submit", async (e) => {
-    e.preventDefault();
-    const password = document.getElementById("admin-password").value;
-    if (password !== "skhan") {
-      alert("Incorrect password");
-      return;
-    }
+      if (error) {
+        alert("Failed to RSVP");
+        return;
+      }
 
-    const { data, error } = await supabase.from("guests").select("*").order("created_at", { ascending: false });
-    if (error) {
-      alert("Failed to load guest list");
-      return;
-    }
+      try {
+        await emailjs.send("service_idd3fkn", "template_kgtloh8", {
+          to_email: email,
+          guest_name: currentGuest.full_name,
+          guest_count: guestCount
+        });
+        alert("RSVP Confirmed! A confirmation email has been sent.");
+      } catch (err) {
+        alert("RSVP Confirmed, but failed to send confirmation email.");
+        console.error("EmailJS error:", err);
+      }
+    });
 
-    const tbody = document.getElementById("guest-rows");
-    tbody.innerHTML = "";
-    data.forEach(guest => {
-      tbody.innerHTML += `
-        <tr>
+    // Admin login & guest list display
+    document.getElementById("admin-auth").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const password = document.getElementById("admin-password").value;
+      if (password !== "skhan") {
+        alert("Incorrect password");
+        return;
+      }
+
+      const { data, error } = await supabase
+        .from("guests")
+        .select("*")
+        .order("created_at", { ascending: false });
+
+      if (error) {
+        alert("Failed to load guest list");
+        return;
+      }
+
+      const tbody = document.getElementById("guest-rows");
+      tbody.innerHTML = "";
+      let totalGuestsConfirmed = 0;
+
+      data.forEach(guest => {
+        const guestsAttending = guest.guest_count || 0;
+        if (guest.rsvp_status === "Confirmed") {
+          totalGuestsConfirmed += guestsAttending;
+        }
+
+        const tr = document.createElement("tr");
+        tr.classList.toggle("confirmed", guest.rsvp_status === "Confirmed");
+
+        tr.innerHTML = `
           <td>${guest.full_name}</td>
           <td>${guest.email || ""}</td>
           <td>${guest.phone || ""}</td>
-          <td>${guest.rsvp_status}</td>
-          <td>${guest.guest_limit}</td>
-          <td>${guest.invitation_text || ""}</td>
-        </tr>
-      `;
-    });
+          <td>${guest.rsvp_status || "Not responded"}</td>
+          <td>${guest.guest_limit || 1}</td>
+          <td>${guestsAttending}</td>
+        `;
+        tbody.appendChild(tr);
+      });
 
-    document.getElementById("guest-list").style.display = "block";
-  });
-</script>
+      document.getElementById("total-headcount").innerText = `Total Confirmed Attending: ${totalGuestsConfirmed}`;
+      guestListDiv.style.display = "block";
+      guestListDiv.classList.add("show");
+      adminSection.setAttribute("aria-hidden", "false");
+      // Clear password for security
+      document.getElementById("admin-password").value = "";
+    });
+  </script>
 
   <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
   <script type="text/javascript">
     (function(){
-      emailjs.init("RtSgLTRPRpIr-3a8T");
+      emailjs.init("RtSgLTRPRpIr-3a8T"); // Your actual public key here
     })();
   </script>
 </body>
