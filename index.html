@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Wedding RSVP - Manal & Safwaan</title>
+  <title>Nikkah RSVP - Manal & Safwaan</title>
 
   <!-- Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Playfair+Display&family=Josefin+Sans:wght@300;600&display=swap" rel="stylesheet" />
@@ -684,11 +684,10 @@
     <!-- Info Content -->
     <div id="info-content" class="content-section">
       <button class="back-button" onclick="showHeroContent()">← Back</button>
-      <h2>Wedding Information</h2>
-      <p><strong>Date:</strong> June 12th, 2025</p>
-      <p><strong>Time:</strong> 6:00 PM</p>
-      <p><strong>Venue:</strong> To be announced</p>
-      <p><strong>Dress Code:</strong> Formal attire</p>
+      <h2>Nikkah Information</h2>
+      <p><strong>Date:</strong> December 6th, 2025</p>
+      <p><strong>Time:</strong> 2:00 PM</p>
+      <p><strong>Venue:</strong> SBIA</p>
       <br>
       <p>We're so excited to celebrate this special day with you! More details will be shared closer to the date.</p>
     </div>
@@ -898,10 +897,12 @@
       // Add event listeners to attendance buttons
       document.querySelectorAll('.attendance-btn').forEach(btn => {
         btn.addEventListener('click', function() {
-          const memberId = parseInt(this.dataset.memberId);
+          const memberId = this.dataset.memberId;
+          // Convert to number if it's a valid number, otherwise keep as string/number
+          const memberIdKey = memberId === '-1' ? -1 : parseInt(memberId);
           const action = this.dataset.action;
           
-          memberAttendance[memberId] = action;
+          memberAttendance[memberIdKey] = action;
           renderPartyMembers();
         });
       });
@@ -981,9 +982,9 @@
         );
         
         if (!mainGuestInMembers) {
-          // Add the main guest as the first party member
+          // Add the main guest as the first party member with a numeric ID
           const mainGuestMember = { 
-            id: `main_${guest.id}`, // Use a unique ID for the main guest
+            id: -1, // Use -1 as a special ID for the main guest
             name: guest.full_name, 
             guest_id: guest.id,
             is_main_guest: true
@@ -991,7 +992,7 @@
           partyMembers.unshift(mainGuestMember);
         }
 
-        document.getElementById("invitation-text").innerText = guest.invitation_text || "You're invited!";
+        document.getElementById("invitation-text").innerText = guest.invitation_text || "";
 
         // Hide the lookup form and show invitation section
         document.getElementById("lookup-form").style.display = "none";
@@ -1061,10 +1062,10 @@
 
         // Update individual party member attendance
         for (const member of partyMembers) {
-          // Skip the main guest member if it's not in the database
-          if (member.is_main_guest) continue;
+          // Skip the main guest member if it's not in the database (ID -1)
+          if (member.is_main_guest && member.id === -1) continue;
           
-          if (member.id && typeof member.id === 'number') {
+          if (member.id && typeof member.id === 'number' && member.id > 0) {
             await supabase
               .from("party_members")
               .update({ attendance_status: memberAttendance[member.id] || 'decline' })
