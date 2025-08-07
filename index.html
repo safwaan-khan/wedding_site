@@ -621,93 +621,37 @@
 
     // Content switching functions
     function showHeroContent() {
-      // Get currently visible content
-      const visibleContent = heroContent.style.display !== "none" ? heroContent : 
-                           infoContent.style.display === "block" ? infoContent : 
-                           rsvpContent.style.display === "block" ? rsvpContent : null;
+      heroContent.style.display = "block";
+      infoContent.style.display = "none";
+      rsvpContent.style.display = "none";
       
-      if (visibleContent && visibleContent !== heroContent) {
-        visibleContent.classList.add('fade-out');
-        setTimeout(() => {
-          heroContent.style.display = "block";
-          infoContent.style.display = "none";
-          rsvpContent.style.display = "none";
-          
-          // Clear all fade classes and add fade-in
-          [heroContent, infoContent, rsvpContent].forEach(content => {
-            content.classList.remove('fade-out', 'fade-in');
-          });
-          heroContent.classList.add('fade-in');
-          
-          // Reset button states
-          infoBtn.setAttribute("aria-expanded", "false");
-          rsvpBtn.setAttribute("aria-expanded", "false");
-        }, 300);
-      } else {
-        heroContent.style.display = "block";
-        infoContent.style.display = "none";
-        rsvpContent.style.display = "none";
-        
-        [heroContent, infoContent, rsvpContent].forEach(content => {
-          content.classList.remove('fade-out', 'fade-in');
-        });
-        
-        // Reset button states
-        infoBtn.setAttribute("aria-expanded", "false");
-        rsvpBtn.setAttribute("aria-expanded", "false");
-      }
+      // Reset button states
+      infoBtn.setAttribute("aria-expanded", "false");
+      rsvpBtn.setAttribute("aria-expanded", "false");
     }
 
     function showInfoContent() {
-      // Get currently visible content
-      const visibleContent = heroContent.style.display !== "none" ? heroContent : 
-                           infoContent.style.display === "block" ? infoContent : 
-                           rsvpContent.style.display === "block" ? rsvpContent : heroContent;
+      heroContent.style.display = "none";
+      infoContent.style.display = "block";
+      rsvpContent.style.display = "none";
+      adminSection.style.display = "none";
       
-      visibleContent.classList.add('fade-out');
-      setTimeout(() => {
-        heroContent.style.display = "none";
-        infoContent.style.display = "block";
-        rsvpContent.style.display = "none";
-        adminSection.style.display = "none";
-        
-        // Clear all fade classes and add fade-in
-        [heroContent, infoContent, rsvpContent].forEach(content => {
-          content.classList.remove('fade-out', 'fade-in');
-        });
-        infoContent.classList.add('fade-in');
-        
-        // Update button states
-        infoBtn.setAttribute("aria-expanded", "true");
-        rsvpBtn.setAttribute("aria-expanded", "false");
-        adminBtn.setAttribute("aria-expanded", "false");
-      }, 300);
+      // Update button states
+      infoBtn.setAttribute("aria-expanded", "true");
+      rsvpBtn.setAttribute("aria-expanded", "false");
+      adminBtn.setAttribute("aria-expanded", "false");
     }
 
     function showRsvpContent() {
-      // Get currently visible content
-      const visibleContent = heroContent.style.display !== "none" ? heroContent : 
-                           infoContent.style.display === "block" ? infoContent : 
-                           rsvpContent.style.display === "block" ? rsvpContent : heroContent;
+      heroContent.style.display = "none";
+      infoContent.style.display = "none";
+      rsvpContent.style.display = "block";
+      adminSection.style.display = "none";
       
-      visibleContent.classList.add('fade-out');
-      setTimeout(() => {
-        heroContent.style.display = "none";
-        infoContent.style.display = "block";
-        rsvpContent.style.display = "block";
-        adminSection.style.display = "none";
-        
-        // Clear all fade classes and add fade-in
-        [heroContent, infoContent, rsvpContent].forEach(content => {
-          content.classList.remove('fade-out', 'fade-in');
-        });
-        rsvpContent.classList.add('fade-in');
-        
-        // Update button states
-        infoBtn.setAttribute("aria-expanded", "false");
-        rsvpBtn.setAttribute("aria-expanded", "true");
-        adminBtn.setAttribute("aria-expanded", "false");
-      }, 300);
+      // Update button states
+      infoBtn.setAttribute("aria-expanded", "false");
+      rsvpBtn.setAttribute("aria-expanded", "true");
+      adminBtn.setAttribute("aria-expanded", "false");
     }
 
     function toggleAdminSection() {
