@@ -560,8 +560,10 @@
             </div>
           </div>
 
-          <label for="email">Your Email:</label>
-          <input type="email" id="email" name="email" required aria-required="true" autocomplete="email" />
+          <div id="email-section">
+            <label for="email">Your Email:</label>
+            <input type="email" id="email" name="email" required aria-required="true" autocomplete="email" />
+          </div>
 
           <button type="submit" aria-label="Submit RSVP">RSVP</button>
           <p class="inline-message" id="rsvp-message" role="alert" aria-live="polite"></p>
@@ -716,12 +718,19 @@
     document.addEventListener('change', function(e) {
       if (e.target.name === 'attendance') {
         const guestCountSection = document.getElementById('guest-count-section');
+        const emailSection = document.getElementById('email-section');
+        const emailInput = document.getElementById('email');
+        
         if (e.target.value === 'no') {
           guestCountSection.style.display = 'none';
+          emailSection.style.display = 'none';
+          emailInput.required = false;
           guestCount = 0;
           guestCountDisplay.textContent = '0';
         } else {
           guestCountSection.style.display = 'block';
+          emailSection.style.display = 'block';
+          emailInput.required = true;
           guestCount = 1;
           guestCountDisplay.textContent = '1';
           btnMinus.disabled = true;
@@ -792,6 +801,8 @@
         // Reset attendance radio buttons
         document.querySelector('input[name="attendance"][value="yes"]').checked = true;
         document.getElementById('guest-count-section').style.display = 'block';
+        document.getElementById('email-section').style.display = 'block';
+        document.getElementById('email').required = true;
 
         // Scroll to invitation
         invitationSection.scrollIntoView({ behavior: "smooth" });
@@ -847,7 +858,7 @@
         return;
       }
 
-      if (!email) {
+      if (isAttending && !email) {
         setMessage(rsvpMessage, "Please enter a valid email address.", false);
         return;
       }
@@ -855,9 +866,16 @@
       try {
         // Update RSVP in DB
         const rsvpStatus = isAttending ? "Confirmed" : "Declined";
+        const updateData = { rsvp_status: rsvpStatus, guest_count: guestCount };
+        
+        // Only include email if attending
+        if (isAttending && email) {
+          updateData.email = email;
+        }
+        
         const { error } = await supabase
           .from("guests")
-          .update({ rsvp_status: rsvpStatus, email, guest_count: guestCount })
+          .update(updateData)
           .eq("id", currentGuest.id);
 
         if (error) {
