@@ -24,24 +24,26 @@
       flex-direction: column;
       align-items: center;
       min-height: 100vh;
-      padding: 2rem 1rem;
+      padding: clamp(1rem, 3vw, 2rem) clamp(0.5rem, 2vw, 1rem);
+      transition: padding 0.3s ease;
     }
 
     .logo {
-      max-width: 180px;
-      margin-bottom: 1.5rem;
+      max-width: clamp(120px, 20vw, 180px);
+      margin-bottom: clamp(1rem, 3vw, 1.5rem);
+      transition: all 0.3s ease;
     }
 
     .hero-container {
       background: rgba(255, 255, 255, 0.2);
       backdrop-filter: blur(6px);
       border-radius: 20px;
-      padding: 2.5rem 2rem;
+      padding: clamp(1.5rem, 4vw, 2.5rem) clamp(1rem, 3vw, 2rem);
       text-align: center;
-      max-width: 500px;
+      max-width: min(500px, 90vw);
       width: 100%;
       box-shadow: 0 0 25px rgba(173, 216, 230, 0.3);
-      margin-bottom: 3rem;
+      margin-bottom: clamp(2rem, 4vw, 3rem);
       color: #2b3a67;
       transition: all 0.3s ease;
     }
@@ -59,50 +61,57 @@
 
     .hero-title {
       font-family: 'Great Vibes', cursive;
-      font-size: 3rem;
+      font-size: clamp(2rem, 6vw, 3rem);
       margin-bottom: 0.5rem;
       color: #2b3a67;
+      transition: font-size 0.3s ease;
     }
 
     .hero-date {
       font-family: 'Josefin Sans', sans-serif;
-      font-size: 1.4rem;
+      font-size: clamp(1.1rem, 3vw, 1.4rem);
       color: #2b3a67;
       margin-bottom: 1.5rem;
+      transition: font-size 0.3s ease;
     }
 
     .hero-image {
       max-width: 100%;
-      border-radius: 16px;
+      height: auto;
+      border-radius: clamp(12px, 2vw, 16px);
       margin-bottom: 1.5rem;
       box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+      transition: border-radius 0.3s ease;
     }
 
     .button-container {
       background: rgba(255, 255, 255, 0.3);
       backdrop-filter: blur(10px);
-      border-radius: 20px;
-      padding: 1.5rem 2rem;
-      max-width: 500px;
+      border-radius: clamp(16px, 3vw, 20px);
+      padding: clamp(1rem, 3vw, 1.5rem) clamp(1.5rem, 4vw, 2rem);
+      max-width: min(500px, 90vw);
       width: 100%;
-      margin-bottom: 3rem;
+      margin-bottom: clamp(2rem, 4vw, 3rem);
       box-shadow: 0 0 30px rgba(173, 216, 230, 0.4);
       display: flex;
       justify-content: center;
-      gap: 2rem;
+      gap: clamp(0.8rem, 3vw, 2rem);
+      transition: all 0.3s ease;
     }
 
     .toggle-button {
       background: rgba(173, 216, 230, 0.3);
       border: 1px solid rgba(43, 58, 103, 0.4);
-      padding: 0.75rem 2rem;
+      padding: clamp(0.6rem, 2vw, 0.75rem) clamp(1.5rem, 4vw, 2rem);
       border-radius: 999px;
       font-family: 'Josefin Sans', sans-serif;
-      font-size: 1.1rem;
+      font-size: clamp(1rem, 2.5vw, 1.1rem);
       color: #2b3a67;
       cursor: pointer;
-      transition: background 0.3s ease, color 0.3s ease;
+      transition: all 0.3s ease;
       user-select: none;
+      white-space: nowrap;
+      min-width: fit-content;
     }
 
     .toggle-button:hover, .toggle-button[aria-expanded="true"] {
@@ -119,31 +128,34 @@
 
     .content-section h2 {
       font-family: 'Great Vibes', cursive;
-      font-size: 2.2rem;
+      font-size: clamp(1.8rem, 4vw, 2.2rem);
       margin-bottom: 1.5rem;
       color: #2b3a67;
       text-align: center;
+      transition: font-size 0.3s ease;
     }
 
     .content-section h3 {
       font-family: 'Playfair Display', serif;
-      font-size: 1.4rem;
+      font-size: clamp(1.2rem, 3vw, 1.4rem);
       margin-bottom: 1rem;
       color: #2b3a67;
       text-align: center;
+      transition: font-size 0.3s ease;
     }
 
     /* Admin section special styling for wider content */
     #admin-section {
-      max-width: 680px;
+      max-width: min(680px, 95vw);
       background: rgba(255, 255, 255, 0.25);
       backdrop-filter: blur(8px);
-      border-radius: 20px;
-      padding: 2rem 2rem 2.5rem;
-      margin-bottom: 3rem;
+      border-radius: clamp(16px, 3vw, 20px);
+      padding: clamp(1.5rem, 4vw, 2rem);
+      margin-bottom: clamp(2rem, 4vw, 3rem);
       box-shadow: 0 0 30px rgba(43, 58, 103, 0.4);
       display: none;
       color: #2b3a67;
+      transition: all 0.3s ease;
     }
 
     form {
@@ -160,13 +172,15 @@
     input[type="text"],
     input[type="email"],
     input[type="password"] {
-      padding: 0.6rem 1rem;
+      padding: clamp(0.5rem, 2vw, 0.6rem) clamp(0.8rem, 2vw, 1rem);
       border: 2px solid #2b3a67;
-      border-radius: 8px;
-      font-size: 1rem;
+      border-radius: clamp(6px, 1.5vw, 8px);
+      font-size: clamp(0.9rem, 2vw, 1rem);
       color: #2b3a67;
       background: rgba(255,255,255,0.9);
-      transition: border-color 0.3s ease;
+      transition: all 0.3s ease;
+      width: 100%;
+      box-sizing: border-box;
     }
 
     input[type="text"]:focus,
@@ -190,15 +204,15 @@
       border: 1.5px solid #2b3a67;
       color: #2b3a67;
       font-family: 'Josefin Sans', sans-serif;
-      font-size: 1.4rem;
-      width: 2.2rem;
-      height: 2.2rem;
+      font-size: clamp(1.2rem, 3vw, 1.4rem);
+      width: clamp(2rem, 5vw, 2.2rem);
+      height: clamp(2rem, 5vw, 2.2rem);
       border-radius: 50%;
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
-      transition: background 0.3s ease, color 0.3s ease;
+      transition: all 0.3s ease;
       user-select: none;
     }
 
@@ -213,11 +227,12 @@
     }
 
     .guest-count-display {
-      min-width: 2rem;
+      min-width: clamp(2rem, 5vw, 2.5rem);
       text-align: center;
       font-weight: 600;
-      font-size: 1.4rem;
+      font-size: clamp(1.2rem, 3vw, 1.4rem);
       color: #2b3a67;
+      transition: font-size 0.3s ease;
     }
 
     button[type="submit"] {
@@ -225,11 +240,13 @@
       border: none;
       color: white;
       font-weight: 600;
-      font-size: 1.1rem;
-      padding: 0.75rem;
-      border-radius: 12px;
+      font-size: clamp(1rem, 2.5vw, 1.1rem);
+      padding: clamp(0.6rem, 2vw, 0.75rem);
+      border-radius: clamp(10px, 2vw, 12px);
       cursor: pointer;
-      transition: background 0.3s ease;
+      transition: all 0.3s ease;
+      width: 100%;
+      box-sizing: border-box;
     }
 
     button[type="submit"]:hover {
@@ -266,7 +283,7 @@
       width: 100%;
       border-collapse: collapse;
       margin-top: 1rem;
-      font-size: 0.9rem;
+      font-size: clamp(0.75rem, 2vw, 0.9rem);
       overflow-x: auto;
       display: block;
       white-space: nowrap;
@@ -280,9 +297,10 @@
 
     th, td {
       border: 1px solid #2b3a67;
-      padding: 0.5rem;
+      padding: clamp(0.3rem, 1vw, 0.5rem);
       text-align: left;
       word-wrap: break-word;
+      font-size: clamp(0.7rem, 1.8vw, 0.85rem);
     }
 
     thead {
@@ -318,12 +336,12 @@
     .admin-button {
       background: transparent;
       border: 1px solid #2b3a67;
-      padding: 0.5rem 1.2rem;
+      padding: clamp(0.4rem, 2vw, 0.5rem) clamp(1rem, 3vw, 1.2rem);
       border-radius: 999px;
-      font-size: 0.9rem;
+      font-size: clamp(0.8rem, 2vw, 0.9rem);
       color: #2b3a67;
       cursor: pointer;
-      transition: background 0.3s ease, color 0.3s ease;
+      transition: all 0.3s ease;
     }
 
     .admin-button:hover,
@@ -336,13 +354,13 @@
     .back-button {
       background: rgba(173, 216, 230, 0.5);
       border: 1px solid #2b3a67;
-      padding: 0.5rem 1.5rem;
+      padding: clamp(0.4rem, 2vw, 0.5rem) clamp(1rem, 3vw, 1.5rem);
       border-radius: 999px;
       font-family: 'Josefin Sans', sans-serif;
-      font-size: 0.9rem;
+      font-size: clamp(0.8rem, 2vw, 0.9rem);
       color: #2b3a67;
       cursor: pointer;
-      transition: background 0.3s ease, color 0.3s ease;
+      transition: all 0.3s ease;
       margin-bottom: 1rem;
       align-self: flex-start;
     }
@@ -353,13 +371,9 @@
     }
 
     /* Responsive */
-    @media (max-width: 600px) {
+    @media (max-width: 768px) {
       body {
-        padding: 1.5rem 0.5rem;
-      }
-      
-      .hero-title {
-        font-size: 2.5rem;
+        padding: 1rem 0.5rem;
       }
       
       .button-container {
@@ -368,20 +382,94 @@
         padding: 1rem;
       }
       
-      .hero-container {
-        padding: 1.5rem 1rem;
-      }
-      
-      #admin-section {
-        max-width: 100%;
+      .toggle-button {
+        width: 100%;
+        text-align: center;
+        padding: 0.8rem 1.5rem;
       }
       
       table {
-        font-size: 0.8rem;
+        font-size: 0.75rem;
+        display: block;
+        overflow-x: auto;
+        white-space: nowrap;
       }
       
       th, td {
-        padding: 0.3rem;
+        padding: 0.25rem;
+        min-width: 80px;
+      }
+      
+      .guest-count-wrapper {
+        gap: 1rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .hero-container {
+        margin-bottom: 1.5rem;
+      }
+      
+      .button-container {
+        margin-bottom: 1.5rem;
+      }
+      
+      .content-section h2 {
+        font-size: 1.8rem;
+      }
+      
+      form {
+        gap: 0.8rem;
+      }
+      
+      #admin-section {
+        padding: 1rem;
+      }
+      
+      table {
+        font-size: 0.7rem;
+      }
+      
+      th, td {
+        padding: 0.2rem;
+        font-size: 0.65rem;
+      }
+    }
+
+    @media (max-width: 320px) {
+      .hero-title {
+        font-size: 1.8rem;
+      }
+      
+      .hero-date {
+        font-size: 1rem;
+      }
+      
+      .toggle-button {
+        font-size: 0.9rem;
+        padding: 0.6rem 1rem;
+      }
+    }
+
+    /* Landscape mobile orientation */
+    @media (max-height: 500px) and (orientation: landscape) {
+      body {
+        padding: 0.5rem;
+      }
+      
+      .logo {
+        max-width: 100px;
+        margin-bottom: 0.5rem;
+      }
+      
+      .hero-container {
+        padding: 1rem;
+        margin-bottom: 1rem;
+      }
+      
+      .button-container {
+        margin-bottom: 1rem;
+        padding: 0.8rem 1rem;
       }
     }
   </style>
