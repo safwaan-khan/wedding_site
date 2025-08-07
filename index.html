@@ -1,4 +1,3 @@
-     
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -25,15 +24,15 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      height: 100vh;
-      padding: clamp(0.5rem, 2vw, 1rem);
+      min-height: 100vh;
+      padding: clamp(0.5rem, 2vw, 2rem);
       transition: padding 0.3s ease;
       overflow: auto;
     }
 
     .logo {
-      max-width: clamp(80px, 15vw, 120px);
-      margin-bottom: clamp(0.5rem, 2vw, 1rem);
+      max-width: clamp(100px, 18vw, 150px);
+      margin-bottom: clamp(0.5rem, 2vw, 1.5rem);
       transition: all 0.3s ease;
     }
 
@@ -41,15 +40,15 @@
       background: rgba(255, 255, 255, 0.2);
       backdrop-filter: blur(6px);
       border-radius: clamp(12px, 3vw, 20px);
-      padding: clamp(1rem, 3vw, 2rem) clamp(0.8rem, 2.5vw, 1.5rem);
+      padding: clamp(1rem, 3vw, 2.5rem) clamp(0.8rem, 2.5vw, 2rem);
       text-align: center;
-      max-width: min(450px, 85vw);
+      max-width: min(500px, 90vw);
       width: 100%;
       box-shadow: 0 0 25px rgba(173, 216, 230, 0.3);
-      margin-bottom: clamp(1rem, 2.5vw, 1.5rem);
+      margin-bottom: clamp(1rem, 2.5vw, 2rem);
       color: #2b3a67;
       transition: all 0.3s ease;
-      max-height: 60vh;
+      max-height: 75vh;
       overflow-y: auto;
     }
 
@@ -66,7 +65,7 @@
 
     .hero-title {
       font-family: 'Great Vibes', cursive;
-      font-size: clamp(1.8rem, 5vw, 2.5rem);
+      font-size: clamp(2rem, 6vw, 3rem);
       margin-bottom: 0.3rem;
       color: #2b3a67;
       transition: font-size 0.3s ease;
@@ -74,20 +73,22 @@
 
     .hero-date {
       font-family: 'Josefin Sans', sans-serif;
-      font-size: clamp(1rem, 2.8vw, 1.2rem);
+      font-size: clamp(1.1rem, 3vw, 1.4rem);
       color: #2b3a67;
-      margin-bottom: clamp(0.8rem, 2vw, 1.2rem);
+      margin-bottom: clamp(0.8rem, 2vw, 1.5rem);
       transition: font-size 0.3s ease;
     }
 
     .hero-image {
       max-width: 100%;
+      width: 100%;
       height: auto;
       border-radius: clamp(8px, 2vw, 12px);
       margin-bottom: clamp(0.8rem, 2vw, 1.2rem);
       box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
       transition: border-radius 0.3s ease;
-      max-height: 20vh;
+      /* Optimize for mobile: much larger hero image */
+      max-height: clamp(25vh, 35vh, 40vh);
       object-fit: cover;
     }
 
@@ -95,24 +96,24 @@
       background: rgba(255, 255, 255, 0.3);
       backdrop-filter: blur(10px);
       border-radius: clamp(12px, 3vw, 16px);
-      padding: clamp(0.8rem, 2.5vw, 1.2rem) clamp(1rem, 3vw, 1.5rem);
-      max-width: min(450px, 85vw);
+      padding: clamp(0.8rem, 2.5vw, 1.5rem) clamp(1rem, 3vw, 2rem);
+      max-width: min(500px, 90vw);
       width: 100%;
-      margin-bottom: clamp(1rem, 2.5vw, 1.5rem);
+      margin-bottom: clamp(1rem, 2.5vw, 2rem);
       box-shadow: 0 0 30px rgba(173, 216, 230, 0.4);
       display: flex;
       justify-content: center;
-      gap: clamp(0.8rem, 2.5vw, 1.5rem);
+      gap: clamp(0.8rem, 2.5vw, 2rem);
       transition: all 0.3s ease;
     }
 
     .toggle-button {
       background: rgba(173, 216, 230, 0.3);
       border: 1px solid rgba(43, 58, 103, 0.4);
-      padding: clamp(0.5rem, 1.8vw, 0.7rem) clamp(1rem, 2.5vw, 1.5rem);
+      padding: clamp(0.6rem, 2vw, 0.8rem) clamp(1.2rem, 3vw, 1.8rem);
       border-radius: 999px;
       font-family: 'Josefin Sans', sans-serif;
-      font-size: clamp(0.85rem, 2vw, 1rem);
+      font-size: clamp(0.9rem, 2.2vw, 1.1rem);
       color: #2b3a67;
       cursor: pointer;
       transition: all 0.3s ease;
@@ -143,8 +144,8 @@
 
     .content-section h2 {
       font-family: 'Great Vibes', cursive;
-      font-size: clamp(1.5rem, 3.5vw, 1.8rem);
-      margin-bottom: clamp(0.8rem, 2vw, 1.2rem);
+      font-size: clamp(1.6rem, 4vw, 2.2rem);
+      margin-bottom: clamp(0.8rem, 2vw, 1.5rem);
       color: #2b3a67;
       text-align: center;
       transition: font-size 0.3s ease;
@@ -152,26 +153,26 @@
 
     .content-section h3 {
       font-family: 'Playfair Display', serif;
-      font-size: clamp(1rem, 2.5vw, 1.2rem);
-      margin-bottom: clamp(0.6rem, 1.5vw, 0.8rem);
+      font-size: clamp(1.1rem, 2.8vw, 1.4rem);
+      margin-bottom: clamp(0.6rem, 1.5vw, 1rem);
       color: #2b3a67;
       text-align: center;
       transition: font-size 0.3s ease;
     }
 
     .content-section p {
-      font-size: clamp(0.85rem, 2vw, 0.95rem);
+      font-size: clamp(0.9rem, 2.2vw, 1rem);
       line-height: 1.4;
-      margin-bottom: clamp(0.4rem, 1vw, 0.6rem);
+      margin-bottom: clamp(0.4rem, 1vw, 0.8rem);
     }
 
     /* Admin section special styling for wider content */
     #admin-section {
-      max-width: min(600px, 90vw);
+      max-width: min(800px, 95vw);
       background: rgba(255, 255, 255, 0.25);
       backdrop-filter: blur(8px);
       border-radius: clamp(12px, 3vw, 16px);
-      padding: clamp(1rem, 3vw, 1.5rem);
+      padding: clamp(1.5rem, 4vw, 2.5rem);
       margin-bottom: clamp(1rem, 2.5vw, 1.5rem);
       box-shadow: 0 0 30px rgba(43, 58, 103, 0.4);
       display: none;
@@ -181,29 +182,29 @@
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
-      max-height: 85vh;
+      max-height: 90vh;
       overflow-y: auto;
     }
 
     form {
       display: flex;
       flex-direction: column;
-      gap: clamp(0.6rem, 1.5vw, 0.8rem);
+      gap: clamp(0.6rem, 1.5vw, 1rem);
       color: #2b3a67;
     }
 
     label {
       font-weight: 600;
-      font-size: clamp(0.8rem, 1.8vw, 0.9rem);
+      font-size: clamp(0.85rem, 2vw, 1rem);
     }
 
     input[type="text"],
     input[type="email"],
     input[type="password"] {
-      padding: clamp(0.4rem, 1.5vw, 0.5rem) clamp(0.6rem, 1.8vw, 0.8rem);
+      padding: clamp(0.5rem, 1.8vw, 0.7rem) clamp(0.7rem, 2vw, 1rem);
       border: 2px solid #2b3a67;
-      border-radius: clamp(4px, 1vw, 6px);
-      font-size: clamp(0.8rem, 1.8vw, 0.9rem);
+      border-radius: clamp(4px, 1vw, 8px);
+      font-size: clamp(0.85rem, 2vw, 1rem);
       color: #2b3a67;
       background: rgba(255,255,255,0.9);
       transition: all 0.3s ease;
@@ -232,9 +233,9 @@
       border: 1.5px solid #2b3a67;
       color: #2b3a67;
       font-family: 'Josefin Sans', sans-serif;
-      font-size: clamp(1.2rem, 3vw, 1.4rem);
-      width: clamp(2rem, 5vw, 2.2rem);
-      height: clamp(2rem, 5vw, 2.2rem);
+      font-size: clamp(1.3rem, 3.5vw, 1.6rem);
+      width: clamp(2.2rem, 5.5vw, 2.5rem);
+      height: clamp(2.2rem, 5.5vw, 2.5rem);
       border-radius: 50%;
       cursor: pointer;
       display: flex;
@@ -255,10 +256,10 @@
     }
 
     .guest-count-display {
-      min-width: clamp(2rem, 5vw, 2.5rem);
+      min-width: clamp(2.5rem, 6vw, 3rem);
       text-align: center;
       font-weight: 600;
-      font-size: clamp(1.2rem, 3vw, 1.4rem);
+      font-size: clamp(1.3rem, 3.5vw, 1.6rem);
       color: #2b3a67;
       transition: font-size 0.3s ease;
     }
@@ -268,9 +269,9 @@
       border: none;
       color: white;
       font-weight: 600;
-      font-size: clamp(0.9rem, 2vw, 1rem);
-      padding: clamp(0.5rem, 1.5vw, 0.6rem);
-      border-radius: clamp(6px, 1.5vw, 8px);
+      font-size: clamp(0.95rem, 2.2vw, 1.1rem);
+      padding: clamp(0.6rem, 1.8vw, 0.8rem);
+      border-radius: clamp(6px, 1.5vw, 10px);
       cursor: pointer;
       transition: all 0.3s ease;
       width: 100%;
@@ -306,33 +307,27 @@
       text-align: center;
     }
 
-    /* Table Styles */
+    /* Table Styles - Much wider for admin */
     table {
       width: 100%;
       border-collapse: collapse;
       margin-top: 1rem;
-      font-size: clamp(0.75rem, 2vw, 0.9rem);
-      overflow-x: auto;
-      display: block;
-      white-space: nowrap;
-    }
-
-    thead, tbody, tr {
-      display: table;
-      width: 100%;
-      table-layout: fixed;
+      font-size: clamp(0.8rem, 2.2vw, 1rem);
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 8px;
+      overflow: hidden;
     }
 
     th, td {
       border: 1px solid #2b3a67;
-      padding: clamp(0.3rem, 1vw, 0.5rem);
+      padding: clamp(0.5rem, 1.5vw, 0.8rem);
       text-align: left;
       word-wrap: break-word;
-      font-size: clamp(0.7rem, 1.8vw, 0.85rem);
+      font-size: clamp(0.75rem, 2vw, 0.95rem);
     }
 
     thead {
-      background: rgba(43, 58, 103, 0.1);
+      background: rgba(43, 58, 103, 0.2);
       color: #1b2550;
       font-weight: 600;
     }
@@ -354,7 +349,7 @@
 
     #total-headcount {
       font-weight: 600;
-      font-size: 1.1rem;
+      font-size: clamp(1rem, 2.5vw, 1.3rem);
       color: #1b2550;
       margin-bottom: 1rem;
       text-align: right;
@@ -363,7 +358,7 @@
     /* Admin button moved to bottom */
     .admin-button-wrapper {
       position: absolute;
-      bottom: clamp(1rem, 2.5vw, 1.5rem);
+      bottom: clamp(1rem, 2.5vw, 2rem);
       left: 50%;
       transform: translateX(-50%);
       text-align: center;
@@ -372,9 +367,9 @@
     .admin-button {
       background: transparent;
       border: 1px solid #2b3a67;
-      padding: clamp(0.3rem, 1.5vw, 0.4rem) clamp(0.8rem, 2.5vw, 1rem);
+      padding: clamp(0.4rem, 1.8vw, 0.6rem) clamp(1rem, 3vw, 1.5rem);
       border-radius: 999px;
-      font-size: clamp(0.7rem, 1.8vw, 0.8rem);
+      font-size: clamp(0.75rem, 2vw, 0.9rem);
       color: #2b3a67;
       cursor: pointer;
       transition: all 0.3s ease;
@@ -390,14 +385,14 @@
     .back-button {
       background: rgba(173, 216, 230, 0.5);
       border: 1px solid #2b3a67;
-      padding: clamp(0.3rem, 1.5vw, 0.4rem) clamp(0.8rem, 2.5vw, 1.2rem);
+      padding: clamp(0.4rem, 1.8vw, 0.6rem) clamp(1rem, 3vw, 1.5rem);
       border-radius: 999px;
       font-family: 'Josefin Sans', sans-serif;
-      font-size: clamp(0.7rem, 1.8vw, 0.8rem);
+      font-size: clamp(0.75rem, 2vw, 0.9rem);
       color: #2b3a67;
       cursor: pointer;
       transition: all 0.3s ease;
-      margin-bottom: clamp(0.6rem, 1.5vw, 0.8rem);
+      margin-bottom: clamp(0.6rem, 1.5vw, 1rem);
       align-self: flex-start;
     }
 
@@ -406,28 +401,153 @@
       color: white;
     }
 
-    /* Responsive */
-    @media (max-width: 768px) {
+    /* Responsive Breakpoints */
+    
+    /* Large screens - scale everything up */
+    @media (min-width: 1200px) {
       body {
-        padding: clamp(0.3rem, 1vw, 0.5rem);
+        padding: 3rem;
+      }
+      
+      .logo {
+        max-width: 200px;
+        margin-bottom: 2rem;
       }
       
       .hero-container {
-        max-height: 55vh;
+        max-width: 600px;
+        padding: 3rem 2.5rem;
+        margin-bottom: 2.5rem;
+        max-height: 80vh;
       }
       
       .hero-image {
-        max-height: 15vh;
+        max-height: 50vh;
+        border-radius: 15px;
+      }
+      
+      .button-container {
+        max-width: 600px;
+        padding: 2rem;
+        margin-bottom: 2.5rem;
+        gap: 2.5rem;
+      }
+      
+      .toggle-button {
+        padding: 1rem 2rem;
+        font-size: 1.2rem;
+      }
+      
+      #admin-section {
+        max-width: 1000px;
+        padding: 3rem;
+      }
+      
+      .hero-title {
+        font-size: 3.5rem;
+      }
+      
+      .hero-date {
+        font-size: 1.6rem;
+        margin-bottom: 2rem;
+      }
+      
+      .content-section h2 {
+        font-size: 2.5rem;
+        margin-bottom: 2rem;
+      }
+      
+      .content-section h3 {
+        font-size: 1.6rem;
+        margin-bottom: 1.2rem;
+      }
+      
+      .content-section p {
+        font-size: 1.1rem;
+        margin-bottom: 1rem;
+      }
+      
+      #total-headcount {
+        font-size: 1.4rem;
+      }
+      
+      th, td {
+        padding: 1rem;
+        font-size: 1rem;
       }
     }
 
-    @media (max-width: 480px) {
+    /* Tablet landscape */
+    @media (min-width: 768px) and (max-width: 1199px) {
       .hero-container {
-        max-height: 50vh;
+        max-width: 550px;
+        max-height: 70vh;
       }
       
       .hero-image {
-        max-height: 12vh;
+        max-height: 35vh;
+      }
+      
+      .button-container {
+        max-width: 550px;
+      }
+      
+      #admin-section {
+        max-width: 900px;
+      }
+    }
+
+    /* Mobile optimizations - prioritize hero image size */
+    @media (max-width: 767px) {
+      body {
+        padding: clamp(0.3rem, 1.5vw, 0.8rem);
+        min-height: 100vh;
+      }
+      
+      .hero-container {
+        max-height: 70vh;
+        padding: clamp(1rem, 3vw, 1.5rem) clamp(0.8rem, 2.5vw, 1.2rem);
+      }
+      
+      .hero-image {
+        /* Much larger on mobile - prioritize the image */
+        max-height: clamp(30vh, 40vh, 45vh);
+        margin-bottom: clamp(0.5rem, 1.5vw, 0.8rem);
+      }
+      
+      .hero-title {
+        margin-bottom: 0.2rem;
+      }
+      
+      .hero-date {
+        margin-bottom: clamp(0.5rem, 1.5vw, 0.8rem);
+      }
+      
+      #admin-section {
+        max-width: 95vw;
+        max-height: 85vh;
+        padding: clamp(1rem, 3vw, 1.5rem);
+      }
+      
+      /* Make table more readable on mobile */
+      table {
+        font-size: clamp(0.7rem, 2vw, 0.85rem);
+      }
+      
+      th, td {
+        padding: clamp(0.3rem, 1vw, 0.5rem);
+        font-size: clamp(0.65rem, 1.8vw, 0.8rem);
+      }
+    }
+
+    /* Small mobile */
+    @media (max-width: 480px) {
+      .hero-container {
+        max-height: 65vh;
+      }
+      
+      .hero-image {
+        max-height: clamp(25vh, 35vh, 40vh);
       }
       
       #admin-section {
@@ -436,49 +556,54 @@
       }
     }
 
+    /* Very small screens */
     @media (max-width: 320px) {
       .hero-container {
-        max-height: 45vh;
+        max-height: 60vh;
       }
       
       .hero-image {
-        max-height: 10vh;
+        max-height: clamp(20vh, 30vh, 35vh);
       }
     }
 
-    /* Landscape mobile orientation */
+    /* Landscape mobile orientation - optimize for limited height */
     @media (max-height: 500px) and (orientation: landscape) {
+      body {
+        padding: 0.5rem;
+      }
+      
       .hero-container {
-        max-height: 40vh;
+        max-height: 80vh;
       }
       
       .hero-image {
-        max-height: 8vh;
+        max-height: clamp(25vh, 35vh, 40vh);
       }
       
       .logo {
-        max-width: clamp(60px, 12vw, 80px);
+        max-width: clamp(60px, 12vw, 100px);
         margin-bottom: clamp(0.3rem, 1vw, 0.5rem);
       }
       
       #admin-section {
-        max-height: 70vh;
+        max-height: 85vh;
       }
     }
 
-    /* Very small screens */
+    /* Very short screens */
     @media (max-height: 400px) {
       .hero-container {
-        max-height: 35vh;
+        max-height: 75vh;
         padding: clamp(0.5rem, 2vw, 1rem);
       }
       
       .hero-image {
-        max-height: 6vh;
+        max-height: clamp(20vh, 30vh, 35vh);
       }
       
       .logo {
-        max-width: clamp(50px, 10vw, 70px);
+        max-width: clamp(50px, 10vw, 80px);
         margin-bottom: clamp(0.2rem, 0.5vw, 0.3rem);
       }
     }
