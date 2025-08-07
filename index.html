@@ -17,6 +17,7 @@
       display: flex;
       flex-direction: column;
       align-items: center;
+      padding-bottom: 4.5rem; /* space for footer */
     }
     h1, h2 {
       font-family: 'Great Vibes', cursive;
@@ -72,14 +73,12 @@
       background: #d6b6b6;
       cursor: not-allowed;
     }
-    /* Center and style invitation text */
     #invitation-text {
       font-size: 1.25rem;
       margin-bottom: 1.5rem;
       text-align: center;
       font-style: italic;
     }
-    /* Fade-in effect */
     #invitation-section, #guest-list {
       opacity: 0;
       max-width: 800px;
@@ -89,34 +88,56 @@
     #invitation-section.show, #guest-list.show {
       opacity: 1;
     }
-    /* Admin toggle button */
-    #admin-toggle {
-      position: fixed;
-      top: 1rem;
-      right: 1rem;
+    /* Guest count clicker */
+    .guest-count-wrapper {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.6rem;
+      margin-bottom: 1.5rem;
+    }
+    .guest-count-btn {
       background: #c48b8b;
-      color: #fff;
       border: none;
-      padding: 0.6rem 1.2rem;
-      border-radius: 10px;
+      color: white;
       font-family: 'Great Vibes', cursive;
-      font-size: 1.1rem;
+      font-size: 1.6rem;
+      width: 2.8rem;
+      height: 2.8rem;
+      border-radius: 50%;
       cursor: pointer;
-      box-shadow: 0 3px 6px rgba(196,139,139,0.4);
-      z-index: 1000;
+      user-select: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       transition: background 0.3s ease;
+      padding-bottom: 3px; /* to visually center the minus sign better */
     }
-    #admin-toggle:hover {
-      background: #a96f6f;
+    .guest-count-btn:disabled {
+      background: #d6b6b6;
+      cursor: not-allowed;
     }
-    /* Admin container */
+    .guest-count-display {
+      font-size: 1.5rem;
+      font-family: 'Playfair Display', serif;
+      min-width: 2rem;
+      text-align: center;
+      user-select: none;
+    }
+    #thank-you-message {
+      text-align: center;
+      font-size: 1.3rem;
+      font-family: 'Playfair Display', serif;
+      color: #a05b5b;
+      margin-top: 2rem;
+      display: none;
+    }
     #admin {
       display: none;
       margin-bottom: 3rem;
       width: 100%;
       max-width: 900px;
     }
-    /* Guest list table */
     #guest-list {
       margin-top: 2rem;
       background: #fff;
@@ -144,7 +165,6 @@
     tbody tr:nth-child(even) {
       background: #fff0f0;
     }
-    /* Highlight confirmed rows */
     tbody tr.confirmed {
       background: #e7c6c6;
       font-weight: 600;
@@ -156,49 +176,25 @@
       margin-bottom: 1rem;
       text-align: right;
     }
-    /* Guest count clicker */
-    .guest-count-wrapper {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 1rem;
-      margin-bottom: 1.5rem;
-    }
-    .guest-count-btn {
+    /* Footer admin button */
+    #admin-toggle {
+      position: fixed;
+      bottom: 1rem;
+      right: 1rem;
       background: #c48b8b;
-      border: none;
       color: white;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 15px;
       font-family: 'Great Vibes', cursive;
-      font-size: 2rem;
-      width: 3.5rem;
-      height: 3.5rem;
-      border-radius: 50%;
+      font-size: 1.1rem;
       cursor: pointer;
-      user-select: none;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      box-shadow: 0 3px 6px rgba(196,139,139,0.4);
+      z-index: 1000;
       transition: background 0.3s ease;
     }
-    .guest-count-btn:disabled {
-      background: #d6b6b6;
-      cursor: not-allowed;
-    }
-    .guest-count-display {
-      font-size: 1.8rem;
-      font-family: 'Playfair Display', serif;
-      min-width: 2.5rem;
-      text-align: center;
-      user-select: none;
-    }
-    /* Thank you message */
-    #thank-you-message {
-      text-align: center;
-      font-size: 1.3rem;
-      font-family: 'Playfair Display', serif;
-      color: #a05b5b;
-      margin-top: 2rem;
-      display: none;
+    #admin-toggle:hover {
+      background: #a96f6f;
     }
     /* Responsive */
     @media (max-width: 600px) {
@@ -207,11 +203,20 @@
       }
       #admin-toggle {
         font-size: 1rem;
-        padding: 0.5rem 1rem;
+        padding: 0.4rem 0.8rem;
       }
       th, td {
         font-size: 0.9rem;
         min-width: 70px;
+      }
+      .guest-count-btn {
+        font-size: 1.4rem;
+        width: 2.4rem;
+        height: 2.4rem;
+      }
+      .guest-count-display {
+        font-size: 1.3rem;
+        min-width: 1.8rem;
       }
     }
   </style>
@@ -232,7 +237,7 @@
     <form id="rsvp-form" aria-label="RSVP Form">
       <label for="guestCount">Number of Guests Attending:</label>
       <div class="guest-count-wrapper">
-        <button type="button" class="guest-count-btn" id="guest-count-minus" aria-label="Decrease guest count">-</button>
+        <button type="button" class="guest-count-btn" id="guest-count-minus" aria-label="Decrease guest count">−</button>
         <div id="guest-count-display" class="guest-count-display" aria-live="polite" aria-atomic="true">1</div>
         <button type="button" class="guest-count-btn" id="guest-count-plus" aria-label="Increase guest count">+</button>
       </div>
@@ -247,9 +252,6 @@
       <p>Thank you for RSVPing! We can't wait to celebrate with you.</p>
     </div>
   </div>
-
-  <!-- Admin Toggle Button -->
-  <button id="admin-toggle" aria-expanded="false" aria-controls="admin">Admin</button>
 
   <div id="admin" role="region" aria-hidden="true" aria-label="Admin Portal">
     <h2>Admin Portal</h2>
@@ -275,6 +277,8 @@
     </div>
   </div>
 
+  <button id="admin-toggle" aria-expanded="false" aria-controls="admin">Admin</button>
+
   <script type="module">
     import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm'
 
@@ -297,7 +301,7 @@
     const adminSection = document.getElementById("admin");
     const adminToggleBtn = document.getElementById("admin-toggle");
 
-    // Toggle Admin Section
+    // Toggle Admin Section visibility on button click
     adminToggleBtn.addEventListener("click", () => {
       if (adminSection.style.display === "block") {
         adminSection.style.display = "none";
@@ -314,6 +318,11 @@
       e.preventDefault();
       const name = document.getElementById("fullName").value.trim();
 
+      if (!name) {
+        setInlineMessage("Please enter a name to look up your invitation.", false);
+        return;
+      }
+
       const { data, error } = await supabase
         .from("guests")
         .select("*")
@@ -321,9 +330,11 @@
         .single();
 
       if (error || !data) {
-        alert("Guest not found.");
+        setInlineMessage("Guest not found. Please check the spelling and try again.", false);
         return;
       }
+
+      clearInlineMessage();
 
       currentGuest = data;
       guestCount = 1;
@@ -336,6 +347,7 @@
       invitationSection.setAttribute("aria-hidden", "false");
       thankYouMessage.style.display = "none";
       rsvpForm.style.display = "flex";
+
       // Scroll to invitation section for better UX
       invitationSection.scrollIntoView({ behavior: "smooth" });
 
@@ -365,6 +377,22 @@
       }
     });
 
+    // Inline message element for user feedback
+    const inlineMessage = document.createElement("p");
+    inlineMessage.style.color = "#a05b5b";
+    inlineMessage.style.fontWeight = "600";
+    inlineMessage.style.textAlign = "center";
+    inlineMessage.style.marginTop = "0.5rem";
+    document.getElementById("lookup-form").appendChild(inlineMessage);
+
+    function setInlineMessage(message, isSuccess = true) {
+      inlineMessage.textContent = message;
+      inlineMessage.style.color = isSuccess ? "#4b8033" : "#a05b5b";
+    }
+    function clearInlineMessage() {
+      inlineMessage.textContent = "";
+    }
+
     // RSVP submission
     rsvpForm.addEventListener("submit", async (e) => {
       e.preventDefault();
@@ -372,9 +400,17 @@
       const email = document.getElementById("email").value.trim();
 
       if (guestCount > currentGuest.guest_limit) {
-        alert(`You cannot RSVP for more than ${currentGuest.guest_limit} guests.`);
+        setInlineMessage(`You cannot RSVP for more than ${currentGuest.guest_limit} guests.`, false);
         return;
       }
+
+      if (!email) {
+        setInlineMessage("Please enter a valid email address.", false);
+        return;
+      }
+
+      // Clear any previous messages
+      clearInlineMessage();
 
       const { error } = await supabase
         .from("guests")
@@ -382,7 +418,7 @@
         .eq("id", currentGuest.id);
 
       if (error) {
-        alert("Failed to RSVP");
+        setInlineMessage("Failed to RSVP. Please try again later.", false);
         return;
       }
 
@@ -392,16 +428,16 @@
           guest_name: currentGuest.full_name,
           guest_count: guestCount
         });
-        // Show thank you message and hide form (no alert popup)
+        // Show thank you message and hide form
         rsvpForm.style.display = "none";
         thankYouMessage.style.display = "block";
-        // Optionally scroll down to thank you message
         thankYouMessage.scrollIntoView({ behavior: "smooth" });
       } catch (err) {
-        // Even if email fails, still show thank you message
+        // Show thank you message anyway, but add error note
         rsvpForm.style.display = "none";
         thankYouMessage.style.display = "block";
         thankYouMessage.innerHTML += "<p style='color:#a05b5b; font-size:1rem;'>Failed to send confirmation email.</p>";
+        thankYouMessage.scrollIntoView({ behavior: "smooth" });
         console.error("EmailJS error:", err);
       }
     });
@@ -411,9 +447,11 @@
       e.preventDefault();
       const password = document.getElementById("admin-password").value;
       if (password !== "skhan") {
-        alert("Incorrect password");
+        setInlineMessage("Incorrect admin password.", false);
         return;
       }
+
+      clearInlineMessage();
 
       const { data, error } = await supabase
         .from("guests")
@@ -421,7 +459,7 @@
         .order("created_at", { ascending: false });
 
       if (error) {
-        alert("Failed to load guest list");
+        setInlineMessage("Failed to load guest list. Please try again.", false);
         return;
       }
 
@@ -452,16 +490,14 @@
       guestListDiv.style.display = "block";
       guestListDiv.classList.add("show");
       adminSection.setAttribute("aria-hidden", "false");
+
       // Clear password for security
       document.getElementById("admin-password").value = "";
     });
   </script>
-
-  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
-  <script type="text/javascript">
-    (function(){
-      emailjs.init("RtSgLTRPRpIr-3a8T"); // Your actual public key here
-    })();
+  <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
+  <script>
+    emailjs.init("your_emailjs_userid"); // replace with your EmailJS user ID
   </script>
 </body>
 </html>
