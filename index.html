@@ -326,6 +326,12 @@
       font-weight: 600;
     }
 
+    tr.rejected {
+      background-color: rgba(211, 47, 47, 0.2);
+      font-weight: 600;
+      color: #d32f2f;
+    }
+
     #total-headcount {
       font-weight: 600;
       font-size: 1.1rem;
@@ -533,11 +539,25 @@
         <p id="invitation-text"></p>
 
         <form id="rsvp-form" aria-label="RSVP Form">
-          <label for="guestCount">Number of Guests Attending:</label>
-          <div class="guest-count-wrapper">
-            <button type="button" class="guest-count-btn" id="guest-count-minus" aria-label="Decrease guest count">−</button>
-            <div id="guest-count-display" class="guest-count-display" aria-live="polite" aria-atomic="true">1</div>
-            <button type="button" class="guest-count-btn" id="guest-count-plus" aria-label="Increase guest count">+</button>
+          <label>Will you be attending?</label>
+          <div style="display: flex; gap: 1rem; margin-bottom: 1rem; justify-content: center;">
+            <label style="display: flex; align-items: center; gap: 0.5rem; font-weight: normal;">
+              <input type="radio" name="attendance" value="yes" checked style="margin: 0;">
+              Yes, I will attend
+            </label>
+            <label style="display: flex; align-items: center; gap: 0.5rem; font-weight: normal;">
+              <input type="radio" name="attendance" value="no" style="margin: 0;">
+              No, I cannot attend
+            </label>
+          </div>
+
+          <div id="guest-count-section">
+            <label for="guestCount">Number of Guests Attending:</label>
+            <div class="guest-count-wrapper">
+              <button type="button" class="guest-count-btn" id="guest-count-minus" aria-label="Decrease guest count">−</button>
+              <div id="guest-count-display" class="guest-count-display" aria-live="polite" aria-atomic="true">1</div>
+              <button type="button" class="guest-count-btn" id="guest-count-plus" aria-label="Increase guest count">+</button>
+            </div>
           </div>
 
           <label for="email">Your Email:</label>
@@ -574,7 +594,6 @@
         <thead>
           <tr>
             <th>Name</th>
-            <th>Email</th>
             <th>RSVP Status</th>
             <th>Guests Allowed</th>
             <th>Guests Attending</th>
@@ -693,6 +712,24 @@
     rsvpBtn.addEventListener("click", showRsvpContent);
     adminBtn.addEventListener("click", toggleAdminSection);
 
+    // Handle attendance radio button changes
+    document.addEventListener('change', function(e) {
+      if (e.target.name === 'attendance') {
+        const guestCountSection = document.getElementById('guest-count-section');
+        if (e.target.value === 'no') {
+          guestCountSection.style.display = 'none';
+          guestCount = 0;
+          guestCountDisplay.textContent = '0';
+        } else {
+          guestCountSection.style.display = 'block';
+          guestCount = 1;
+          guestCountDisplay.textContent = '1';
+          btnMinus.disabled = true;
+          btnPlus.disabled = guestCount >= (currentGuest?.guest_limit || 1);
+        }
+      }
+    });
+
     // Helper functions for messages
     function setMessage(element, message, isSuccess = true) {
       element.textContent = message;
@@ -751,6 +788,10 @@
         // Reset messages and inputs
         clearMessage(rsvpMessage);
         document.getElementById("email").value = "";
+        
+        // Reset attendance radio buttons
+        document.querySelector('input[name="attendance"][value="yes"]').checked = true;
+        document.getElementById('guest-count-section').style.display = 'block';
 
         // Scroll to invitation
         invitationSection.scrollIntoView({ behavior: "smooth" });
@@ -793,8 +834,15 @@
       clearMessage(rsvpMessage);
 
       const email = document.getElementById("email").value.trim();
+      const attendanceRadio = document.querySelector('input[name="attendance"]:checked');
+      const isAttending = attendanceRadio.value === 'yes';
+      
+      // Set guest count based on attendance choice
+      if (!isAttending) {
+        guestCount = 0;
+      }
 
-      if (guestCount > (currentGuest.guest_limit || 1)) {
+      if (isAttending && guestCount > (currentGuest.guest_limit || 1)) {
         setMessage(rsvpMessage, `You cannot RSVP for more than ${currentGuest.guest_limit} guests.`, false);
         return;
       }
@@ -806,9 +854,10 @@
 
       try {
         // Update RSVP in DB
+        const rsvpStatus = isAttending ? "Confirmed" : "Declined";
         const { error } = await supabase
           .from("guests")
-          .update({ rsvp_status: "Confirmed", email, guest_count: guestCount })
+          .update({ rsvp_status: rsvpStatus, email, guest_count: guestCount })
           .eq("id", currentGuest.id);
 
         if (error) {
@@ -819,6 +868,13 @@
         // Show thank you, hide form
         rsvpForm.style.display = "none";
         thankYouMessage.style.display = "block";
+        
+        // Update thank you message based on attendance
+        const thankYouText = isAttending 
+          ? "Thank you for RSVPing! We can't wait to celebrate with you."
+          : "Thank you for letting us know. We'll miss you on our special day!";
+        thankYouMessage.querySelector('p').textContent = thankYouText;
+        
         thankYouMessage.scrollIntoView({ behavior: "smooth" });
 
         // Try to send confirmation email if EmailJS is available
@@ -827,7 +883,8 @@
             await emailjs.send("service_idd3fkn", "template_kgtloh8", {
               to_email: email,
               guest_name: currentGuest.full_name,
-              guest_count: guestCount
+              guest_count: guestCount,
+              attendance_status: isAttending ? "attending" : "not attending"
             });
           } catch (err) {
             console.error("EmailJS error:", err);
@@ -877,10 +934,10 @@
 
           const tr = document.createElement("tr");
           tr.classList.toggle("confirmed", guest.rsvp_status === "Confirmed");
+          tr.classList.toggle("rejected", guest.rsvp_status === "Declined");
 
           tr.innerHTML = `
             <td>${guest.full_name}</td>
-            <td>${guest.email || ""}</td>
             <td>${guest.rsvp_status || "Not responded"}</td>
             <td>${guest.guest_limit || 1}</td>
             <td>${guestsAttending}</td>
