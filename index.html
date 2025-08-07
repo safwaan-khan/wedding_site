@@ -126,6 +126,12 @@
       display: none;
       text-align: left;
       opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .content-section.active {
+      display: block;
+      opacity: 1;
     }
 
     .content-section h2 {
@@ -622,8 +628,8 @@
     // Content switching functions
     function showHeroContent() {
       heroContent.style.display = "block";
-      infoContent.style.display = "none";
-      rsvpContent.style.display = "none";
+      infoContent.classList.remove("active");
+      rsvpContent.classList.remove("active");
       
       // Reset button states
       infoBtn.setAttribute("aria-expanded", "false");
@@ -632,8 +638,8 @@
 
     function showInfoContent() {
       heroContent.style.display = "none";
-      infoContent.style.display = "block";
-      rsvpContent.style.display = "none";
+      infoContent.classList.add("active");
+      rsvpContent.classList.remove("active");
       adminSection.style.display = "none";
       
       // Update button states
@@ -644,8 +650,8 @@
 
     function showRsvpContent() {
       heroContent.style.display = "none";
-      infoContent.style.display = "none";
-      rsvpContent.style.display = "block";
+      infoContent.classList.remove("active");
+      rsvpContent.classList.add("active");
       adminSection.style.display = "none";
       
       // Update button states
