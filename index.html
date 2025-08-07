@@ -220,48 +220,79 @@
       outline: none;
     }
 
-    .guest-count-wrapper {
+    /* Party Members Styling */
+    .party-members-container {
       display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0.75rem;
-      margin-top: 0.25rem;
+      flex-direction: column;
+      gap: clamp(0.8rem, 2vw, 1.2rem);
+      margin-top: clamp(0.5rem, 1.5vw, 0.8rem);
+      padding: clamp(0.8rem, 2vw, 1.2rem);
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: clamp(8px, 2vw, 12px);
+      border: 1px solid rgba(43, 58, 103, 0.2);
     }
 
-    .guest-count-btn {
-      background: rgba(173, 216, 230, 0.5);
-      border: 1.5px solid #2b3a67;
-      color: #2b3a67;
-      font-family: 'Josefin Sans', sans-serif;
-      font-size: clamp(1.3rem, 3.5vw, 1.6rem);
-      width: clamp(2.2rem, 5.5vw, 2.5rem);
-      height: clamp(2.2rem, 5.5vw, 2.5rem);
-      border-radius: 50%;
-      cursor: pointer;
+    .party-member {
       display: flex;
+      justify-content: space-between;
       align-items: center;
-      justify-content: center;
+      padding: clamp(0.6rem, 1.8vw, 0.8rem);
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: clamp(6px, 1.5vw, 8px);
+      border: 1px solid rgba(43, 58, 103, 0.15);
+    }
+
+    .party-member-name {
+      font-weight: 600;
+      font-size: clamp(0.9rem, 2.2vw, 1rem);
+      color: #2b3a67;
+      flex: 1;
+    }
+
+    .party-member-buttons {
+      display: flex;
+      gap: clamp(0.4rem, 1vw, 0.6rem);
+    }
+
+    .attendance-btn {
+      background: rgba(255, 255, 255, 0.3);
+      border: 1.5px solid #2b3a67;
+      padding: clamp(0.3rem, 1vw, 0.4rem) clamp(0.6rem, 1.5vw, 0.8rem);
+      border-radius: clamp(4px, 1vw, 6px);
+      font-family: 'Josefin Sans', sans-serif;
+      font-size: clamp(0.75rem, 1.8vw, 0.85rem);
+      color: #2b3a67;
+      cursor: pointer;
       transition: all 0.3s ease;
       user-select: none;
-    }
-
-    .guest-count-btn:disabled {
-      opacity: 0.5;
-      cursor: not-allowed;
-    }
-
-    .guest-count-btn:hover:not(:disabled) {
-      background: rgba(43, 58, 103, 0.6);
-      color: white;
-    }
-
-    .guest-count-display {
-      min-width: clamp(2.5rem, 6vw, 3rem);
+      min-width: clamp(3.5rem, 8vw, 4rem);
       text-align: center;
+    }
+
+    .attendance-btn:hover {
+      background: rgba(43, 58, 103, 0.1);
+    }
+
+    .attendance-btn.accept-selected {
+      background: rgba(45, 125, 50, 0.2);
+      border-color: #2d7d32;
+      color: #2d7d32;
       font-weight: 600;
-      font-size: clamp(1.3rem, 3.5vw, 1.6rem);
-      color: #2b3a67;
-      transition: font-size 0.3s ease;
+    }
+
+    .attendance-btn.decline-selected {
+      background: rgba(211, 47, 47, 0.2);
+      border-color: #d32f2f;
+      color: #d32f2f;
+      font-weight: 600;
+    }
+
+    .attendance-btn.accept-selected:hover {
+      background: rgba(45, 125, 50, 0.3);
+    }
+
+    .attendance-btn.decline-selected:hover {
+      background: rgba(211, 47, 47, 0.3);
     }
 
     button[type="submit"] {
@@ -663,12 +694,10 @@
             </label>
           </div>
 
-          <div id="guest-count-section">
-            <label for="guestCount">Number of Guests Attending:</label>
-            <div class="guest-count-wrapper">
-              <button type="button" class="guest-count-btn" id="guest-count-minus" aria-label="Decrease guest count">−</button>
-              <div id="guest-count-display" class="guest-count-display" aria-live="polite" aria-atomic="true">1</div>
-              <button type="button" class="guest-count-btn" id="guest-count-plus" aria-label="Increase guest count">+</button>
+          <div id="guest-list-section">
+            <label>Party Members - Please select attendance for each guest:</label>
+            <div id="party-members-list" class="party-members-container">
+              <!-- Individual guest buttons will be populated here -->
             </div>
           </div>
 
@@ -735,7 +764,8 @@
 
     // Variables
     let currentGuest = null;
-    let guestCount = 1;
+    let partyMembers = [];
+    let memberAttendance = {};
 
     // DOM Elements
     const infoBtn = document.getElementById("info-btn");
@@ -750,9 +780,7 @@
     const invitationSection = document.getElementById("invitation-section");
     const thankYouMessage = document.getElementById("thank-you-message");
     const rsvpForm = document.getElementById("rsvp-form");
-    const guestCountDisplay = document.getElementById("guest-count-display");
-    const btnMinus = document.getElementById("guest-count-minus");
-    const btnPlus = document.getElementById("guest-count-plus");
+    const partyMembersList = document.getElementById("party-members-list");
     const lookupMessage = document.getElementById("lookup-message");
     const rsvpMessage = document.getElementById("rsvp-message");
     const adminMessage = document.getElementById("admin-message");
@@ -829,29 +857,73 @@
     // Handle attendance radio button changes
     document.addEventListener('change', function(e) {
       if (e.target.name === 'attendance') {
-        const guestCountSection = document.getElementById('guest-count-section');
+        const guestListSection = document.getElementById('guest-list-section');
         const emailSection = document.getElementById('email-section');
         const emailInput = document.getElementById('email');
         
         if (e.target.value === 'no') {
-          guestCountSection.style.display = 'none';
+          guestListSection.style.display = 'none';
           emailSection.style.display = 'none';
           emailInput.required = false;
-          guestCount = 0;
-          guestCountDisplay.textContent = '0';
+          // Set all members to decline
+          partyMembers.forEach(member => {
+            memberAttendance[member.id] = 'decline';
+          });
         } else {
-          guestCountSection.style.display = 'block';
+          guestListSection.style.display = 'block';
           emailSection.style.display = 'block';
           emailInput.required = true;
-          guestCount = 1;
-          guestCountDisplay.textContent = '1';
-          btnMinus.disabled = true;
-          btnPlus.disabled = guestCount >= (currentGuest?.guest_limit || 1);
+          // Reset all member selections
+          memberAttendance = {};
+          renderPartyMembers();
         }
       }
     });
 
-    // Helper functions for messages
+    // Function to render party members
+    function renderPartyMembers() {
+      partyMembersList.innerHTML = '';
+      
+      partyMembers.forEach(member => {
+        const memberDiv = document.createElement('div');
+        memberDiv.className = 'party-member';
+        
+        const attendance = memberAttendance[member.id];
+        
+        memberDiv.innerHTML = `
+          <div class="party-member-name">${member.name}</div>
+          <div class="party-member-buttons">
+            <button type="button" class="attendance-btn accept-btn ${attendance === 'accept' ? 'accept-selected' : ''}" 
+                    data-member-id="${member.id}" data-action="accept">Accept</button>
+            <button type="button" class="attendance-btn decline-btn ${attendance === 'decline' ? 'decline-selected' : ''}" 
+                    data-member-id="${member.id}" data-action="decline">Decline</button>
+          </div>
+        `;
+        
+        partyMembersList.appendChild(memberDiv);
+      });
+      
+      // Add event listeners to attendance buttons
+      document.querySelectorAll('.attendance-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+          const memberId = parseInt(this.dataset.memberId);
+          const action = this.dataset.action;
+          
+          memberAttendance[memberId] = action;
+          renderPartyMembers();
+        });
+      });
+    }
+
+    // Function to check if all party members have selected attendance
+    function allMembersResponded() {
+      return partyMembers.every(member => memberAttendance[member.id] !== undefined);
+    }
+
+    // Function to count attending members
+    function countAttendingMembers() {
+      return partyMembers.filter(member => memberAttendance[member.id] === 'accept').length;
+    }
     function setMessage(element, message, isSuccess = true) {
       element.textContent = message;
       element.className = isSuccess ? "inline-message success" : "inline-message";
@@ -894,8 +966,26 @@
         }
 
         currentGuest = guest;
-        guestCount = 1;
-        guestCountDisplay.textContent = guestCount;
+        
+        // Fetch party members for this guest
+        const { data: membersData, error: membersError } = await supabase
+          .from("party_members")
+          .select("*")
+          .eq("guest_id", guest.id)
+          .order("id");
+
+        if (membersError) {
+          setMessage(lookupMessage, "Failed to load party members. Please try again later.", false);
+          return;
+        }
+
+        partyMembers = membersData || [];
+        memberAttendance = {};
+
+        // If no party members exist, create one with the main guest's name
+        if (partyMembers.length === 0) {
+          partyMembers = [{ id: 0, name: guest.full_name, guest_id: guest.id }];
+        }
 
         document.getElementById("invitation-text").innerText = guest.invitation_text || "You're invited!";
 
@@ -912,16 +1002,15 @@
         
         // Reset attendance radio buttons
         document.querySelector('input[name="attendance"][value="yes"]').checked = true;
-        document.getElementById('guest-count-section').style.display = 'block';
+        document.getElementById('guest-list-section').style.display = 'block';
         document.getElementById('email-section').style.display = 'block';
         document.getElementById('email').required = true;
 
+        // Render party members
+        renderPartyMembers();
+
         // Scroll to invitation
         invitationSection.scrollIntoView({ behavior: "smooth" });
-
-        // Setup guest count buttons
-        btnMinus.disabled = true;
-        btnPlus.disabled = guestCount >= (currentGuest.guest_limit || 1);
 
         setMessage(lookupMessage, "Guest found! Please complete your RSVP below.", true);
 
@@ -931,27 +1020,7 @@
       }
     });
 
-    // Guest Count Controls
-    btnMinus.addEventListener("click", () => {
-      if (guestCount > 1) {
-        guestCount--;
-        guestCountDisplay.textContent = guestCount;
-        btnPlus.disabled = false;
-        if (guestCount === 1) btnMinus.disabled = true;
-      }
-    });
-
-    btnPlus.addEventListener("click", () => {
-      const limit = currentGuest?.guest_limit || 1;
-      if (guestCount < limit) {
-        guestCount++;
-        guestCountDisplay.textContent = guestCount;
-        btnMinus.disabled = false;
-        if (guestCount === limit) btnPlus.disabled = true;
-      }
-    });
-
-    // RSVP Form Submission - using original logic with EmailJS
+    // RSVP Form Submission
     rsvpForm.addEventListener("submit", async (e) => {
       e.preventDefault();
       clearMessage(rsvpMessage);
@@ -960,23 +1029,31 @@
       const attendanceRadio = document.querySelector('input[name="attendance"]:checked');
       const isAttending = attendanceRadio.value === 'yes';
       
-      // Set guest count based on attendance choice
-      if (!isAttending) {
+      let guestCount = 0;
+      
+      if (isAttending) {
+        // Check if all members have responded
+        if (!allMembersResponded()) {
+          setMessage(rsvpMessage, "Please select attendance for all party members.", false);
+          return;
+        }
+        
+        guestCount = countAttendingMembers();
+        
+        if (!email) {
+          setMessage(rsvpMessage, "Please enter a valid email address.", false);
+          return;
+        }
+      } else {
+        // If not attending, set all to decline
+        partyMembers.forEach(member => {
+          memberAttendance[member.id] = 'decline';
+        });
         guestCount = 0;
       }
 
-      if (isAttending && guestCount > (currentGuest.guest_limit || 1)) {
-        setMessage(rsvpMessage, `You cannot RSVP for more than ${currentGuest.guest_limit} guests.`, false);
-        return;
-      }
-
-      if (isAttending && !email) {
-        setMessage(rsvpMessage, "Please enter a valid email address.", false);
-        return;
-      }
-
       try {
-        // Update RSVP in DB
+        // Update main guest RSVP in DB
         const rsvpStatus = isAttending ? "Confirmed" : "Declined";
         const updateData = { rsvp_status: rsvpStatus, guest_count: guestCount };
         
@@ -995,6 +1072,21 @@
           return;
         }
 
+        // Update individual party member attendance if they exist in the database
+        if (partyMembers.length > 0 && partyMembers[0].id !== 0) {
+          const memberUpdates = partyMembers.map(member => ({
+            id: member.id,
+            attendance_status: memberAttendance[member.id] || 'decline'
+          }));
+
+          for (const update of memberUpdates) {
+            await supabase
+              .from("party_members")
+              .update({ attendance_status: update.attendance_status })
+              .eq("id", update.id);
+          }
+        }
+
         // Show thank you, hide form
         rsvpForm.style.display = "none";
         thankYouMessage.style.display = "block";
@@ -1008,11 +1100,17 @@
         thankYouMessage.scrollIntoView({ behavior: "smooth" });
 
         // Try to send confirmation email if EmailJS is available
-        if (typeof emailjs !== 'undefined') {
+        if (typeof emailjs !== 'undefined' && isAttending) {
           try {
+            const attendingNames = partyMembers
+              .filter(member => memberAttendance[member.id] === 'accept')
+              .map(member => member.name)
+              .join(', ');
+
             await emailjs.send("service_idd3fkn", "template_kgtloh8", {
               to_email: email,
               guest_name: currentGuest.full_name,
+              attending_members: attendingNames,
               guest_count: guestCount,
               attendance_status: isAttending ? "attending" : "not attending"
             });
