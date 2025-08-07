@@ -1,9 +1,8 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Wedding RSVP</title>
   <style>
     body {
@@ -55,7 +54,7 @@
     <p id="invitation-text"></p>
     <form id="rsvp-form">
       <label for="guestCount">Number of Guests Attending:</label>
-      <input type="number" id="guestCount" min="1" max="10" required />
+      <select id="guestCount" required></select>
       <label for="email">Your Email:</label>
       <input type="email" id="email" required />
       <label for="phone">Your Phone Number:</label>
@@ -73,7 +72,7 @@
     <div id="guest-list" style="display:none;">
       <h3>Guest List</h3>
       <table>
-        <thead><tr><th>Name</th><th>Email</th><th>Phone</th><th>RSVP</th><th>Guest Count</th><th>Invited</th></tr></thead>
+        <thead><tr><th>Name</th><th>Email</th><th>Phone</th><th>RSVP</th><th>Guest Limit</th><th>Invited</th></tr></thead>
         <tbody id="guest-rows"></tbody>
       </table>
     </div>
@@ -92,18 +91,32 @@
     document.getElementById("lookup-form").addEventListener("submit", async (e) => {
       e.preventDefault();
       const name = document.getElementById("fullName").value.trim();
+
       const { data, error } = await supabase
         .from("guests")
         .select("*")
         .eq("full_name", name)
         .single();
+
       if (error || !data) {
         alert("Guest not found.");
         return;
       }
+
       currentGuest = data;
       document.getElementById("invitation-text").innerText = data.invitation_text || "You're invited!";
-      document.getElementById("guestCount").value = data.guest_count || 1;
+
+      // Dynamically populate guestCount select based on guest_limit
+      const guestCountSelect = document.getElementById("guestCount");
+      guestCountSelect.innerHTML = "";
+      const limit = currentGuest.guest_limit || 1;
+      for(let i = 1; i <= limit; i++) {
+        const option = document.createElement("option");
+        option.value = i;
+        option.textContent = i;
+        guestCountSelect.appendChild(option);
+      }
+
       document.getElementById("invitation-section").style.display = "block";
     });
 
@@ -113,12 +126,21 @@
       const phone = document.getElementById("phone").value.trim();
       const guestCount = parseInt(document.getElementById("guestCount").value, 10);
 
+      // Validate guestCount does not exceed guest_limit (extra safety)
+      if (guestCount > currentGuest.guest_limit) {
+        alert(`You cannot RSVP for more than ${currentGuest.guest_limit} guests.`);
+        return;
+      }
+
       const { error } = await supabase
         .from("guests")
         .update({ rsvp_status: "Confirmed", email, phone, guest_count: guestCount })
         .eq("id", currentGuest.id);
 
-      if (error) return alert("Failed to RSVP");
+      if (error) {
+        alert("Failed to RSVP");
+        return;
+      }
 
       // Send confirmation via EmailJS
       emailjs.send("service_xxx", "template_xxx", {
@@ -127,7 +149,7 @@
         guest_count: guestCount
       });
 
-      // Send SMS via Twilio Webhook (setup separately)
+      // Send SMS via Twilio Webhook (set up separately)
       fetch("https://your-twilio-webhook-url.com/sms", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -143,10 +165,16 @@
     document.getElementById("admin-auth").addEventListener("submit", async (e) => {
       e.preventDefault();
       const password = document.getElementById("admin-password").value;
-      if (password !== "skhan") return alert("Incorrect password");
+      if (password !== "skhan") {
+        alert("Incorrect password");
+        return;
+      }
 
       const { data, error } = await supabase.from("guests").select("*").order("created_at", { ascending: false });
-      if (error) return alert("Failed to load guest list");
+      if (error) {
+        alert("Failed to load guest list");
+        return;
+      }
 
       const tbody = document.getElementById("guest-rows");
       tbody.innerHTML = "";
@@ -157,7 +185,7 @@
             <td>${guest.email || ""}</td>
             <td>${guest.phone || ""}</td>
             <td>${guest.rsvp_status}</td>
-            <td>${guest.guest_count}</td>
+            <td>${guest.guest_limit}</td>
             <td>${guest.invitation_text || ""}</td>
           </tr>
         `;
@@ -165,7 +193,6 @@
 
       document.getElementById("guest-list").style.display = "block";
     });
-
   </script>
   <script src="https://cdn.emailjs.com/dist/email.min.js"></script>
   <script>
