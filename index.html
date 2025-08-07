@@ -84,7 +84,7 @@
       width: 100%;
       height: auto;
       border-radius: clamp(8px, 2vw, 12px);
-      margin-bottom: clamp(0.6rem, 1.8vw, 1rem);
+      margin-bottom: 0;
       box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
       transition: border-radius 0.3s ease;
       max-height: clamp(20vh, 28vh, 32vh);
@@ -93,18 +93,10 @@
     }
 
     .button-container {
-      background: rgba(255, 255, 255, 0.3);
-      backdrop-filter: blur(10px);
-      border-radius: clamp(12px, 3vw, 16px);
-      padding: clamp(0.6rem, 2vw, 1.2rem) clamp(0.8rem, 2.5vw, 1.5rem);
-      max-width: min(480px, 92vw);
-      width: 100%;
-      margin-bottom: clamp(0.8rem, 2vw, 1.5rem);
-      box-shadow: 0 0 30px rgba(173, 216, 230, 0.4);
       display: flex;
       justify-content: center;
       gap: clamp(0.6rem, 2vw, 1.5rem);
-      transition: all 0.3s ease;
+      margin-bottom: clamp(0.8rem, 2vw, 1.5rem);
     }
 
     .toggle-button {
@@ -122,6 +114,8 @@
       flex: 1;
       text-align: center;
       min-width: 0;
+      backdrop-filter: blur(6px);
+      box-shadow: 0 0 15px rgba(173, 216, 230, 0.2);
     }
 
     .toggle-button:hover, .toggle-button[aria-expanded="true"] {
@@ -196,6 +190,19 @@
     label {
       font-weight: 600;
       font-size: clamp(0.8rem, 1.8vw, 0.9rem);
+      text-align: center;
+    }
+
+    /* Special styling for the guest lookup label */
+    #lookup-form label {
+      font-size: clamp(0.82rem, 2vw, 0.92rem);
+      text-align: center;
+    }
+
+    /* Special styling for party member selection label */
+    #guest-list-section > label {
+      font-size: clamp(0.82rem, 2vw, 0.92rem);
+      text-align: center;
     }
 
     input[type="text"],
@@ -323,6 +330,7 @@
       margin-top: -0.3rem;
       min-height: 1rem;
       color: #a05b5b;
+      text-align: center;
     }
 
     .inline-message.success {
@@ -330,11 +338,11 @@
     }
 
     #thank-you-message {
-      font-size: clamp(0.95rem, 2.2vw, 1.1rem);
-      color: #2d7d32;
+      font-size: clamp(0.98rem, 2.5vw, 1.13rem);
+      color: #2b3a67;
       margin-top: 0.8rem;
-      font-weight: 600;
-      font-style: italic;
+      font-weight: normal;
+      font-style: normal;
       text-align: center;
     }
 
@@ -455,6 +463,11 @@
       transform: scale(1.1);
     }
 
+    /* Hide email section when no one is attending */
+    #email-section.hidden {
+      display: none !important;
+    }
+
     /* Responsive Breakpoints */
     
     /* Large screens - scale everything up */
@@ -481,10 +494,8 @@
       }
       
       .button-container {
-        max-width: 550px;
-        padding: 1.5rem;
-        margin-bottom: 2rem;
         gap: 2rem;
+        margin-bottom: 2rem;
       }
       
       .toggle-button {
@@ -529,6 +540,18 @@
         padding: 1rem;
         font-size: 1rem;
       }
+
+      #lookup-form label {
+        font-size: 0.94rem;
+      }
+
+      #guest-list-section > label {
+        font-size: 0.94rem;
+      }
+
+      #thank-you-message {
+        font-size: 1.16rem;
+      }
     }
 
     /* Tablet landscape */
@@ -540,10 +563,6 @@
       
       .hero-image {
         max-height: 30vh;
-      }
-      
-      .button-container {
-        max-width: 520px;
       }
       
       #admin-section {
@@ -565,7 +584,7 @@
       
       .hero-image {
         max-height: clamp(18vh, 25vh, 28vh);
-        margin-bottom: clamp(0.4rem, 1.2vw, 0.6rem);
+        margin-bottom: 0;
         object-fit: contain;
         object-position: center;
       }
@@ -718,17 +737,14 @@
 
       <!-- Invitation & RSVP Form (hidden until lookup success) -->
       <div id="invitation-section" aria-live="polite" role="region" aria-hidden="true" style="display:none; margin-top:1rem;">
-        <h3>Your Invitation</h3>
-        <p id="invitation-text"></p>
+        <div id="guest-list-section">
+          <label>Please select attendance for each party member:</label>
+          <div id="party-members-list" class="party-members-container">
+            <!-- Individual guest buttons will be populated here -->
+          </div>
+        </div>
 
         <form id="rsvp-form" aria-label="RSVP Form">
-          <div id="guest-list-section">
-            <label>Please select attendance for each party member:</label>
-            <div id="party-members-list" class="party-members-container">
-              <!-- Individual guest buttons will be populated here -->
-            </div>
-          </div>
-
           <div id="email-section">
             <label for="email">Your Email (for confirmation):</label>
             <input type="email" id="email" name="email" required aria-required="true" autocomplete="email" />
@@ -739,7 +755,7 @@
         </form>
 
         <div id="thank-you-message" style="display:none;">
-          <p>Thank you for RSVPing! We can't wait to celebrate with you.</p>
+          <p>Thank you for RSVPing! We can't wait to celebrate with you all, iA!</p>
         </div>
       </div>
     </div>
@@ -813,6 +829,7 @@
     const rsvpMessage = document.getElementById("rsvp-message");
     const adminMessage = document.getElementById("admin-message");
     const guestListDiv = document.getElementById("guest-list");
+    const emailSection = document.getElementById("email-section");
 
     // Content switching functions
     function showHeroContent() {
@@ -924,6 +941,9 @@
           
           memberAttendance[memberIdKey] = action;
           renderPartyMembers();
+          
+          // Check if email section should be shown/hidden
+          updateEmailSectionVisibility();
         });
       });
     }
@@ -936,6 +956,18 @@
     // Function to count attending members
     function countAttendingMembers() {
       return partyMembers.filter(member => memberAttendance[member.id] === 'accept').length;
+    }
+
+    // Function to update email section visibility
+    function updateEmailSectionVisibility() {
+      const attendingCount = countAttendingMembers();
+      if (attendingCount === 0) {
+        emailSection.classList.add('hidden');
+        document.getElementById("email").removeAttribute('required');
+      } else {
+        emailSection.classList.remove('hidden');
+        document.getElementById("email").setAttribute('required', 'true');
+      }
     }
 
     function setMessage(element, message, isSuccess = true) {
@@ -1012,8 +1044,6 @@
           partyMembers.unshift(mainGuestMember);
         }
 
-        document.getElementById("invitation-text").innerText = guest.invitation_text || "";
-
         // Hide the lookup form and show invitation section
         document.getElementById("lookup-form").style.display = "none";
         invitationSection.style.display = "block";
@@ -1027,6 +1057,9 @@
 
         // Render party members
         renderPartyMembers();
+        
+        // Update email section visibility
+        updateEmailSectionVisibility();
 
         // Scroll to invitation
         invitationSection.scrollIntoView({ behavior: "smooth" });
@@ -1055,6 +1088,7 @@
       const guestCount = countAttendingMembers();
       const isAnyoneAttending = guestCount > 0;
       
+      // Only require email if someone is attending
       if (isAnyoneAttending && !email) {
         setMessage(rsvpMessage, "Please enter a valid email address.", false);
         return;
@@ -1104,9 +1138,9 @@
         
         let thankYouText;
         if (attendingNames.length > 0) {
-          thankYouText = `Thank you for RSVPing! We can't wait to celebrate with ${attendingNames.length > 1 ? 'you all' : 'you'}.`;
+          thankYouText = `Thank you for RSVPing! We can't wait to celebrate with ${attendingNames.length > 1 ? 'you all' : 'you'}, iA!`;
         } else {
-          thankYouText = "Thank you for letting us know. We'll miss you on our special day!";
+          thankYouText = "Thank you for letting us know. We'll miss you on our special day, iA!";
         }
         
         thankYouMessage.querySelector('p').textContent = thankYouText;
