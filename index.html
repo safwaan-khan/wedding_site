@@ -31,8 +31,8 @@
     }
 
     .logo {
-      max-width: clamp(100px, 18vw, 150px);
-      margin-bottom: clamp(0.5rem, 2vw, 1.5rem);
+      max-width: clamp(80px, 15vw, 120px);
+      margin-bottom: clamp(0.3rem, 1.5vw, 1rem);
       transition: all 0.3s ease;
     }
 
@@ -40,15 +40,15 @@
       background: rgba(255, 255, 255, 0.2);
       backdrop-filter: blur(6px);
       border-radius: clamp(12px, 3vw, 20px);
-      padding: clamp(1rem, 3vw, 2.5rem) clamp(0.8rem, 2.5vw, 2rem);
+      padding: clamp(0.8rem, 2.5vw, 2rem) clamp(0.8rem, 2vw, 1.8rem);
       text-align: center;
-      max-width: min(500px, 90vw);
+      max-width: min(480px, 92vw);
       width: 100%;
       box-shadow: 0 0 25px rgba(173, 216, 230, 0.3);
-      margin-bottom: clamp(1rem, 2.5vw, 2rem);
+      margin-bottom: clamp(0.8rem, 2vw, 1.5rem);
       color: #2b3a67;
       transition: all 0.3s ease;
-      max-height: 75vh;
+      max-height: 72vh;
       overflow-y: auto;
     }
 
@@ -65,17 +65,17 @@
 
     .hero-title {
       font-family: 'Great Vibes', cursive;
-      font-size: clamp(2rem, 6vw, 3rem);
-      margin-bottom: 0.3rem;
+      font-size: clamp(1.8rem, 5.5vw, 2.8rem);
+      margin-bottom: 0.2rem;
       color: #2b3a67;
       transition: font-size 0.3s ease;
     }
 
     .hero-date {
       font-family: 'Josefin Sans', sans-serif;
-      font-size: clamp(1.1rem, 3vw, 1.4rem);
+      font-size: clamp(1rem, 2.8vw, 1.3rem);
       color: #2b3a67;
-      margin-bottom: clamp(0.8rem, 2vw, 1.5rem);
+      margin-bottom: clamp(0.6rem, 1.8vw, 1.2rem);
       transition: font-size 0.3s ease;
     }
 
@@ -84,11 +84,10 @@
       width: 100%;
       height: auto;
       border-radius: clamp(8px, 2vw, 12px);
-      margin-bottom: clamp(0.8rem, 2vw, 1.2rem);
+      margin-bottom: clamp(0.6rem, 1.8vw, 1rem);
       box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
       transition: border-radius 0.3s ease;
-      /* Optimize for mobile: much larger hero image */
-      max-height: clamp(25vh, 35vh, 40vh);
+      max-height: clamp(20vh, 28vh, 32vh);
       object-fit: cover;
     }
 
@@ -96,24 +95,24 @@
       background: rgba(255, 255, 255, 0.3);
       backdrop-filter: blur(10px);
       border-radius: clamp(12px, 3vw, 16px);
-      padding: clamp(0.8rem, 2.5vw, 1.5rem) clamp(1rem, 3vw, 2rem);
-      max-width: min(500px, 90vw);
+      padding: clamp(0.6rem, 2vw, 1.2rem) clamp(0.8rem, 2.5vw, 1.5rem);
+      max-width: min(480px, 92vw);
       width: 100%;
-      margin-bottom: clamp(1rem, 2.5vw, 2rem);
+      margin-bottom: clamp(0.8rem, 2vw, 1.5rem);
       box-shadow: 0 0 30px rgba(173, 216, 230, 0.4);
       display: flex;
       justify-content: center;
-      gap: clamp(0.8rem, 2.5vw, 2rem);
+      gap: clamp(0.6rem, 2vw, 1.5rem);
       transition: all 0.3s ease;
     }
 
     .toggle-button {
       background: rgba(173, 216, 230, 0.3);
       border: 1px solid rgba(43, 58, 103, 0.4);
-      padding: clamp(0.6rem, 2vw, 0.8rem) clamp(1.2rem, 3vw, 1.8rem);
+      padding: clamp(0.5rem, 1.8vw, 0.7rem) clamp(1rem, 2.8vw, 1.5rem);
       border-radius: 999px;
       font-family: 'Josefin Sans', sans-serif;
-      font-size: clamp(0.9rem, 2.2vw, 1.1rem);
+      font-size: clamp(0.85rem, 2vw, 1rem);
       color: #2b3a67;
       cursor: pointer;
       transition: all 0.3s ease;
@@ -144,8 +143,8 @@
 
     .content-section h2 {
       font-family: 'Great Vibes', cursive;
-      font-size: clamp(1.6rem, 4vw, 2.2rem);
-      margin-bottom: clamp(0.8rem, 2vw, 1.5rem);
+      font-size: clamp(1.4rem, 3.5vw, 1.9rem);
+      margin-bottom: clamp(0.6rem, 1.8vw, 1.2rem);
       color: #2b3a67;
       text-align: center;
       transition: font-size 0.3s ease;
@@ -153,17 +152,17 @@
 
     .content-section h3 {
       font-family: 'Playfair Display', serif;
-      font-size: clamp(1.1rem, 2.8vw, 1.4rem);
-      margin-bottom: clamp(0.6rem, 1.5vw, 1rem);
+      font-size: clamp(1rem, 2.5vw, 1.25rem);
+      margin-bottom: clamp(0.5rem, 1.2vw, 0.8rem);
       color: #2b3a67;
       text-align: center;
       transition: font-size 0.3s ease;
     }
 
     .content-section p {
-      font-size: clamp(0.9rem, 2.2vw, 1rem);
-      line-height: 1.4;
-      margin-bottom: clamp(0.4rem, 1vw, 0.8rem);
+      font-size: clamp(0.85rem, 2vw, 0.95rem);
+      line-height: 1.3;
+      margin-bottom: clamp(0.3rem, 0.8vw, 0.6rem);
     }
 
     /* Admin section special styling for wider content */
@@ -189,22 +188,22 @@
     form {
       display: flex;
       flex-direction: column;
-      gap: clamp(0.6rem, 1.5vw, 1rem);
+      gap: clamp(0.5rem, 1.2vw, 0.8rem);
       color: #2b3a67;
     }
 
     label {
       font-weight: 600;
-      font-size: clamp(0.85rem, 2vw, 1rem);
+      font-size: clamp(0.8rem, 1.8vw, 0.9rem);
     }
 
     input[type="text"],
     input[type="email"],
     input[type="password"] {
-      padding: clamp(0.5rem, 1.8vw, 0.7rem) clamp(0.7rem, 2vw, 1rem);
+      padding: clamp(0.4rem, 1.5vw, 0.6rem) clamp(0.6rem, 1.8vw, 0.8rem);
       border: 2px solid #2b3a67;
       border-radius: clamp(4px, 1vw, 8px);
-      font-size: clamp(0.85rem, 2vw, 1rem);
+      font-size: clamp(0.8rem, 1.8vw, 0.9rem);
       color: #2b3a67;
       background: rgba(255,255,255,0.9);
       transition: all 0.3s ease;
@@ -220,15 +219,15 @@
       outline: none;
     }
 
-    /* Party Members Styling */
+    /* Party Members Styling - More compact */
     .party-members-container {
       display: flex;
       flex-direction: column;
-      gap: clamp(0.8rem, 2vw, 1.2rem);
-      margin-top: clamp(0.5rem, 1.5vw, 0.8rem);
-      padding: clamp(0.8rem, 2vw, 1.2rem);
+      gap: clamp(0.4rem, 1.2vw, 0.7rem);
+      margin-top: clamp(0.3rem, 1vw, 0.5rem);
+      padding: clamp(0.5rem, 1.5vw, 0.8rem);
       background: rgba(255, 255, 255, 0.1);
-      border-radius: clamp(8px, 2vw, 12px);
+      border-radius: clamp(6px, 1.5vw, 10px);
       border: 1px solid rgba(43, 58, 103, 0.2);
     }
 
@@ -236,36 +235,36 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: clamp(0.6rem, 1.8vw, 0.8rem);
+      padding: clamp(0.4rem, 1.2vw, 0.6rem);
       background: rgba(255, 255, 255, 0.2);
-      border-radius: clamp(6px, 1.5vw, 8px);
+      border-radius: clamp(4px, 1vw, 6px);
       border: 1px solid rgba(43, 58, 103, 0.15);
     }
 
     .party-member-name {
       font-weight: 600;
-      font-size: clamp(0.9rem, 2.2vw, 1rem);
+      font-size: clamp(0.8rem, 1.9vw, 0.9rem);
       color: #2b3a67;
       flex: 1;
     }
 
     .party-member-buttons {
       display: flex;
-      gap: clamp(0.4rem, 1vw, 0.6rem);
+      gap: clamp(0.3rem, 0.8vw, 0.5rem);
     }
 
     .attendance-btn {
       background: rgba(255, 255, 255, 0.3);
       border: 1.5px solid #2b3a67;
-      padding: clamp(0.3rem, 1vw, 0.4rem) clamp(0.6rem, 1.5vw, 0.8rem);
-      border-radius: clamp(4px, 1vw, 6px);
+      padding: clamp(0.25rem, 0.8vw, 0.35rem) clamp(0.5rem, 1.2vw, 0.7rem);
+      border-radius: clamp(3px, 0.8vw, 5px);
       font-family: 'Josefin Sans', sans-serif;
-      font-size: clamp(0.75rem, 1.8vw, 0.85rem);
+      font-size: clamp(0.7rem, 1.6vw, 0.8rem);
       color: #2b3a67;
       cursor: pointer;
       transition: all 0.3s ease;
       user-select: none;
-      min-width: clamp(3.5rem, 8vw, 4rem);
+      min-width: clamp(3rem, 7vw, 3.5rem);
       text-align: center;
     }
 
@@ -300,9 +299,9 @@
       border: none;
       color: white;
       font-weight: 600;
-      font-size: clamp(0.95rem, 2.2vw, 1.1rem);
-      padding: clamp(0.6rem, 1.8vw, 0.8rem);
-      border-radius: clamp(6px, 1.5vw, 10px);
+      font-size: clamp(0.85rem, 2vw, 1rem);
+      padding: clamp(0.5rem, 1.5vw, 0.7rem);
+      border-radius: clamp(5px, 1.2vw, 8px);
       cursor: pointer;
       transition: all 0.3s ease;
       width: 100%;
@@ -319,9 +318,9 @@
     }
 
     .inline-message {
-      font-size: 0.9rem;
-      margin-top: -0.5rem;
-      min-height: 1.3rem;
+      font-size: clamp(0.75rem, 1.8vw, 0.85rem);
+      margin-top: -0.3rem;
+      min-height: 1rem;
       color: #a05b5b;
     }
 
@@ -330,9 +329,9 @@
     }
 
     #thank-you-message {
-      font-size: 1.2rem;
+      font-size: clamp(0.95rem, 2.2vw, 1.1rem);
       color: #2d7d32;
-      margin-top: 1rem;
+      margin-top: 0.8rem;
       font-weight: 600;
       font-style: italic;
       text-align: center;
@@ -389,7 +388,7 @@
     /* Admin button moved to bottom */
     .admin-button-wrapper {
       position: absolute;
-      bottom: clamp(1rem, 2.5vw, 2rem);
+      bottom: clamp(0.8rem, 2vw, 1.5rem);
       left: 50%;
       transform: translateX(-50%);
       text-align: center;
@@ -398,9 +397,9 @@
     .admin-button {
       background: transparent;
       border: 1px solid #2b3a67;
-      padding: clamp(0.4rem, 1.8vw, 0.6rem) clamp(1rem, 3vw, 1.5rem);
+      padding: clamp(0.3rem, 1.5vw, 0.5rem) clamp(0.8rem, 2.5vw, 1.2rem);
       border-radius: 999px;
-      font-size: clamp(0.75rem, 2vw, 0.9rem);
+      font-size: clamp(0.7rem, 1.8vw, 0.85rem);
       color: #2b3a67;
       cursor: pointer;
       transition: all 0.3s ease;
@@ -416,20 +415,43 @@
     .back-button {
       background: rgba(173, 216, 230, 0.5);
       border: 1px solid #2b3a67;
-      padding: clamp(0.4rem, 1.8vw, 0.6rem) clamp(1rem, 3vw, 1.5rem);
+      padding: clamp(0.3rem, 1.5vw, 0.5rem) clamp(0.8rem, 2.5vw, 1.2rem);
       border-radius: 999px;
       font-family: 'Josefin Sans', sans-serif;
-      font-size: clamp(0.75rem, 2vw, 0.9rem);
+      font-size: clamp(0.7rem, 1.8vw, 0.85rem);
       color: #2b3a67;
       cursor: pointer;
       transition: all 0.3s ease;
-      margin-bottom: clamp(0.6rem, 1.5vw, 1rem);
+      margin-bottom: clamp(0.4rem, 1.2vw, 0.8rem);
       align-self: flex-start;
     }
 
     .back-button:hover {
       background: rgba(43, 58, 103, 0.6);
       color: white;
+    }
+
+    /* Radio button styling for cleaner look */
+    .radio-container {
+      display: flex;
+      gap: clamp(0.8rem, 2vw, 1.5rem);
+      margin-bottom: clamp(0.5rem, 1.2vw, 0.8rem);
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .radio-container label {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-weight: normal;
+      font-size: clamp(0.8rem, 1.8vw, 0.9rem);
+      cursor: pointer;
+    }
+
+    .radio-container input[type="radio"] {
+      margin: 0;
+      transform: scale(1.1);
     }
 
     /* Responsive Breakpoints */
@@ -441,32 +463,32 @@
       }
       
       .logo {
-        max-width: 200px;
-        margin-bottom: 2rem;
+        max-width: 160px;
+        margin-bottom: 1.5rem;
       }
       
       .hero-container {
-        max-width: 600px;
-        padding: 3rem 2.5rem;
-        margin-bottom: 2.5rem;
-        max-height: 80vh;
+        max-width: 550px;
+        padding: 2.5rem 2rem;
+        margin-bottom: 2rem;
+        max-height: 75vh;
       }
       
       .hero-image {
-        max-height: 50vh;
+        max-height: 35vh;
         border-radius: 15px;
       }
       
       .button-container {
-        max-width: 600px;
-        padding: 2rem;
-        margin-bottom: 2.5rem;
-        gap: 2.5rem;
+        max-width: 550px;
+        padding: 1.5rem;
+        margin-bottom: 2rem;
+        gap: 2rem;
       }
       
       .toggle-button {
-        padding: 1rem 2rem;
-        font-size: 1.2rem;
+        padding: 0.8rem 1.8rem;
+        font-size: 1.1rem;
       }
       
       #admin-section {
@@ -475,27 +497,27 @@
       }
       
       .hero-title {
-        font-size: 3.5rem;
+        font-size: 3.2rem;
       }
       
       .hero-date {
-        font-size: 1.6rem;
-        margin-bottom: 2rem;
+        font-size: 1.5rem;
+        margin-bottom: 1.8rem;
       }
       
       .content-section h2 {
-        font-size: 2.5rem;
-        margin-bottom: 2rem;
+        font-size: 2.2rem;
+        margin-bottom: 1.5rem;
       }
       
       .content-section h3 {
-        font-size: 1.6rem;
-        margin-bottom: 1.2rem;
+        font-size: 1.4rem;
+        margin-bottom: 1rem;
       }
       
       .content-section p {
-        font-size: 1.1rem;
-        margin-bottom: 1rem;
+        font-size: 1rem;
+        margin-bottom: 0.8rem;
       }
       
       #total-headcount {
@@ -511,16 +533,16 @@
     /* Tablet landscape */
     @media (min-width: 768px) and (max-width: 1199px) {
       .hero-container {
-        max-width: 550px;
-        max-height: 70vh;
+        max-width: 520px;
+        max-height: 68vh;
       }
       
       .hero-image {
-        max-height: 35vh;
+        max-height: 30vh;
       }
       
       .button-container {
-        max-width: 550px;
+        max-width: 520px;
       }
       
       #admin-section {
@@ -528,30 +550,29 @@
       }
     }
 
-    /* Mobile optimizations - prioritize hero image size */
+    /* Mobile optimizations - ensure everything fits on screen */
     @media (max-width: 767px) {
       body {
-        padding: clamp(0.3rem, 1.5vw, 0.8rem);
+        padding: clamp(0.3rem, 1.2vw, 0.6rem);
         min-height: 100vh;
       }
       
       .hero-container {
-        max-height: 70vh;
-        padding: clamp(1rem, 3vw, 1.5rem) clamp(0.8rem, 2.5vw, 1.2rem);
+        max-height: 68vh;
+        padding: clamp(0.6rem, 2.5vw, 1.2rem) clamp(0.6rem, 2vw, 1rem);
       }
       
       .hero-image {
-        /* Much larger on mobile - prioritize the image */
-        max-height: clamp(30vh, 40vh, 45vh);
-        margin-bottom: clamp(0.5rem, 1.5vw, 0.8rem);
+        max-height: clamp(18vh, 25vh, 28vh);
+        margin-bottom: clamp(0.4rem, 1.2vw, 0.6rem);
       }
       
       .hero-title {
-        margin-bottom: 0.2rem;
+        margin-bottom: 0.15rem;
       }
       
       .hero-date {
-        margin-bottom: clamp(0.5rem, 1.5vw, 0.8rem);
+        margin-bottom: clamp(0.4rem, 1.2vw, 0.6rem);
       }
       
       #admin-section {
@@ -562,12 +583,21 @@
       
       /* Make table more readable on mobile */
       table {
-        font-size: clamp(0.7rem, 2vw, 0.85rem);
+        font-size: clamp(0.65rem, 1.8vw, 0.8rem);
       }
       
       th, td {
+        padding: clamp(0.25rem, 0.8vw, 0.4rem);
+        font-size: clamp(0.6rem, 1.6vw, 0.75rem);
+      }
+      
+      .party-members-container {
+        gap: clamp(0.3rem, 1vw, 0.5rem);
+        padding: clamp(0.4rem, 1.2vw, 0.6rem);
+      }
+      
+      .party-member {
         padding: clamp(0.3rem, 1vw, 0.5rem);
-        font-size: clamp(0.65rem, 1.8vw, 0.8rem);
       }
     }
 
@@ -578,7 +608,7 @@
       }
       
       .hero-image {
-        max-height: clamp(25vh, 35vh, 40vh);
+        max-height: clamp(16vh, 22vh, 25vh);
       }
       
       #admin-section {
@@ -590,31 +620,31 @@
     /* Very small screens */
     @media (max-width: 320px) {
       .hero-container {
-        max-height: 60vh;
+        max-height: 62vh;
       }
       
       .hero-image {
-        max-height: clamp(20vh, 30vh, 35vh);
+        max-height: clamp(14vh, 20vh, 22vh);
       }
     }
 
     /* Landscape mobile orientation - optimize for limited height */
     @media (max-height: 500px) and (orientation: landscape) {
       body {
-        padding: 0.5rem;
+        padding: 0.4rem;
       }
       
       .hero-container {
-        max-height: 80vh;
+        max-height: 75vh;
       }
       
       .hero-image {
-        max-height: clamp(25vh, 35vh, 40vh);
+        max-height: clamp(20vh, 30vh, 35vh);
       }
       
       .logo {
-        max-width: clamp(60px, 12vw, 100px);
-        margin-bottom: clamp(0.3rem, 1vw, 0.5rem);
+        max-width: clamp(50px, 10vw, 80px);
+        margin-bottom: clamp(0.2rem, 0.8vw, 0.4rem);
       }
       
       #admin-section {
@@ -625,17 +655,17 @@
     /* Very short screens */
     @media (max-height: 400px) {
       .hero-container {
-        max-height: 75vh;
-        padding: clamp(0.5rem, 2vw, 1rem);
+        max-height: 70vh;
+        padding: clamp(0.4rem, 1.5vw, 0.8rem);
       }
       
       .hero-image {
-        max-height: clamp(20vh, 30vh, 35vh);
+        max-height: clamp(16vh, 25vh, 30vh);
       }
       
       .logo {
-        max-width: clamp(50px, 10vw, 80px);
-        margin-bottom: clamp(0.2rem, 0.5vw, 0.3rem);
+        max-width: clamp(40px, 8vw, 60px);
+        margin-bottom: clamp(0.15rem, 0.4vw, 0.25rem);
       }
     }
   </style>
@@ -677,36 +707,24 @@
       </form>
 
       <!-- Invitation & RSVP Form (hidden until lookup success) -->
-      <div id="invitation-section" aria-live="polite" role="region" aria-hidden="true" style="display:none; margin-top:1.5rem;">
+      <div id="invitation-section" aria-live="polite" role="region" aria-hidden="true" style="display:none; margin-top:1rem;">
         <h3>Your Invitation</h3>
         <p id="invitation-text"></p>
 
         <form id="rsvp-form" aria-label="RSVP Form">
-          <label>Will you be attending?</label>
-          <div style="display: flex; gap: 1rem; margin-bottom: 1rem; justify-content: center;">
-            <label style="display: flex; align-items: center; gap: 0.5rem; font-weight: normal;">
-              <input type="radio" name="attendance" value="yes" checked style="margin: 0;">
-              Yes, I will attend
-            </label>
-            <label style="display: flex; align-items: center; gap: 0.5rem; font-weight: normal;">
-              <input type="radio" name="attendance" value="no" style="margin: 0;">
-              No, I cannot attend
-            </label>
-          </div>
-
           <div id="guest-list-section">
-            <label>Party Members - Please select attendance for each guest:</label>
+            <label>Please select attendance for each party member:</label>
             <div id="party-members-list" class="party-members-container">
               <!-- Individual guest buttons will be populated here -->
             </div>
           </div>
 
           <div id="email-section">
-            <label for="email">Your Email:</label>
+            <label for="email">Your Email (for confirmation):</label>
             <input type="email" id="email" name="email" required aria-required="true" autocomplete="email" />
           </div>
 
-          <button type="submit" aria-label="Submit RSVP">RSVP</button>
+          <button type="submit" aria-label="Submit RSVP">Submit RSVP</button>
           <p class="inline-message" id="rsvp-message" role="alert" aria-live="polite"></p>
         </form>
 
@@ -854,33 +872,7 @@
     rsvpBtn.addEventListener("click", showRsvpContent);
     adminBtn.addEventListener("click", toggleAdminSection);
 
-    // Handle attendance radio button changes
-    document.addEventListener('change', function(e) {
-      if (e.target.name === 'attendance') {
-        const guestListSection = document.getElementById('guest-list-section');
-        const emailSection = document.getElementById('email-section');
-        const emailInput = document.getElementById('email');
-        
-        if (e.target.value === 'no') {
-          guestListSection.style.display = 'none';
-          emailSection.style.display = 'none';
-          emailInput.required = false;
-          // Set all members to decline
-          partyMembers.forEach(member => {
-            memberAttendance[member.id] = 'decline';
-          });
-        } else {
-          guestListSection.style.display = 'block';
-          emailSection.style.display = 'block';
-          emailInput.required = true;
-          // Reset all member selections
-          memberAttendance = {};
-          renderPartyMembers();
-        }
-      }
-    });
-
-    // Function to render party members
+    // Function to render party members - now ALL members including party leader
     function renderPartyMembers() {
       partyMembersList.innerHTML = '';
       
@@ -924,6 +916,7 @@
     function countAttendingMembers() {
       return partyMembers.filter(member => memberAttendance[member.id] === 'accept').length;
     }
+
     function setMessage(element, message, isSuccess = true) {
       element.textContent = message;
       element.className = isSuccess ? "inline-message success" : "inline-message";
@@ -934,7 +927,7 @@
       element.className = "inline-message";
     }
 
-    // Guest Lookup Form - using the flexible name matching from original code
+    // Guest Lookup Form
     document.getElementById("lookup-form").addEventListener("submit", async (e) => {
       e.preventDefault();
       clearMessage(lookupMessage);
@@ -982,9 +975,20 @@
         partyMembers = membersData || [];
         memberAttendance = {};
 
-        // If no party members exist, create one with the main guest's name
-        if (partyMembers.length === 0) {
-          partyMembers = [{ id: 0, name: guest.full_name, guest_id: guest.id }];
+        // Always include the main guest as a party member if not already in the list
+        const mainGuestInMembers = partyMembers.find(m => 
+          m.name.toLowerCase().trim() === guest.full_name.toLowerCase().trim()
+        );
+        
+        if (!mainGuestInMembers) {
+          // Add the main guest as the first party member
+          const mainGuestMember = { 
+            id: `main_${guest.id}`, // Use a unique ID for the main guest
+            name: guest.full_name, 
+            guest_id: guest.id,
+            is_main_guest: true
+          };
+          partyMembers.unshift(mainGuestMember);
         }
 
         document.getElementById("invitation-text").innerText = guest.invitation_text || "You're invited!";
@@ -999,12 +1003,6 @@
         // Reset messages and inputs
         clearMessage(rsvpMessage);
         document.getElementById("email").value = "";
-        
-        // Reset attendance radio buttons
-        document.querySelector('input[name="attendance"][value="yes"]').checked = true;
-        document.getElementById('guest-list-section').style.display = 'block';
-        document.getElementById('email-section').style.display = 'block';
-        document.getElementById('email').required = true;
 
         // Render party members
         renderPartyMembers();
@@ -1026,39 +1024,28 @@
       clearMessage(rsvpMessage);
 
       const email = document.getElementById("email").value.trim();
-      const attendanceRadio = document.querySelector('input[name="attendance"]:checked');
-      const isAttending = attendanceRadio.value === 'yes';
       
-      let guestCount = 0;
+      // Check if all members have responded
+      if (!allMembersResponded()) {
+        setMessage(rsvpMessage, "Please select attendance for all party members.", false);
+        return;
+      }
       
-      if (isAttending) {
-        // Check if all members have responded
-        if (!allMembersResponded()) {
-          setMessage(rsvpMessage, "Please select attendance for all party members.", false);
-          return;
-        }
-        
-        guestCount = countAttendingMembers();
-        
-        if (!email) {
-          setMessage(rsvpMessage, "Please enter a valid email address.", false);
-          return;
-        }
-      } else {
-        // If not attending, set all to decline
-        partyMembers.forEach(member => {
-          memberAttendance[member.id] = 'decline';
-        });
-        guestCount = 0;
+      const guestCount = countAttendingMembers();
+      const isAnyoneAttending = guestCount > 0;
+      
+      if (isAnyoneAttending && !email) {
+        setMessage(rsvpMessage, "Please enter a valid email address.", false);
+        return;
       }
 
       try {
         // Update main guest RSVP in DB
-        const rsvpStatus = isAttending ? "Confirmed" : "Declined";
+        const rsvpStatus = isAnyoneAttending ? "Confirmed" : "Declined";
         const updateData = { rsvp_status: rsvpStatus, guest_count: guestCount };
         
-        // Only include email if attending
-        if (isAttending && email) {
+        // Only include email if someone is attending
+        if (isAnyoneAttending && email) {
           updateData.email = email;
         }
         
@@ -1072,18 +1059,16 @@
           return;
         }
 
-        // Update individual party member attendance if they exist in the database
-        if (partyMembers.length > 0 && partyMembers[0].id !== 0) {
-          const memberUpdates = partyMembers.map(member => ({
-            id: member.id,
-            attendance_status: memberAttendance[member.id] || 'decline'
-          }));
-
-          for (const update of memberUpdates) {
+        // Update individual party member attendance
+        for (const member of partyMembers) {
+          // Skip the main guest member if it's not in the database
+          if (member.is_main_guest) continue;
+          
+          if (member.id && typeof member.id === 'number') {
             await supabase
               .from("party_members")
-              .update({ attendance_status: update.attendance_status })
-              .eq("id", update.id);
+              .update({ attendance_status: memberAttendance[member.id] || 'decline' })
+              .eq("id", member.id);
           }
         }
 
@@ -1092,27 +1077,29 @@
         thankYouMessage.style.display = "block";
         
         // Update thank you message based on attendance
-        const thankYouText = isAttending 
-          ? "Thank you for RSVPing! We can't wait to celebrate with you."
-          : "Thank you for letting us know. We'll miss you on our special day!";
-        thankYouMessage.querySelector('p').textContent = thankYouText;
+        const attendingNames = partyMembers
+          .filter(member => memberAttendance[member.id] === 'accept')
+          .map(member => member.name);
         
+        let thankYouText;
+        if (attendingNames.length > 0) {
+          thankYouText = `Thank you for RSVPing! We can't wait to celebrate with ${attendingNames.length > 1 ? 'you all' : 'you'}.`;
+        } else {
+          thankYouText = "Thank you for letting us know. We'll miss you on our special day!";
+        }
+        
+        thankYouMessage.querySelector('p').textContent = thankYouText;
         thankYouMessage.scrollIntoView({ behavior: "smooth" });
 
-        // Try to send confirmation email if EmailJS is available
-        if (typeof emailjs !== 'undefined' && isAttending) {
+        // Try to send confirmation email if EmailJS is available and someone is attending
+        if (typeof emailjs !== 'undefined' && isAnyoneAttending) {
           try {
-            const attendingNames = partyMembers
-              .filter(member => memberAttendance[member.id] === 'accept')
-              .map(member => member.name)
-              .join(', ');
-
             await emailjs.send("service_idd3fkn", "template_kgtloh8", {
               to_email: email,
               guest_name: currentGuest.full_name,
-              attending_members: attendingNames,
+              attending_members: attendingNames.join(', '),
               guest_count: guestCount,
-              attendance_status: isAttending ? "attending" : "not attending"
+              attendance_status: isAnyoneAttending ? "attending" : "not attending"
             });
           } catch (err) {
             console.error("EmailJS error:", err);
@@ -1126,7 +1113,7 @@
       }
     });
 
-    // Admin Authentication - using original password
+    // Admin Authentication
     document.getElementById("admin-auth").addEventListener("submit", async (e) => {
       e.preventDefault();
       clearMessage(adminMessage);
