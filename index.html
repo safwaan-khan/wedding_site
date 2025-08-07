@@ -18,8 +18,7 @@
     body {
       font-family: 'Josefin Sans', sans-serif;
       color: #2b3a67;
-      background: url('Background.jpeg') no-repeat center center fixed;
-      background-size: cover;
+      background: linear-gradient(135deg, #e8f4f8 0%, #d4e9f2 100%);
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -30,6 +29,12 @@
     .logo {
       max-width: 180px;
       margin-bottom: 1.5rem;
+      background: #2b3a67;
+      padding: 1rem;
+      border-radius: 10px;
+      color: white;
+      text-align: center;
+      font-family: 'Great Vibes', cursive;
     }
 
     .hero-container {
@@ -61,9 +66,16 @@
 
     .hero-image {
       max-width: 100%;
+      height: 200px;
       border-radius: 16px;
       margin-bottom: 1.5rem;
       box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+      background: linear-gradient(45deg, #2b3a67, #4a6fa5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 1.2rem;
     }
 
     .button-container {
@@ -139,6 +151,7 @@
     input[type="password"]:focus {
       border-color: #1b2550;
       background: white;
+      outline: none;
     }
 
     .guest-count-wrapper {
@@ -199,6 +212,10 @@
       color: #a05b5b;
     }
 
+    .inline-message.success {
+      color: #2d7d32;
+    }
+
     table {
       width: 100%;
       border-collapse: collapse;
@@ -242,12 +259,12 @@
   </style>
 </head>
 <body>
-  <img src="Bismillah.png" alt="Bismillah" class="logo" />
+  <div class="logo">Bismillah</div>
 
   <div class="hero-container">
     <h1 class="hero-title">Manal & Safwaan</h1>
     <p class="hero-date">12.06.2025</p>
-    <img src="hero.png" alt="Wedding Image" class="hero-image" />
+    <div class="hero-image">Wedding Photo Placeholder</div>
   </div>
 
   <div class="button-container">
@@ -256,8 +273,13 @@
   </div>
 
   <section id="info-section">
-    <h2>Info</h2>
-    <p>Welcome to our wedding website! More info will go here.</p>
+    <h2>Wedding Information</h2>
+    <p><strong>Date:</strong> June 12th, 2025</p>
+    <p><strong>Time:</strong> 6:00 PM</p>
+    <p><strong>Venue:</strong> To be announced</p>
+    <p><strong>Dress Code:</strong> Formal attire</p>
+    <br>
+    <p>We're so excited to celebrate this special day with you! More details will be shared closer to the date.</p>
   </section>
 
   <section id="rsvp-section">
@@ -299,7 +321,6 @@
 
   <section id="admin-section">
     <h2>Admin Portal</h2>
-    <h2>Admin Portal</h2>
     <form id="admin-auth" aria-label="Admin Login Form">
       <input type="password" id="admin-password" placeholder="Admin Password" aria-required="true" autocomplete="current-password" />
       <button type="submit">Login</button>
@@ -329,17 +350,43 @@
     <button id="admin-btn" class="admin-button" aria-expanded="false" aria-controls="admin-section">Admin</button>
   </div>
 
-  <!-- Supabase + EmailJS + Scripts -->
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js/dist/supabase.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
   <script>
-    emailjs.init("RtSgLTRPRpIr-3a8T");
-  </script>
-  <script>
-    const supabaseUrl = 'https://hrshdoeovdocwyxcerey.supabase.co';
-    const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imhyc2hkb2VvdmRvY3d5eGNlcmV5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQ1ODQyNTEsImV4cCI6MjA3MDE2MDI1MX0.n5x7-0cjS0K7knGXGSjaR0rPG_OUEVmx5loJFSs3niA';
-    const supabase = supabase.createClient(supabaseUrl, supabaseKey);
+    // Mock database for demo purposes (replace with actual Supabase integration)
+    const mockGuests = [
+      { 
+        id: 1,
+        name: "John Smith", 
+        email: "john@example.com", 
+        maxGuests: 2, 
+        attending: null, 
+        actualGuests: 0,
+        rsvpStatus: "pending"
+      },
+      { 
+        id: 2,
+        name: "Sarah Johnson", 
+        email: "sarah@example.com", 
+        maxGuests: 4, 
+        attending: true, 
+        actualGuests: 3,
+        rsvpStatus: "confirmed"
+      },
+      { 
+        id: 3,
+        name: "Mike Wilson", 
+        email: "mike@example.com", 
+        maxGuests: 1, 
+        attending: null, 
+        actualGuests: 0,
+        rsvpStatus: "pending"
+      }
+    ];
 
+    const ADMIN_PASSWORD = "skhan"; // Change this to your desired password
+    let currentGuest = null;
+    let currentGuestCount = 1;
+
+    // DOM Elements
     const infoBtn = document.getElementById("info-btn");
     const rsvpBtn = document.getElementById("rsvp-btn");
     const adminBtn = document.getElementById("admin-btn");
@@ -348,6 +395,7 @@
     const rsvpSection = document.getElementById("rsvp-section");
     const adminSection = document.getElementById("admin-section");
 
+    // Section Toggle Functions
     function hideAllSections() {
       [infoSection, rsvpSection, adminSection].forEach(section => {
         section.style.display = "none";
@@ -370,12 +418,171 @@
       }
     }
 
+    // Event Listeners for Section Toggles
     infoBtn.addEventListener("click", () => toggleSection(infoSection, infoBtn));
     rsvpBtn.addEventListener("click", () => toggleSection(rsvpSection, rsvpBtn));
     adminBtn.addEventListener("click", () => toggleSection(adminSection, adminBtn));
+
+    // Guest Lookup Form
+    document.getElementById("lookup-form").addEventListener("submit", function(e) {
+      e.preventDefault();
+      const fullName = document.getElementById("fullName").value.trim();
+      const lookupMessage = document.getElementById("lookup-message");
+      
+      if (!fullName) {
+        lookupMessage.textContent = "Please enter your full name.";
+        lookupMessage.className = "inline-message";
+        return;
+      }
+
+      // Search for guest in mock database
+      const guest = mockGuests.find(g => 
+        g.name.toLowerCase().includes(fullName.toLowerCase()) || 
+        fullName.toLowerCase().includes(g.name.toLowerCase())
+      );
+
+      if (guest) {
+        currentGuest = guest;
+        currentGuestCount = guest.attending ? guest.actualGuests : 1;
+        
+        // Show invitation section
+        const invitationSection = document.getElementById("invitation-section");
+        const invitationText = document.getElementById("invitation-text");
+        
+        invitationText.textContent = `Welcome ${guest.name}! You can bring up to ${guest.maxGuests} guest${guest.maxGuests > 1 ? 's' : ''} total.`;
+        
+        if (guest.attending !== null) {
+          if (guest.attending) {
+            invitationText.textContent += ` You have already confirmed attendance for ${guest.actualGuests} guest${guest.actualGuests > 1 ? 's' : ''}.`;
+          } else {
+            invitationText.textContent += ` You have already declined this invitation.`;
+          }
+        }
+
+        // Update guest count display
+        document.getElementById("guest-count-display").textContent = currentGuestCount;
+        document.getElementById("email").value = guest.email;
+
+        invitationSection.style.display = "block";
+        invitationSection.setAttribute("aria-hidden", "false");
+        
+        lookupMessage.textContent = "Guest found! Please complete your RSVP below.";
+        lookupMessage.className = "inline-message success";
+      } else {
+        lookupMessage.textContent = "Guest not found. Please check your spelling or contact the hosts.";
+        lookupMessage.className = "inline-message";
+        
+        // Hide invitation section
+        const invitationSection = document.getElementById("invitation-section");
+        invitationSection.style.display = "none";
+        invitationSection.setAttribute("aria-hidden", "true");
+      }
+    });
+
+    // Guest Count Controls
+    document.getElementById("guest-count-minus").addEventListener("click", function() {
+      if (currentGuestCount > 0) {
+        currentGuestCount--;
+        document.getElementById("guest-count-display").textContent = currentGuestCount;
+      }
+    });
+
+    document.getElementById("guest-count-plus").addEventListener("click", function() {
+      if (currentGuest && currentGuestCount < currentGuest.maxGuests) {
+        currentGuestCount++;
+        document.getElementById("guest-count-display").textContent = currentGuestCount;
+      }
+    });
+
+    // RSVP Form Submission
+    document.getElementById("rsvp-form").addEventListener("submit", function(e) {
+      e.preventDefault();
+      const email = document.getElementById("email").value;
+      const rsvpMessage = document.getElementById("rsvp-message");
+
+      if (!currentGuest) {
+        rsvpMessage.textContent = "Please lookup your invitation first.";
+        rsvpMessage.className = "inline-message";
+        return;
+      }
+
+      // Update guest information
+      currentGuest.email = email;
+      currentGuest.actualGuests = currentGuestCount;
+      currentGuest.attending = currentGuestCount > 0;
+      currentGuest.rsvpStatus = currentGuestCount > 0 ? "confirmed" : "declined";
+
+      // Show thank you message
+      document.getElementById("thank-you-message").style.display = "block";
+      this.style.display = "none";
+
+      rsvpMessage.textContent = "RSVP submitted successfully!";
+      rsvpMessage.className = "inline-message success";
+
+      // In a real implementation, this would send data to your backend
+      console.log("RSVP Data:", {
+        guest: currentGuest.name,
+        email: email,
+        attending: currentGuest.attending,
+        guestCount: currentGuestCount
+      });
+    });
+
+    // Admin Authentication
+    document.getElementById("admin-auth").addEventListener("submit", function(e) {
+      e.preventDefault();
+      const password = document.getElementById("admin-password").value;
+      const adminMessage = document.getElementById("admin-message");
+
+      if (password === ADMIN_PASSWORD) {
+        document.getElementById("guest-list").style.display = "block";
+        this.style.display = "none";
+        loadGuestList();
+        adminMessage.textContent = "Login successful!";
+        adminMessage.className = "inline-message success";
+      } else {
+        adminMessage.textContent = "Invalid password.";
+        adminMessage.className = "inline-message";
+      }
+    });
+
+    // Load Guest List for Admin
+    function loadGuestList() {
+      const guestRows = document.getElementById("guest-rows");
+      const totalHeadcount = document.getElementById("total-headcount");
+      
+      let totalConfirmed = 0;
+      let totalPending = 0;
+      let totalAttending = 0;
+
+      guestRows.innerHTML = "";
+
+      mockGuests.forEach(guest => {
+        const row = document.createElement("tr");
+        if (guest.rsvpStatus === "confirmed") {
+          row.className = "confirmed";
+          totalConfirmed++;
+          totalAttending += guest.actualGuests;
+        } else {
+          totalPending++;
+        }
+
+        row.innerHTML = `
+          <td>${guest.name}</td>
+          <td>${guest.email}</td>
+          <td>${guest.rsvpStatus}</td>
+          <td>${guest.maxGuests}</td>
+          <td>${guest.actualGuests}</td>
+        `;
+        guestRows.appendChild(row);
+      });
+
+      totalHeadcount.innerHTML = `
+        <strong>Total Confirmed:</strong> ${totalConfirmed} guests<br>
+        <strong>Total Attending:</strong> ${totalAttending} people<br>
+        <strong>Pending RSVPs:</strong> ${totalPending} guests
+      `;
+    }
   </script>
 </body>
 </html>
-
-</html>
-
