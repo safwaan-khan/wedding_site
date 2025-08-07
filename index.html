@@ -339,16 +339,32 @@
   </div>
 
   <!-- Supabase + EmailJS + Scripts -->
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js/dist/supabase.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/supabase-js/2.38.4/supabase.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/emailjs-com/3.2.0/email.min.js"></script>
   <script>
-    emailjs.init("RtSgLTRPRpIr-3a8T");
-  </script>
-  <script>
+    // Wait for scripts to load before initializing
+    window.addEventListener('load', function() {
+      if (typeof emailjs !== 'undefined') {
+        emailjs.init("RtSgLTRPRpIr-3a8T");
+      }
+    });
+
     // Supabase configuration
     const supabaseUrl = 'https://hrshdoeovdocwyxcerey.supabase.co';
     const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imhyc2hkb2VvdmRvY3d5eGNlcmV5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQ1ODQyNTEsImV4cCI6MjA3MDE2MDI1MX0.n5x7-0cjS0K7knGXGSjaR0rPG_OUEVmx5loJFSs3niA';
-    const supabaseClient = supabase.createClient(supabaseUrl, supabaseKey);
+    
+    // Initialize Supabase client when available
+    let supabaseClient;
+    if (typeof supabase !== 'undefined') {
+      supabaseClient = supabase.createClient(supabaseUrl, supabaseKey);
+    } else {
+      // Fallback for when supabase global is not available
+      window.addEventListener('load', function() {
+        if (typeof supabase !== 'undefined') {
+          supabaseClient = supabase.createClient(supabaseUrl, supabaseKey);
+        }
+      });
+    }
 
     const ADMIN_PASSWORD = "admin123"; // Change this to your desired password
     let currentGuest = null;
@@ -399,6 +415,12 @@
       
       if (!fullName) {
         lookupMessage.textContent = "Please enter your full name.";
+        lookupMessage.className = "inline-message";
+        return;
+      }
+
+      if (!supabaseClient) {
+        lookupMessage.textContent = "Database connection not available. Please refresh the page.";
         lookupMessage.className = "inline-message";
         return;
       }
@@ -488,6 +510,12 @@
         return;
       }
 
+      if (!supabaseClient) {
+        rsvpMessage.textContent = "Database connection not available. Please refresh the page.";
+        rsvpMessage.className = "inline-message";
+        return;
+      }
+
       try {
         rsvpMessage.textContent = "Submitting RSVP...";
         rsvpMessage.className = "inline-message";
@@ -559,6 +587,11 @@
       const guestRows = document.getElementById("guest-rows");
       const totalHeadcount = document.getElementById("total-headcount");
       
+      if (!supabaseClient) {
+        guestRows.innerHTML = "<tr><td colspan='5'>Database connection not available</td></tr>";
+        return;
+      }
+
       try {
         // Fetch all guests from Supabase
         const { data: guests, error } = await supabaseClient
