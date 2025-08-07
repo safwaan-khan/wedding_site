@@ -1,1 +1,177 @@
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Wedding RSVP</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      margin: 0;
+      padding: 2rem;
+      background: #f9f6f2;
+      color: #333;
+    }
+    h1, h2 {
+      text-align: center;
+    }
+    form {
+      max-width: 500px;
+      margin: 2rem auto;
+      display: flex;
+      flex-direction: column;
+    }
+    input, select, textarea, button {
+      margin-bottom: 1rem;
+      padding: 0.8rem;
+      font-size: 1rem;
+    }
+    #admin {
+      margin-top: 4rem;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 2rem;
+    }
+    th, td {
+      padding: 0.6rem;
+      border: 1px solid #ccc;
+      text-align: left;
+    }
+  </style>
+</head>
+<body>
+  <h1>You're Invited!</h1>
+  <p style="text-align:center">Enter your full name to view your invitation</p>
+  <form id="lookup-form">
+    <input type="text" id="fullName" placeholder="Full Name" required />
+    <button type="submit">Find Invitation</button>
+  </form>
+
+  <div id="invitation-section" style="display:none;">
+    <h2>Your Invitation</h2>
+    <p id="invitation-text"></p>
+    <form id="rsvp-form">
+      <label for="guestCount">Number of Guests Attending:</label>
+      <input type="number" id="guestCount" min="1" max="10" required />
+      <label for="email">Your Email:</label>
+      <input type="email" id="email" required />
+      <label for="phone">Your Phone Number:</label>
+      <input type="text" id="phone" />
+      <button type="submit">RSVP</button>
+    </form>
+  </div>
+
+  <div id="admin">
+    <h2>Admin Portal</h2>
+    <form id="admin-auth">
+      <input type="password" id="admin-password" placeholder="Admin Password" required />
+      <button type="submit">Login</button>
+    </form>
+    <div id="guest-list" style="display:none;">
+      <h3>Guest List</h3>
+      <table>
+        <thead><tr><th>Name</th><th>Email</th><th>Phone</th><th>RSVP</th><th>Guest Count</th><th>Invited</th></tr></thead>
+        <tbody id="guest-rows"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <script type="module">
+    import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm'
+
+    const supabase = createClient(
+      'https://hrshdoeovdocwyxcerey.supabase.co',
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imhyc2hkb2VvdmRvY3d5eGNlcmV5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQ1ODQyNTEsImV4cCI6MjA3MDE2MDI1MX0.n5x7-0cjS0K7knGXGSjaR0rPG_OUEVmx5loJFSs3niA'
+    );
+
+    let currentGuest = null;
+
+    document.getElementById("lookup-form").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const name = document.getElementById("fullName").value.trim();
+      const { data, error } = await supabase
+        .from("guests")
+        .select("*")
+        .eq("full_name", name)
+        .single();
+      if (error || !data) {
+        alert("Guest not found.");
+        return;
+      }
+      currentGuest = data;
+      document.getElementById("invitation-text").innerText = data.invitation_text || "You're invited!";
+      document.getElementById("guestCount").value = data.guest_count || 1;
+      document.getElementById("invitation-section").style.display = "block";
+    });
+
+    document.getElementById("rsvp-form").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const email = document.getElementById("email").value.trim();
+      const phone = document.getElementById("phone").value.trim();
+      const guestCount = parseInt(document.getElementById("guestCount").value, 10);
+
+      const { error } = await supabase
+        .from("guests")
+        .update({ rsvp_status: "Confirmed", email, phone, guest_count: guestCount })
+        .eq("id", currentGuest.id);
+
+      if (error) return alert("Failed to RSVP");
+
+      // Send confirmation via EmailJS
+      emailjs.send("service_xxx", "template_xxx", {
+        to_email: email,
+        guest_name: currentGuest.full_name,
+        guest_count: guestCount
+      });
+
+      // Send SMS via Twilio Webhook (setup separately)
+      fetch("https://your-twilio-webhook-url.com/sms", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          to: phone,
+          body: `Hi ${currentGuest.full_name}, your RSVP for ${guestCount} has been received. Thank you!`
+        })
+      });
+
+      alert("RSVP Confirmed!");
+    });
+
+    document.getElementById("admin-auth").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const password = document.getElementById("admin-password").value;
+      if (password !== "your_admin_password") return alert("Incorrect password");
+
+      const { data, error } = await supabase.from("guests").select("*").order("created_at", { ascending: false });
+      if (error) return alert("Failed to load guest list");
+
+      const tbody = document.getElementById("guest-rows");
+      tbody.innerHTML = "";
+      data.forEach(guest => {
+        tbody.innerHTML += `
+          <tr>
+            <td>${guest.full_name}</td>
+            <td>${guest.email || ""}</td>
+            <td>${guest.phone || ""}</td>
+            <td>${guest.rsvp_status}</td>
+            <td>${guest.guest_count}</td>
+            <td>${guest.invitation_text || ""}</td>
+          </tr>
+        `;
+      });
+
+      document.getElementById("guest-list").style.display = "block";
+    });
+
+  </script>
+  <script src="https://cdn.emailjs.com/dist/email.min.js"></script>
+  <script>
+    (function(){
+      emailjs.init("your_emailjs_user_id");
+    })();
+  </script>
+</body>
+</html>
