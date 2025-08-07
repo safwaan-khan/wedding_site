@@ -17,7 +17,7 @@
 
     body {
       font-family: 'Josefin Sans', sans-serif;
-      color: #2b3a67; /* dark blue font */
+      color: #2b3a67;
       background: url('Background.jpeg') no-repeat center center fixed;
       background-size: cover;
       display: flex;
@@ -66,7 +66,6 @@
       box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
     }
 
-    /* New container for buttons */
     .button-container {
       background: rgba(255, 255, 255, 0.3);
       backdrop-filter: blur(10px);
@@ -99,7 +98,6 @@
       color: white;
     }
 
-    /* Sections for info, RSVP, admin */
     section {
       max-width: 500px;
       width: 100%;
@@ -113,7 +111,6 @@
       color: #2b3a67;
     }
 
-    /* RSVP form styles */
     form {
       display: flex;
       flex-direction: column;
@@ -135,7 +132,6 @@
       color: #2b3a67;
       background: rgba(255,255,255,0.9);
       transition: border-color 0.3s ease;
-      outline-offset: 2px;
     }
 
     input[type="text"]:focus,
@@ -159,7 +155,6 @@
       background: rgba(173, 216, 230, 0.3);
       color: #2b3a67;
       cursor: pointer;
-      user-select: none;
       transition: background 0.3s ease;
     }
 
@@ -204,7 +199,6 @@
       color: #a05b5b;
     }
 
-    /* Guest list admin table */
     table {
       width: 100%;
       border-collapse: collapse;
@@ -221,6 +215,30 @@
       background-color: rgba(43, 58, 103, 0.1);
       font-weight: 600;
     }
+
+    /* Admin button moved to bottom */
+    .admin-button-wrapper {
+      margin-top: auto;
+      padding: 1rem 0;
+      text-align: center;
+    }
+
+    .admin-button {
+      background: transparent;
+      border: 1px solid #2b3a67;
+      padding: 0.5rem 1.2rem;
+      border-radius: 999px;
+      font-size: 0.9rem;
+      color: #2b3a67;
+      cursor: pointer;
+      transition: background 0.3s ease, color 0.3s ease;
+    }
+
+    .admin-button:hover,
+    .admin-button[aria-expanded="true"] {
+      background: #2b3a67;
+      color: white;
+    }
   </style>
 </head>
 <body>
@@ -232,20 +250,19 @@
     <img src="hero.png" alt="Wedding Image" class="hero-image" />
   </div>
 
-  <div class="button-container" role="region" aria-label="Toggle sections">
+  <div class="button-container">
     <button id="info-btn" class="toggle-button" aria-expanded="false" aria-controls="info-section">Info</button>
     <button id="rsvp-btn" class="toggle-button" aria-expanded="false" aria-controls="rsvp-section">RSVP</button>
-    <button id="admin-btn" class="toggle-button" aria-expanded="false" aria-controls="admin-section">Admin</button>
   </div>
 
-  <section id="info-section" aria-hidden="true" tabindex="-1">
+  <section id="info-section">
     <h2>Info</h2>
     <p>Welcome to our wedding website! More info will go here.</p>
   </section>
 
-  <section id="rsvp-section" aria-hidden="true" tabindex="-1">
+  <section id="rsvp-section">
     <h2>RSVP</h2>
-
+    
     <!-- Guest Lookup Form -->
     <form id="lookup-form" aria-label="Guest lookup form">
       <label for="fullName">Enter your full name to find your invitation:</label>
@@ -280,7 +297,8 @@
     </div>
   </section>
 
-  <section id="admin-section" aria-hidden="true" tabindex="-1">
+  <section id="admin-section">
+    <h2>Admin Portal</h2>
     <h2>Admin Portal</h2>
     <form id="admin-auth" aria-label="Admin Login Form">
       <input type="password" id="admin-password" placeholder="Admin Password" aria-required="true" autocomplete="current-password" />
@@ -306,22 +324,22 @@
     </div>
   </section>
 
-  <!-- Load Supabase from CDN -->
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js/dist/supabase.min.js"></script>
+  <!-- Admin Button moved to bottom -->
+  <div class="admin-button-wrapper">
+    <button id="admin-btn" class="admin-button" aria-expanded="false" aria-controls="admin-section">Admin</button>
+  </div>
 
-  <!-- Load EmailJS -->
+  <!-- Supabase + EmailJS + Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js/dist/supabase.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
   <script>
-    emailjs.init("RtSgLTRPRpIr-3a8T"); // Your EmailJS user ID here
+    emailjs.init("RtSgLTRPRpIr-3a8T");
   </script>
-
   <script>
-    // Initialize Supabase client globally
     const supabaseUrl = 'https://hrshdoeovdocwyxcerey.supabase.co';
-    const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imhyc2hkb2VvdmRvY3l...'; // Use your full anon key here
+    const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imhyc2hkb2VvdmRvY3d5eGNlcmV5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQ1ODQyNTEsImV4cCI6MjA3MDE2MDI1MX0.n5x7-0cjS0K7knGXGSjaR0rPG_OUEVmx5loJFSs3niA';
     const supabase = supabase.createClient(supabaseUrl, supabaseKey);
 
-    // Elements
     const infoBtn = document.getElementById("info-btn");
     const rsvpBtn = document.getElementById("rsvp-btn");
     const adminBtn = document.getElementById("admin-btn");
@@ -330,31 +348,6 @@
     const rsvpSection = document.getElementById("rsvp-section");
     const adminSection = document.getElementById("admin-section");
 
-    const lookupForm = document.getElementById("lookup-form");
-    const lookupMessage = document.getElementById("lookup-message");
-
-    const invitationSection = document.getElementById("invitation-section");
-    const invitationText = document.getElementById("invitation-text");
-    const rsvpForm = document.getElementById("rsvp-form");
-    const rsvpMessage = document.getElementById("rsvp-message");
-
-    const guestCountMinus = document.getElementById("guest-count-minus");
-    const guestCountPlus = document.getElementById("guest-count-plus");
-    const guestCountDisplay = document.getElementById("guest-count-display");
-    const thankYouMessage = document.getElementById("thank-you-message");
-    const emailInput = document.getElementById("email");
-
-    const adminAuthForm = document.getElementById("admin-auth");
-    const adminPasswordInput = document.getElementById("admin-password");
-    const adminMessage = document.getElementById("admin-message");
-    const guestListDiv = document.getElementById("guest-list");
-    const guestRows = document.getElementById("guest-rows");
-    const totalHeadcount = document.getElementById("total-headcount");
-
-    let currentGuest = null;
-    let guestCount = 1;
-
-    // Utility: Hide all main sections
     function hideAllSections() {
       [infoSection, rsvpSection, adminSection].forEach(section => {
         section.style.display = "none";
@@ -363,7 +356,6 @@
       [infoBtn, rsvpBtn, adminBtn].forEach(btn => btn.setAttribute("aria-expanded", "false"));
     }
 
-    // Toggle helper
     function toggleSection(section, button) {
       const isVisible = section.style.display === "block";
       if (isVisible) {
@@ -375,189 +367,15 @@
         section.style.display = "block";
         section.setAttribute("aria-hidden", "false");
         button.setAttribute("aria-expanded", "true");
-        section.focus();
       }
     }
 
-    // Button listeners
     infoBtn.addEventListener("click", () => toggleSection(infoSection, infoBtn));
     rsvpBtn.addEventListener("click", () => toggleSection(rsvpSection, rsvpBtn));
     adminBtn.addEventListener("click", () => toggleSection(adminSection, adminBtn));
-
-    // Guest count buttons
-    guestCountMinus.addEventListener("click", () => {
-      if (guestCount > 1) {
-        guestCount--;
-        guestCountDisplay.textContent = guestCount;
-        guestCountPlus.disabled = false;
-        if (guestCount === 1) guestCountMinus.disabled = true;
-      }
-    });
-
-    guestCountPlus.addEventListener("click", () => {
-      const limit = currentGuest?.guest_limit || 1;
-      if (guestCount < limit) {
-        guestCount++;
-        guestCountDisplay.textContent = guestCount;
-        guestCountMinus.disabled = false;
-        if (guestCount === limit) guestCountPlus.disabled = true;
-      }
-    });
-
-    // Lookup form submit handler
-    lookupForm.addEventListener("submit", async (e) => {
-      e.preventDefault();
-      lookupMessage.textContent = "";
-      invitationSection.style.display = "none";
-      invitationSection.setAttribute("aria-hidden", "true");
-      thankYouMessage.style.display = "none";
-      rsvpForm.style.display = "none";
-      rsvpMessage.textContent = "";
-
-      const nameInput = document.getElementById("fullName").value.trim();
-      if (!nameInput) {
-        lookupMessage.textContent = "Please enter your full name.";
-        return;
-      }
-
-      // Query Supabase: case-insensitive exact match on full_name
-      const { data, error } = await supabase
-        .from("guests")
-        .select("*")
-        .ilike("full_name", nameInput);
-
-      if (error) {
-        lookupMessage.textContent = "Failed to lookup guest. Please try again.";
-        return;
-      }
-
-      const nameLower = nameInput.toLowerCase();
-      const guest = data.find(g => g.full_name.trim().toLowerCase() === nameLower);
-
-      if (!guest) {
-        lookupMessage.textContent = "Guest not found. Please check the spelling and try again.";
-        return;
-      }
-
-      currentGuest = guest;
-      guestCount = 1;
-      guestCountDisplay.textContent = guestCount;
-      guestCountMinus.disabled = true;
-      guestCountPlus.disabled = guestCount >= (currentGuest.guest_limit || 1);
-
-      invitationText.textContent = guest.invitation_text || "You're invited!";
-      invitationSection.style.display = "block";
-      invitationSection.setAttribute("aria-hidden", "false");
-      rsvpForm.style.display = "flex";
-
-      emailInput.value = "";
-      rsvpMessage.textContent = "";
-
-      invitationSection.scrollIntoView({ behavior: "smooth" });
-    });
-
-    // RSVP form submit
-    rsvpForm.addEventListener("submit", async (e) => {
-      e.preventDefault();
-      rsvpMessage.textContent = "";
-
-      const email = emailInput.value.trim();
-
-      if (guestCount > (currentGuest.guest_limit || 1)) {
-        rsvpMessage.textContent = `You cannot RSVP for more than ${currentGuest.guest_limit} guests.`;
-        return;
-      }
-
-      if (!email) {
-        rsvpMessage.textContent = "Please enter a valid email address.";
-        return;
-      }
-
-      const { error } = await supabase
-        .from("guests")
-        .update({
-          rsvp_status: "Confirmed",
-          email,
-          guest_count: guestCount
-        })
-        .eq("id", currentGuest.id);
-
-      if (error) {
-        rsvpMessage.textContent = "Failed to submit RSVP. Please try again.";
-        return;
-      }
-
-      // Send email confirmation via EmailJS
-      try {
-        await emailjs.send("service_idd3fkn", "template_kgtloh8", {
-          to_email: email,
-          guest_name: currentGuest.full_name,
-          guest_count: guestCount
-        });
-        rsvpForm.style.display = "none";
-        thankYouMessage.style.display = "block";
-        thankYouMessage.scrollIntoView({ behavior: "smooth" });
-      } catch (err) {
-        rsvpForm.style.display = "none";
-        thankYouMessage.style.display = "block";
-        thankYouMessage.innerHTML += "<p style='color:#a05b5b; font-size:1rem;'>Failed to send confirmation email.</p>";
-        thankYouMessage.scrollIntoView({ behavior: "smooth" });
-        console.error("EmailJS error:", err);
-      }
-    });
-
-    // Admin login
-    adminAuthForm.addEventListener("submit", async (e) => {
-      e.preventDefault();
-      adminMessage.textContent = "";
-      guestListDiv.style.display = "none";
-      guestRows.innerHTML = "";
-      totalHeadcount.textContent = "";
-
-      const password = adminPasswordInput.value;
-
-      if (password !== "skhan") {
-        adminMessage.textContent = "Incorrect admin password.";
-        return;
-      }
-
-      const { data, error } = await supabase
-        .from("guests")
-        .select("*")
-        .order("created_at", { ascending: false });
-
-      if (error) {
-        adminMessage.textContent = "Failed to load guest list. Please try again.";
-        return;
-      }
-
-      let totalGuestsConfirmed = 0;
-
-      data.forEach(guest => {
-        const guestsAttending = guest.guest_count || 0;
-        if (guest.rsvp_status === "Confirmed") {
-          totalGuestsConfirmed += guestsAttending;
-        }
-
-        const tr = document.createElement("tr");
-        tr.classList.toggle("confirmed", guest.rsvp_status === "Confirmed");
-
-        tr.innerHTML = `
-          <td>${guest.full_name}</td>
-          <td>${guest.email || ""}</td>
-          <td>${guest.rsvp_status || "Not responded"}</td>
-          <td>${guest.guest_limit || 1}</td>
-          <td>${guestsAttending}</td>
-        `;
-        guestRows.appendChild(tr);
-      });
-
-      totalHeadcount.textContent = `Total Confirmed Attending: ${totalGuestsConfirmed}`;
-      guestListDiv.style.display = "block";
-      adminPasswordInput.value = "";
-    });
   </script>
-
 </body>
+</html>
+
 </html>
 
