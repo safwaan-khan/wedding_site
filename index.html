@@ -43,6 +43,7 @@
       box-shadow: 0 0 25px rgba(173, 216, 230, 0.3);
       margin-bottom: 3rem;
       color: #2b3a67;
+      transition: all 0.3s ease;
     }
 
     .hero-title {
@@ -98,9 +99,31 @@
       color: white;
     }
 
-    section {
-      max-width: 500px;
-      width: 100%;
+    /* Content sections that will appear in hero area */
+    .content-section {
+      display: none;
+      text-align: left;
+    }
+
+    .content-section h2 {
+      font-family: 'Great Vibes', cursive;
+      font-size: 2.2rem;
+      margin-bottom: 1.5rem;
+      color: #2b3a67;
+      text-align: center;
+    }
+
+    .content-section h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.4rem;
+      margin-bottom: 1rem;
+      color: #2b3a67;
+      text-align: center;
+    }
+
+    /* Admin section special styling for wider content */
+    #admin-section {
+      max-width: 680px;
       background: rgba(255, 255, 255, 0.25);
       backdrop-filter: blur(8px);
       border-radius: 20px;
@@ -109,11 +132,6 @@
       box-shadow: 0 0 30px rgba(43, 58, 103, 0.4);
       display: none;
       color: #2b3a67;
-    }
-
-    /* Admin section special styling for wider content */
-    #admin-section {
-      max-width: 680px;
     }
 
     form {
@@ -302,6 +320,26 @@
       color: white;
     }
 
+    /* Back button styling */
+    .back-button {
+      background: rgba(173, 216, 230, 0.5);
+      border: 1px solid #2b3a67;
+      padding: 0.5rem 1.5rem;
+      border-radius: 999px;
+      font-family: 'Josefin Sans', sans-serif;
+      font-size: 0.9rem;
+      color: #2b3a67;
+      cursor: pointer;
+      transition: background 0.3s ease, color 0.3s ease;
+      margin-bottom: 1rem;
+      align-self: flex-start;
+    }
+
+    .back-button:hover {
+      background: rgba(43, 58, 103, 0.6);
+      color: white;
+    }
+
     /* Responsive */
     @media (max-width: 600px) {
       body {
@@ -318,7 +356,7 @@
         padding: 1rem;
       }
       
-      section {
+      .hero-container {
         padding: 1.5rem 1rem;
       }
       
@@ -339,63 +377,70 @@
 <body>
   <img src="Bismillah.png" alt="Bismillah" class="logo" />
 
-  <div class="hero-container">
-    <h1 class="hero-title">Manal & Safwaan</h1>
-    <p class="hero-date">12.06.2025</p>
-    <img src="hero.png" alt="Wedding Image" class="hero-image" />
+  <div class="hero-container" id="hero-container">
+    <!-- Default Hero Content -->
+    <div id="hero-content">
+      <h1 class="hero-title">Manal & Safwaan</h1>
+      <p class="hero-date">12.06.2025</p>
+      <img src="hero.png" alt="Wedding Image" class="hero-image" />
+    </div>
+
+    <!-- Info Content -->
+    <div id="info-content" class="content-section">
+      <button class="back-button" onclick="showHeroContent()">← Back</button>
+      <h2>Wedding Information</h2>
+      <p><strong>Date:</strong> June 12th, 2025</p>
+      <p><strong>Time:</strong> 6:00 PM</p>
+      <p><strong>Venue:</strong> To be announced</p>
+      <p><strong>Dress Code:</strong> Formal attire</p>
+      <br>
+      <p>We're so excited to celebrate this special day with you! More details will be shared closer to the date.</p>
+    </div>
+
+    <!-- RSVP Content -->
+    <div id="rsvp-content" class="content-section">
+      <button class="back-button" onclick="showHeroContent()">← Back</button>
+      <h2>RSVP</h2>
+      
+      <!-- Guest Lookup Form -->
+      <form id="lookup-form" aria-label="Guest lookup form">
+        <label for="fullName">Enter your full name to find your invitation:</label>
+        <input type="text" id="fullName" name="fullName" autocomplete="name" required />
+        <button type="submit">Find Invitation</button>
+        <p id="lookup-message" class="inline-message" role="alert" aria-live="polite"></p>
+      </form>
+
+      <!-- Invitation & RSVP Form (hidden until lookup success) -->
+      <div id="invitation-section" aria-live="polite" role="region" aria-hidden="true" style="display:none; margin-top:1.5rem;">
+        <h3>Your Invitation</h3>
+        <p id="invitation-text"></p>
+
+        <form id="rsvp-form" aria-label="RSVP Form">
+          <label for="guestCount">Number of Guests Attending:</label>
+          <div class="guest-count-wrapper">
+            <button type="button" class="guest-count-btn" id="guest-count-minus" aria-label="Decrease guest count">−</button>
+            <div id="guest-count-display" class="guest-count-display" aria-live="polite" aria-atomic="true">1</div>
+            <button type="button" class="guest-count-btn" id="guest-count-plus" aria-label="Increase guest count">+</button>
+          </div>
+
+          <label for="email">Your Email:</label>
+          <input type="email" id="email" name="email" required aria-required="true" autocomplete="email" />
+
+          <button type="submit" aria-label="Submit RSVP">RSVP</button>
+          <p class="inline-message" id="rsvp-message" role="alert" aria-live="polite"></p>
+        </form>
+
+        <div id="thank-you-message" style="display:none;">
+          <p>Thank you for RSVPing! We can't wait to celebrate with you.</p>
+        </div>
+      </div>
+    </div>
   </div>
 
   <div class="button-container">
-    <button id="info-btn" class="toggle-button" aria-expanded="false" aria-controls="info-section">Info</button>
-    <button id="rsvp-btn" class="toggle-button" aria-expanded="false" aria-controls="rsvp-section">RSVP</button>
+    <button id="info-btn" class="toggle-button" aria-expanded="false">Info</button>
+    <button id="rsvp-btn" class="toggle-button" aria-expanded="false">RSVP</button>
   </div>
-
-  <section id="info-section">
-    <h2>Wedding Information</h2>
-    <p><strong>Date:</strong> June 12th, 2025</p>
-    <p><strong>Time:</strong> 6:00 PM</p>
-    <p><strong>Venue:</strong> To be announced</p>
-    <p><strong>Dress Code:</strong> Formal attire</p>
-    <br>
-    <p>We're so excited to celebrate this special day with you! More details will be shared closer to the date.</p>
-  </section>
-
-  <section id="rsvp-section">
-    <h2>RSVP</h2>
-    
-    <!-- Guest Lookup Form -->
-    <form id="lookup-form" aria-label="Guest lookup form">
-      <label for="fullName">Enter your full name to find your invitation:</label>
-      <input type="text" id="fullName" name="fullName" autocomplete="name" required />
-      <button type="submit">Find Invitation</button>
-      <p id="lookup-message" class="inline-message" role="alert" aria-live="polite"></p>
-    </form>
-
-    <!-- Invitation & RSVP Form (hidden until lookup success) -->
-    <div id="invitation-section" aria-live="polite" role="region" aria-hidden="true" style="display:none; margin-top:1.5rem;">
-      <h3>Your Invitation</h3>
-      <p id="invitation-text"></p>
-
-      <form id="rsvp-form" aria-label="RSVP Form">
-        <label for="guestCount">Number of Guests Attending:</label>
-        <div class="guest-count-wrapper">
-          <button type="button" class="guest-count-btn" id="guest-count-minus" aria-label="Decrease guest count">−</button>
-          <div id="guest-count-display" class="guest-count-display" aria-live="polite" aria-atomic="true">1</div>
-          <button type="button" class="guest-count-btn" id="guest-count-plus" aria-label="Increase guest count">+</button>
-        </div>
-
-        <label for="email">Your Email:</label>
-        <input type="email" id="email" name="email" required aria-required="true" autocomplete="email" />
-
-        <button type="submit" aria-label="Submit RSVP">RSVP</button>
-        <p class="inline-message" id="rsvp-message" role="alert" aria-live="polite"></p>
-      </form>
-
-      <div id="thank-you-message" style="display:none;">
-        <p>Thank you for RSVPing! We can't wait to celebrate with you.</p>
-      </div>
-    </div>
-  </section>
 
   <section id="admin-section">
     <h2>Admin Portal</h2>
@@ -447,8 +492,9 @@
     const rsvpBtn = document.getElementById("rsvp-btn");
     const adminBtn = document.getElementById("admin-btn");
 
-    const infoSection = document.getElementById("info-section");
-    const rsvpSection = document.getElementById("rsvp-section");
+    const heroContent = document.getElementById("hero-content");
+    const infoContent = document.getElementById("info-content");
+    const rsvpContent = document.getElementById("rsvp-content");
     const adminSection = document.getElementById("admin-section");
 
     const invitationSection = document.getElementById("invitation-section");
@@ -462,33 +508,63 @@
     const adminMessage = document.getElementById("admin-message");
     const guestListDiv = document.getElementById("guest-list");
 
-    // Section Toggle Functions
-    function hideAllSections() {
-      [infoSection, rsvpSection, adminSection].forEach(section => {
-        section.style.display = "none";
-        section.setAttribute("aria-hidden", "true");
-      });
-      [infoBtn, rsvpBtn, adminBtn].forEach(btn => btn.setAttribute("aria-expanded", "false"));
+    // Content switching functions
+    function showHeroContent() {
+      heroContent.style.display = "block";
+      infoContent.style.display = "none";
+      rsvpContent.style.display = "none";
+      
+      // Reset button states
+      infoBtn.setAttribute("aria-expanded", "false");
+      rsvpBtn.setAttribute("aria-expanded", "false");
     }
 
-    function toggleSection(section, button) {
-      const isVisible = section.style.display === "block";
+    function showInfoContent() {
+      heroContent.style.display = "none";
+      infoContent.style.display = "block";
+      rsvpContent.style.display = "none";
+      adminSection.style.display = "none";
+      
+      // Update button states
+      infoBtn.setAttribute("aria-expanded", "true");
+      rsvpBtn.setAttribute("aria-expanded", "false");
+      adminBtn.setAttribute("aria-expanded", "false");
+    }
+
+    function showRsvpContent() {
+      heroContent.style.display = "none";
+      infoContent.style.display = "none";
+      rsvpContent.style.display = "block";
+      adminSection.style.display = "none";
+      
+      // Update button states
+      infoBtn.setAttribute("aria-expanded", "false");
+      rsvpBtn.setAttribute("aria-expanded", "true");
+      adminBtn.setAttribute("aria-expanded", "false");
+    }
+
+    function toggleAdminSection() {
+      const isVisible = adminSection.style.display === "block";
       if (isVisible) {
-        section.style.display = "none";
-        section.setAttribute("aria-hidden", "true");
-        button.setAttribute("aria-expanded", "false");
+        adminSection.style.display = "none";
+        adminBtn.setAttribute("aria-expanded", "false");
       } else {
-        hideAllSections();
-        section.style.display = "block";
-        section.setAttribute("aria-hidden", "false");
-        button.setAttribute("aria-expanded", "true");
+        adminSection.style.display = "block";
+        adminBtn.setAttribute("aria-expanded", "true");
+        
+        // Hide other content
+        infoBtn.setAttribute("aria-expanded", "false");
+        rsvpBtn.setAttribute("aria-expanded", "false");
       }
     }
 
+    // Make showHeroContent globally available
+    window.showHeroContent = showHeroContent;
+
     // Event Listeners for Section Toggles
-    infoBtn.addEventListener("click", () => toggleSection(infoSection, infoBtn));
-    rsvpBtn.addEventListener("click", () => toggleSection(rsvpSection, rsvpBtn));
-    adminBtn.addEventListener("click", () => toggleSection(adminSection, adminBtn));
+    infoBtn.addEventListener("click", showInfoContent);
+    rsvpBtn.addEventListener("click", showRsvpContent);
+    adminBtn.addEventListener("click", toggleAdminSection);
 
     // Helper functions for messages
     function setMessage(element, message, isSuccess = true) {
