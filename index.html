@@ -66,32 +66,32 @@
       box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
     }
 
-    /* New container for buttons with stronger translucent background */
+    /* Info & RSVP buttons container - same style as hero container */
     .button-container {
-      background: rgba(43, 58, 103, 0.25);
-      backdrop-filter: blur(8px);
+      background: rgba(255 255 255 / 0.15);
+      backdrop-filter: blur(6px);
       border-radius: 20px;
-      padding: 1.25rem 2rem;
-      max-width: 320px;
+      padding: 1.5rem 2rem;
+      max-width: 500px;
       width: 100%;
       margin-bottom: 3rem;
       display: flex;
       justify-content: center;
-      gap: 1.5rem;
-      box-shadow: 0 0 30px rgba(43, 58, 103, 0.5);
+      gap: 2rem;
+      box-shadow: 0 0 30px rgba(43, 58, 103, 0.4);
     }
 
     .hero-button {
       background: rgba(173, 216, 230, 0.3);
       border: 1px solid rgba(0, 123, 255, 0.3);
-      padding: 0.75rem 1.5rem;
+      padding: 0.75rem 1.75rem;
       border-radius: 999px;
       font-family: 'Josefin Sans', sans-serif;
-      font-size: 1rem;
+      font-size: 1.1rem;
       color: #2b3a67;
       cursor: pointer;
       transition: background 0.3s ease, color 0.3s ease;
-      min-width: 80px;
+      min-width: 100px;
       text-align: center;
       user-select: none;
     }
@@ -103,31 +103,34 @@
       outline: none;
     }
 
-    /* RSVP lookup form container */
-    #lookup-form-container {
+    /* Hide info and RSVP sections initially */
+    #info-section,
+    #rsvp-section {
       display: none;
-      background: rgba(43, 58, 103, 0.2);
-      backdrop-filter: blur(8px);
-      border-radius: 20px;
-      padding: 2rem;
-      max-width: 400px;
-      width: 100%;
-      box-shadow: 0 0 30px rgba(43, 58, 103, 0.4);
-      margin-bottom: 3rem;
-      color: #2b3a67;
-    }
-
-    /* Invitation container */
-    #invitation-section {
-      display: none;
-      background: rgba(43, 58, 103, 0.2);
-      backdrop-filter: blur(8px);
+      background: rgba(255 255 255 / 0.15);
+      backdrop-filter: blur(6px);
       border-radius: 20px;
       padding: 2rem;
       max-width: 500px;
       width: 100%;
       box-shadow: 0 0 30px rgba(43, 58, 103, 0.4);
       margin-bottom: 3rem;
+      color: #2b3a67;
+    }
+
+    #info-section p {
+      font-size: 1.1rem;
+      line-height: 1.5;
+    }
+
+    #lookup-form-container {
+      display: block;
+      margin-bottom: 1.5rem;
+    }
+
+    #invitation-section {
+      display: none;
+      margin-top: 1rem;
       color: #2b3a67;
     }
 
@@ -294,23 +297,24 @@
     }
 
     #admin-toggle {
-      background: rgba(43, 58, 103, 0.25);
+      background: rgba(255 255 255 / 0.15);
       border: 1px solid #2b3a67;
-      border-radius: 999px;
-      padding: 0.75rem 1.5rem;
+      border-radius: 20px;
+      padding: 0.75rem 1.75rem;
       font-family: 'Josefin Sans', sans-serif;
-      font-size: 1rem;
+      font-size: 1.1rem;
       color: #2b3a67;
       cursor: pointer;
       transition: background 0.3s ease;
       margin-bottom: 2rem;
       user-select: none;
       align-self: center;
+      box-shadow: 0 0 30px rgba(43, 58, 103, 0.4);
     }
 
     #admin-toggle:hover,
     #admin-toggle:focus {
-      background: rgba(43, 58, 103, 0.5);
+      background: rgba(255 255 255 / 0.35);
       outline: none;
     }
   </style>
@@ -325,16 +329,16 @@
   </div>
 
   <div class="button-container">
-    <button class="hero-button" onclick="scrollToSection('info-section')">Info</button>
-    <button class="hero-button" onclick="scrollToSection('rsvp-section')">RSVP</button>
+    <button class="hero-button" id="info-btn" aria-controls="info-section" aria-expanded="false">Info</button>
+    <button class="hero-button" id="rsvp-btn" aria-controls="rsvp-section" aria-expanded="false">RSVP</button>
   </div>
 
-  <div id="info-section" style="max-width: 500px; margin-bottom: 3rem; color: #2b3a67;">
+  <div id="info-section" aria-hidden="true" tabindex="-1">
     <h2>Information</h2>
     <p>Details about the wedding, location, schedule, etc.</p>
   </div>
 
-  <div id="rsvp-section" style="max-width: 500px; width: 100%; margin-bottom: 3rem;">
+  <div id="rsvp-section" aria-hidden="true" tabindex="-1">
     <div id="lookup-form-container">
       <form id="lookup-form" aria-label="Guest Lookup Form">
         <label for="fullName">Enter Your Full Name:</label>
@@ -425,50 +429,84 @@
       const adminSection = document.getElementById("admin");
       const adminToggleBtn = document.getElementById("admin-toggle");
 
-      window.scrollToSection = function (id) {
-        const section = document.getElementById(id);
-        if (section) {
-          section.scrollIntoView({ behavior: 'smooth' });
-          if (id === 'rsvp-section') {
-            lookupFormContainer.style.display = "block";
-          }
+      const infoBtn = document.getElementById("info-btn");
+      const rsvpBtn = document.getElementById("rsvp-btn");
+      const infoSection = document.getElementById("info-section");
+      const rsvpSection = document.getElementById("rsvp-section");
+
+      // Helper function to toggle sections
+      function toggleSection(sectionToShow, btnToActivate) {
+        // Hide all
+        infoSection.style.display = "none";
+        infoSection.setAttribute("aria-hidden", "true");
+        rsvpSection.style.display = "none";
+        rsvpSection.setAttribute("aria-hidden", "true");
+        btnToActivate === infoBtn ? rsvpBtn.setAttribute("aria-expanded", "false") : infoBtn.setAttribute("aria-expanded", "false");
+
+        // Show chosen
+        sectionToShow.style.display = "block";
+        sectionToShow.setAttribute("aria-hidden", "false");
+        btnToActivate.setAttribute("aria-expanded", "true");
+
+        // Scroll into view
+        sectionToShow.focus();
+        sectionToShow.scrollIntoView({ behavior: "smooth" });
+      }
+
+      infoBtn.addEventListener("click", () => {
+        const isVisible = infoSection.style.display === "block";
+        if (isVisible) {
+          // Hide it
+          infoSection.style.display = "none";
+          infoSection.setAttribute("aria-hidden", "true");
+          infoBtn.setAttribute("aria-expanded", "false");
+        } else {
+          toggleSection(infoSection, infoBtn);
         }
-      };
+      });
 
-      function setMessage(element, message, isSuccess = true) {
-        element.textContent = message;
-        element.style.color = isSuccess ? "#4b8033" : "#a05b5b";
-      }
-      function clearMessage(element) {
-        element.textContent = "";
-      }
+      rsvpBtn.addEventListener("click", () => {
+        const isVisible = rsvpSection.style.display === "block";
+        if (isVisible) {
+          rsvpSection.style.display = "none";
+          rsvpSection.setAttribute("aria-hidden", "true");
+          rsvpBtn.setAttribute("aria-expanded", "false");
+        } else {
+          toggleSection(rsvpSection, rsvpBtn);
+        }
+      });
 
+      // Guest lookup form submit
       document.getElementById("lookup-form").addEventListener("submit", async (e) => {
         e.preventDefault();
-        clearMessage(lookupMessage);
+        lookupMessage.textContent = "";
+        invitationSection.style.display = "none";
+        invitationSection.setAttribute("aria-hidden", "true");
+        thankYouMessage.style.display = "none";
+        rsvpForm.style.display = "none";
 
-        const inputName = document.getElementById("fullName").value.trim();
-
-        if (!inputName) {
-          setMessage(lookupMessage, "Please enter your full name.", false);
+        const nameInput = document.getElementById("fullName").value.trim();
+        if (!nameInput) {
+          lookupMessage.textContent = "Please enter your full name.";
           return;
         }
-
-        const nameLower = inputName.toLowerCase();
 
         const { data, error } = await supabase
           .from("guests")
-          .select("*");
+          .select("*")
+          .ilike("full_name", nameInput);
 
         if (error) {
-          setMessage(lookupMessage, "Lookup failed. Please try again.", false);
+          lookupMessage.textContent = "Failed to lookup guest. Please try again.";
           return;
         }
 
+        // Simple exact match ignoring case and whitespace
+        const nameLower = nameInput.toLowerCase();
         const guest = data.find(g => g.full_name.trim().toLowerCase() === nameLower);
 
         if (!guest) {
-          setMessage(lookupMessage, "Guest not found. Please check the spelling and try again.", false);
+          lookupMessage.textContent = "Guest not found. Please check the spelling and try again.";
           return;
         }
 
@@ -483,7 +521,6 @@
         thankYouMessage.style.display = "none";
         rsvpForm.style.display = "flex";
 
-        clearMessage(rsvpMessage);
         document.getElementById("email").value = "";
 
         btnMinus.disabled = true;
@@ -492,6 +529,7 @@
         invitationSection.scrollIntoView({ behavior: "smooth" });
       });
 
+      // Guest count buttons
       btnMinus.addEventListener("click", () => {
         if (guestCount > 1) {
           guestCount--;
@@ -511,19 +549,20 @@
         }
       });
 
+      // RSVP form submit
       rsvpForm.addEventListener("submit", async (e) => {
         e.preventDefault();
-        clearMessage(rsvpMessage);
+        rsvpMessage.textContent = "";
 
         const email = document.getElementById("email").value.trim();
 
         if (guestCount > (currentGuest.guest_limit || 1)) {
-          setMessage(rsvpMessage, `You cannot RSVP for more than ${currentGuest.guest_limit} guests.`, false);
+          rsvpMessage.textContent = `You cannot RSVP for more than ${currentGuest.guest_limit} guests.`;
           return;
         }
 
         if (!email) {
-          setMessage(rsvpMessage, "Please enter a valid email address.", false);
+          rsvpMessage.textContent = "Please enter a valid email address.";
           return;
         }
 
@@ -533,7 +572,7 @@
           .eq("id", currentGuest.id);
 
         if (error) {
-          setMessage(rsvpMessage, "Failed to RSVP. Please try again later.", false);
+          rsvpMessage.textContent = "Failed to RSVP. Please try again later.";
           return;
         }
 
@@ -555,25 +594,33 @@
         }
       });
 
+      // Admin toggle
       adminToggleBtn.addEventListener("click", () => {
         const isVisible = adminSection.style.display === "block";
-        adminSection.style.display = isVisible ? "none" : "block";
-        adminToggleBtn.setAttribute("aria-expanded", (!isVisible).toString());
-
-        // Clear admin message & hide guest list when hiding admin
         if (isVisible) {
+          adminSection.style.display = "none";
+          adminSection.setAttribute("aria-hidden", "true");
+          adminToggleBtn.setAttribute("aria-expanded", "false");
           adminMessage.textContent = "";
           guestListDiv.style.display = "none";
+        } else {
+          adminSection.style.display = "block";
+          adminSection.setAttribute("aria-hidden", "false");
+          adminToggleBtn.setAttribute("aria-expanded", "true");
+          // Scroll to admin section
+          adminSection.scrollIntoView({ behavior: "smooth" });
         }
       });
 
+      // Admin login form
       document.getElementById("admin-auth").addEventListener("submit", async (e) => {
         e.preventDefault();
-        clearMessage(adminMessage);
+        adminMessage.textContent = "";
+
         const password = document.getElementById("admin-password").value;
 
         if (password !== "skhan") {
-          setMessage(adminMessage, "Incorrect admin password.", false);
+          adminMessage.textContent = "Incorrect admin password.";
           return;
         }
 
@@ -583,7 +630,7 @@
           .order("created_at", { ascending: false });
 
         if (error) {
-          setMessage(adminMessage, "Failed to load guest list. Please try again.", false);
+          adminMessage.textContent = "Failed to load guest list. Please try again.";
           return;
         }
 
@@ -612,11 +659,8 @@
 
         document.getElementById("total-headcount").innerText = `Total Confirmed Attending: ${totalGuestsConfirmed}`;
         guestListDiv.style.display = "block";
-        adminSection.setAttribute("aria-hidden", "false");
-        document.getElementById("admin-password").value = "";
       });
     });
   </script>
-
 </body>
 </html>
