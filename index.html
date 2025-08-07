@@ -78,122 +78,114 @@
     </div>
   </div>
 
-  <script type="module">
-    import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm'
+<script type="module">
+  import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm'
 
-    const supabase = createClient(
-      'https://hrshdoeovdocwyxcerey.supabase.co',
-      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imhyc2hkb2VvdmRvY3d5eGNlcmV5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQ1ODQyNTEsImV4cCI6MjA3MDE2MDI1MX0.n5x7-0cjS0K7knGXGSjaR0rPG_OUEVmx5loJFSs3niA'
-    );
+  const supabase = createClient(
+    'https://hrshdoeovdocwyxcerey.supabase.co',
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imhyc2hkb2VvdmRvY3d5eGNlcmV5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQ1ODQyNTEsImV4cCI6MjA3MDE2MDI1MX0.n5x7-0cjS0K7knGXGSjaR0rPG_OUEVmx5loJFSs3niA'
+  );
 
-    let currentGuest = null;
+  let currentGuest = null;
 
-    document.getElementById("lookup-form").addEventListener("submit", async (e) => {
-      e.preventDefault();
-      const name = document.getElementById("fullName").value.trim();
+  document.getElementById("lookup-form").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const name = document.getElementById("fullName").value.trim();
 
-      const { data, error } = await supabase
-        .from("guests")
-        .select("*")
-        .eq("full_name", name)
-        .single();
+    const { data, error } = await supabase
+      .from("guests")
+      .select("*")
+      .eq("full_name", name)
+      .single();
 
-      if (error || !data) {
-        alert("Guest not found.");
-        return;
-      }
+    if (error || !data) {
+      alert("Guest not found.");
+      return;
+    }
 
-      currentGuest = data;
-      document.getElementById("invitation-text").innerText = data.invitation_text || "You're invited!";
+    currentGuest = data;
+    document.getElementById("invitation-text").innerText = data.invitation_text || "You're invited!";
 
-      // Dynamically populate guestCount select based on guest_limit
-      const guestCountSelect = document.getElementById("guestCount");
-      guestCountSelect.innerHTML = "";
-      const limit = currentGuest.guest_limit || 1;
-      for(let i = 1; i <= limit; i++) {
-        const option = document.createElement("option");
-        option.value = i;
-        option.textContent = i;
-        guestCountSelect.appendChild(option);
-      }
+    const guestCountSelect = document.getElementById("guestCount");
+    guestCountSelect.innerHTML = "";
+    const limit = currentGuest.guest_limit || 1;
+    for(let i = 1; i <= limit; i++) {
+      const option = document.createElement("option");
+      option.value = i;
+      option.textContent = i;
+      guestCountSelect.appendChild(option);
+    }
 
-      document.getElementById("invitation-section").style.display = "block";
-    });
+    document.getElementById("invitation-section").style.display = "block";
+  });
 
-    document.getElementById("rsvp-form").addEventListener("submit", async (e) => {
-      e.preventDefault();
-      const email = document.getElementById("email").value.trim();
-      const phone = document.getElementById("phone").value.trim();
-      const guestCount = parseInt(document.getElementById("guestCount").value, 10);
+  document.getElementById("rsvp-form").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const email = document.getElementById("email").value.trim();
+    const phone = document.getElementById("phone").value.trim();
+    const guestCount = parseInt(document.getElementById("guestCount").value, 10);
 
-      // Validate guestCount does not exceed guest_limit (extra safety)
-      if (guestCount > currentGuest.guest_limit) {
-        alert(`You cannot RSVP for more than ${currentGuest.guest_limit} guests.`);
-        return;
-      }
+    if (guestCount > currentGuest.guest_limit) {
+      alert(`You cannot RSVP for more than ${currentGuest.guest_limit} guests.`);
+      return;
+    }
 
-      const { error } = await supabase
-        .from("guests")
-        .update({ rsvp_status: "Confirmed", email, phone, guest_count: guestCount })
-        .eq("id", currentGuest.id);
+    const { error } = await supabase
+      .from("guests")
+      .update({ rsvp_status: "Confirmed", email, phone, guest_count: guestCount })
+      .eq("id", currentGuest.id);
 
-      if (error) {
-        alert("Failed to RSVP");
-        return;
-      }
+    if (error) {
+      alert("Failed to RSVP");
+      return;
+    }
 
-      // Send confirmation via EmailJS
-      emailjs.send("service_idd3fkn", "template_kgtloh8", {
+    try {
+      await emailjs.send("service_idd3fkn", "template_kgtloh8", {
         to_email: email,
         guest_name: currentGuest.full_name,
         guest_count: guestCount
       });
+      alert("RSVP Confirmed! A confirmation email has been sent.");
+    } catch (err) {
+      alert("RSVP Confirmed, but failed to send confirmation email.");
+      console.error("EmailJS error:", err);
+    }
+  });
 
-      // Send SMS via Twilio Webhook (set up separately)
-      fetch("https://your-twilio-webhook-url.com/sms", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          to: phone,
-          body: `Hi ${currentGuest.full_name}, your RSVP for ${guestCount} has been received. Thank you!`
-        })
-      });
+  document.getElementById("admin-auth").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const password = document.getElementById("admin-password").value;
+    if (password !== "skhan") {
+      alert("Incorrect password");
+      return;
+    }
 
-      alert("RSVP Confirmed!");
+    const { data, error } = await supabase.from("guests").select("*").order("created_at", { ascending: false });
+    if (error) {
+      alert("Failed to load guest list");
+      return;
+    }
+
+    const tbody = document.getElementById("guest-rows");
+    tbody.innerHTML = "";
+    data.forEach(guest => {
+      tbody.innerHTML += `
+        <tr>
+          <td>${guest.full_name}</td>
+          <td>${guest.email || ""}</td>
+          <td>${guest.phone || ""}</td>
+          <td>${guest.rsvp_status}</td>
+          <td>${guest.guest_limit}</td>
+          <td>${guest.invitation_text || ""}</td>
+        </tr>
+      `;
     });
 
-    document.getElementById("admin-auth").addEventListener("submit", async (e) => {
-      e.preventDefault();
-      const password = document.getElementById("admin-password").value;
-      if (password !== "skhan") {
-        alert("Incorrect password");
-        return;
-      }
+    document.getElementById("guest-list").style.display = "block";
+  });
+</script>
 
-      const { data, error } = await supabase.from("guests").select("*").order("created_at", { ascending: false });
-      if (error) {
-        alert("Failed to load guest list");
-        return;
-      }
-
-      const tbody = document.getElementById("guest-rows");
-      tbody.innerHTML = "";
-      data.forEach(guest => {
-        tbody.innerHTML += `
-          <tr>
-            <td>${guest.full_name}</td>
-            <td>${guest.email || ""}</td>
-            <td>${guest.phone || ""}</td>
-            <td>${guest.rsvp_status}</td>
-            <td>${guest.guest_limit}</td>
-            <td>${guest.invitation_text || ""}</td>
-          </tr>
-        `;
-      });
-
-      document.getElementById("guest-list").style.display = "block";
-    });
-  </script>
   <script src="https://cdn.emailjs.com/dist/email.min.js"></script>
   <script>
     (function(){
