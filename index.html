@@ -88,7 +88,8 @@
       box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
       transition: border-radius 0.3s ease;
       max-height: clamp(20vh, 28vh, 32vh);
-      object-fit: cover;
+      object-fit: contain;
+      object-position: center;
     }
 
     .button-container {
@@ -565,6 +566,8 @@
       .hero-image {
         max-height: clamp(18vh, 25vh, 28vh);
         margin-bottom: clamp(0.4rem, 1.2vw, 0.6rem);
+        object-fit: contain;
+        object-position: center;
       }
       
       .hero-title {
@@ -609,6 +612,8 @@
       
       .hero-image {
         max-height: clamp(16vh, 22vh, 25vh);
+        object-fit: contain;
+        object-position: center;
       }
       
       #admin-section {
@@ -625,6 +630,8 @@
       
       .hero-image {
         max-height: clamp(14vh, 20vh, 22vh);
+        object-fit: contain;
+        object-position: center;
       }
     }
 
@@ -640,6 +647,8 @@
       
       .hero-image {
         max-height: clamp(20vh, 30vh, 35vh);
+        object-fit: contain;
+        object-position: center;
       }
       
       .logo {
@@ -661,6 +670,8 @@
       
       .hero-image {
         max-height: clamp(16vh, 25vh, 30vh);
+        object-fit: contain;
+        object-position: center;
       }
       
       .logo {
@@ -685,8 +696,8 @@
     <div id="info-content" class="content-section">
       <button class="back-button" onclick="showHeroContent()">← Back</button>
       <h2>Nikkah Information</h2>
-      <p><strong>Date:</strong> December 6th, 2025</p>
-      <p><strong>Time:</strong> 2:00 PM</p>
+      <p><strong>Date:</strong> Saturday, December 6th, 2025</p>
+      <p><strong>Time:</strong> 3:00 PM</p>
       <p><strong>Venue:</strong> SBIA</p>
       <br>
       <p>We're so excited to celebrate this special day with you! More details will be shared closer to the date.</p>
@@ -809,6 +820,9 @@
       infoContent.classList.remove("active");
       rsvpContent.classList.remove("active");
       
+      // Show admin button when back to hero
+      document.querySelector('.admin-button-wrapper').style.display = "block";
+      
       // Reset button states
       infoBtn.setAttribute("aria-expanded", "false");
       rsvpBtn.setAttribute("aria-expanded", "false");
@@ -819,6 +833,9 @@
       infoContent.classList.add("active");
       rsvpContent.classList.remove("active");
       adminSection.style.display = "none";
+      
+      // Hide admin button
+      document.querySelector('.admin-button-wrapper').style.display = "none";
       
       // Update button states
       infoBtn.setAttribute("aria-expanded", "true");
@@ -831,6 +848,9 @@
       infoContent.classList.remove("active");
       rsvpContent.classList.add("active");
       adminSection.style.display = "none";
+      
+      // Hide admin button
+      document.querySelector('.admin-button-wrapper').style.display = "none";
       
       // Update button states
       infoBtn.setAttribute("aria-expanded", "false");
