@@ -46,6 +46,17 @@
       transition: all 0.3s ease;
     }
 
+    /* Fade transition classes */
+    .fade-out {
+      opacity: 0;
+      transition: opacity 0.3s ease-out;
+    }
+
+    .fade-in {
+      opacity: 1;
+      transition: opacity 0.3s ease-in;
+    }
+
     .hero-title {
       font-family: 'Great Vibes', cursive;
       font-size: 3rem;
@@ -103,6 +114,7 @@
     .content-section {
       display: none;
       text-align: left;
+      opacity: 0;
     }
 
     .content-section h2 {
@@ -399,7 +411,7 @@
 
     <!-- RSVP Content -->
     <div id="rsvp-content" class="content-section">
-      <button class="back-button" onclick="showHeroContent()">← Back</button>
+      <button class="back-button" onclick="showHeroContent(); resetRsvpForm();">← Back</button>
       <h2>RSVP</h2>
       
       <!-- Guest Lookup Form -->
@@ -510,37 +522,70 @@
 
     // Content switching functions
     function showHeroContent() {
-      heroContent.style.display = "block";
-      infoContent.style.display = "none";
-      rsvpContent.style.display = "none";
-      
-      // Reset button states
-      infoBtn.setAttribute("aria-expanded", "false");
-      rsvpBtn.setAttribute("aria-expanded", "false");
+      // Fade out current content
+      const currentContent = document.querySelector('.content-section[style*="display: block"], #hero-content[style*="display: none"]');
+      if (currentContent) {
+        currentContent.classList.add('fade-out');
+        setTimeout(() => {
+          heroContent.style.display = "block";
+          infoContent.style.display = "none";
+          rsvpContent.style.display = "none";
+          
+          heroContent.classList.remove('fade-out');
+          heroContent.classList.add('fade-in');
+          
+          // Reset button states
+          infoBtn.setAttribute("aria-expanded", "false");
+          rsvpBtn.setAttribute("aria-expanded", "false");
+        }, 300);
+      } else {
+        heroContent.style.display = "block";
+        infoContent.style.display = "none";
+        rsvpContent.style.display = "none";
+        heroContent.classList.add('fade-in');
+        
+        // Reset button states
+        infoBtn.setAttribute("aria-expanded", "false");
+        rsvpBtn.setAttribute("aria-expanded", "false");
+      }
     }
 
     function showInfoContent() {
-      heroContent.style.display = "none";
-      infoContent.style.display = "block";
-      rsvpContent.style.display = "none";
-      adminSection.style.display = "none";
-      
-      // Update button states
-      infoBtn.setAttribute("aria-expanded", "true");
-      rsvpBtn.setAttribute("aria-expanded", "false");
-      adminBtn.setAttribute("aria-expanded", "false");
+      // Fade out current content
+      heroContent.classList.add('fade-out');
+      setTimeout(() => {
+        heroContent.style.display = "none";
+        infoContent.style.display = "block";
+        rsvpContent.style.display = "none";
+        adminSection.style.display = "none";
+        
+        infoContent.classList.remove('fade-out');
+        infoContent.classList.add('fade-in');
+        
+        // Update button states
+        infoBtn.setAttribute("aria-expanded", "true");
+        rsvpBtn.setAttribute("aria-expanded", "false");
+        adminBtn.setAttribute("aria-expanded", "false");
+      }, 300);
     }
 
     function showRsvpContent() {
-      heroContent.style.display = "none";
-      infoContent.style.display = "none";
-      rsvpContent.style.display = "block";
-      adminSection.style.display = "none";
-      
-      // Update button states
-      infoBtn.setAttribute("aria-expanded", "false");
-      rsvpBtn.setAttribute("aria-expanded", "true");
-      adminBtn.setAttribute("aria-expanded", "false");
+      // Fade out current content
+      heroContent.classList.add('fade-out');
+      setTimeout(() => {
+        heroContent.style.display = "none";
+        infoContent.style.display = "none";
+        rsvpContent.style.display = "block";
+        adminSection.style.display = "none";
+        
+        rsvpContent.classList.remove('fade-out');
+        rsvpContent.classList.add('fade-in');
+        
+        // Update button states
+        infoBtn.setAttribute("aria-expanded", "false");
+        rsvpBtn.setAttribute("aria-expanded", "true");
+        adminBtn.setAttribute("aria-expanded", "false");
+      }, 300);
     }
 
     function toggleAdminSection() {
@@ -558,8 +603,18 @@
       }
     }
 
-    // Make showHeroContent globally available
+    // Reset RSVP form function
+    function resetRsvpForm() {
+      document.getElementById("lookup-form").style.display = "flex";
+      invitationSection.style.display = "none";
+      invitationSection.setAttribute("aria-hidden", "true");
+      document.getElementById("fullName").value = "";
+      clearMessage(lookupMessage);
+    }
+
+    // Make functions globally available
     window.showHeroContent = showHeroContent;
+    window.resetRsvpForm = resetRsvpForm;
 
     // Event Listeners for Section Toggles
     infoBtn.addEventListener("click", showInfoContent);
@@ -614,6 +669,8 @@
 
         document.getElementById("invitation-text").innerText = guest.invitation_text || "You're invited!";
 
+        // Hide the lookup form and show invitation section
+        document.getElementById("lookup-form").style.display = "none";
         invitationSection.style.display = "block";
         invitationSection.setAttribute("aria-hidden", "false");
         thankYouMessage.style.display = "none";
