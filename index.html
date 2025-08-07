@@ -65,8 +65,12 @@
       font-size: 1.3rem;
       padding: 0.8rem;
     }
-    button:hover {
+    button:hover:not(:disabled) {
       background: #a96f6f;
+    }
+    button:disabled {
+      background: #d6b6b6;
+      cursor: not-allowed;
     }
     /* Center and style invitation text */
     #invitation-text {
@@ -152,6 +156,50 @@
       margin-bottom: 1rem;
       text-align: right;
     }
+    /* Guest count clicker */
+    .guest-count-wrapper {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+    .guest-count-btn {
+      background: #c48b8b;
+      border: none;
+      color: white;
+      font-family: 'Great Vibes', cursive;
+      font-size: 2rem;
+      width: 3.5rem;
+      height: 3.5rem;
+      border-radius: 50%;
+      cursor: pointer;
+      user-select: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.3s ease;
+    }
+    .guest-count-btn:disabled {
+      background: #d6b6b6;
+      cursor: not-allowed;
+    }
+    .guest-count-display {
+      font-size: 1.8rem;
+      font-family: 'Playfair Display', serif;
+      min-width: 2.5rem;
+      text-align: center;
+      user-select: none;
+    }
+    /* Thank you message */
+    #thank-you-message {
+      text-align: center;
+      font-size: 1.3rem;
+      font-family: 'Playfair Display', serif;
+      color: #a05b5b;
+      margin-top: 2rem;
+      display: none;
+    }
     /* Responsive */
     @media (max-width: 600px) {
       form {
@@ -183,16 +231,21 @@
 
     <form id="rsvp-form" aria-label="RSVP Form">
       <label for="guestCount">Number of Guests Attending:</label>
-      <select id="guestCount" required aria-required="true"></select>
+      <div class="guest-count-wrapper">
+        <button type="button" class="guest-count-btn" id="guest-count-minus" aria-label="Decrease guest count">-</button>
+        <div id="guest-count-display" class="guest-count-display" aria-live="polite" aria-atomic="true">1</div>
+        <button type="button" class="guest-count-btn" id="guest-count-plus" aria-label="Increase guest count">+</button>
+      </div>
 
       <label for="email">Your Email:</label>
       <input type="email" id="email" required aria-required="true" autocomplete="email" />
 
-      <label for="phone">Your Phone Number:</label>
-      <input type="tel" id="phone" autocomplete="tel" />
-
       <button type="submit" aria-label="Submit RSVP">RSVP</button>
     </form>
+
+    <div id="thank-you-message">
+      <p>Thank you for RSVPing! We can't wait to celebrate with you.</p>
+    </div>
   </div>
 
   <!-- Admin Toggle Button -->
@@ -212,7 +265,6 @@
           <tr>
             <th>Name</th>
             <th>Email</th>
-            <th>Phone</th>
             <th>RSVP Status</th>
             <th>Guests Allowed</th>
             <th>Guests Attending</th>
@@ -232,8 +284,15 @@
     );
 
     let currentGuest = null;
+    let guestCount = 1;
 
     const invitationSection = document.getElementById("invitation-section");
+    const thankYouMessage = document.getElementById("thank-you-message");
+    const rsvpForm = document.getElementById("rsvp-form");
+    const guestCountDisplay = document.getElementById("guest-count-display");
+    const btnMinus = document.getElementById("guest-count-minus");
+    const btnPlus = document.getElementById("guest-count-plus");
+
     const guestListDiv = document.getElementById("guest-list");
     const adminSection = document.getElementById("admin");
     const adminToggleBtn = document.getElementById("admin-toggle");
@@ -267,31 +326,50 @@
       }
 
       currentGuest = data;
-      document.getElementById("invitation-text").innerText = data.invitation_text || "You're invited!";
+      guestCount = 1;
+      guestCountDisplay.textContent = guestCount;
 
-      const guestCountSelect = document.getElementById("guestCount");
-      guestCountSelect.innerHTML = "";
-      const limit = currentGuest.guest_limit || 1;
-      for(let i = 1; i <= limit; i++) {
-        const option = document.createElement("option");
-        option.value = i;
-        option.textContent = i;
-        guestCountSelect.appendChild(option);
-      }
+      document.getElementById("invitation-text").innerText = data.invitation_text || "You're invited!";
 
       invitationSection.style.display = "block";
       invitationSection.classList.add("show");
       invitationSection.setAttribute("aria-hidden", "false");
+      thankYouMessage.style.display = "none";
+      rsvpForm.style.display = "flex";
       // Scroll to invitation section for better UX
       invitationSection.scrollIntoView({ behavior: "smooth" });
+
+      // Set max guest count limit
+      btnMinus.disabled = true;
+      btnPlus.disabled = guestCount >= (currentGuest.guest_limit || 1);
+    });
+
+    // Guest count minus button
+    btnMinus.addEventListener("click", () => {
+      if (guestCount > 1) {
+        guestCount--;
+        guestCountDisplay.textContent = guestCount;
+        btnPlus.disabled = false;
+        if (guestCount === 1) btnMinus.disabled = true;
+      }
+    });
+
+    // Guest count plus button
+    btnPlus.addEventListener("click", () => {
+      const limit = currentGuest?.guest_limit || 1;
+      if (guestCount < limit) {
+        guestCount++;
+        guestCountDisplay.textContent = guestCount;
+        btnMinus.disabled = false;
+        if (guestCount === limit) btnPlus.disabled = true;
+      }
     });
 
     // RSVP submission
-    document.getElementById("rsvp-form").addEventListener("submit", async (e) => {
+    rsvpForm.addEventListener("submit", async (e) => {
       e.preventDefault();
+
       const email = document.getElementById("email").value.trim();
-      const phone = document.getElementById("phone").value.trim();
-      const guestCount = parseInt(document.getElementById("guestCount").value, 10);
 
       if (guestCount > currentGuest.guest_limit) {
         alert(`You cannot RSVP for more than ${currentGuest.guest_limit} guests.`);
@@ -300,7 +378,7 @@
 
       const { error } = await supabase
         .from("guests")
-        .update({ rsvp_status: "Confirmed", email, phone, guest_count: guestCount })
+        .update({ rsvp_status: "Confirmed", email, guest_count: guestCount })
         .eq("id", currentGuest.id);
 
       if (error) {
@@ -314,9 +392,16 @@
           guest_name: currentGuest.full_name,
           guest_count: guestCount
         });
-        alert("RSVP Confirmed! A confirmation email has been sent.");
+        // Show thank you message and hide form (no alert popup)
+        rsvpForm.style.display = "none";
+        thankYouMessage.style.display = "block";
+        // Optionally scroll down to thank you message
+        thankYouMessage.scrollIntoView({ behavior: "smooth" });
       } catch (err) {
-        alert("RSVP Confirmed, but failed to send confirmation email.");
+        // Even if email fails, still show thank you message
+        rsvpForm.style.display = "none";
+        thankYouMessage.style.display = "block";
+        thankYouMessage.innerHTML += "<p style='color:#a05b5b; font-size:1rem;'>Failed to send confirmation email.</p>";
         console.error("EmailJS error:", err);
       }
     });
@@ -356,7 +441,6 @@
         tr.innerHTML = `
           <td>${guest.full_name}</td>
           <td>${guest.email || ""}</td>
-          <td>${guest.phone || ""}</td>
           <td>${guest.rsvp_status || "Not responded"}</td>
           <td>${guest.guest_limit || 1}</td>
           <td>${guestsAttending}</td>
