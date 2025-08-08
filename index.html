@@ -83,7 +83,7 @@
       max-width: 100%;
       width: 100%;
       height: auto;
-      border-radius: clamp(8px, 2vw, 12px);
+      border-radius: clamp(24px, 2vw, 36px);
       margin-bottom: 0;
       box-shadow: none;
       transition: border-radius 0.3s ease;
@@ -738,7 +738,7 @@
       
       <!-- Guest Lookup Form -->
       <form id="lookup-form" aria-label="Guest lookup form" style="display: flex;">
-        <label for="fullName">Enter your full name to find your invitation:</label>
+        <label for="fullName"><center>Enter your full name to find your invitation:</center></label>
         <input type="text" id="fullName" name="fullName" autocomplete="name" required />
         <button type="submit">Find Invitation</button>
         <p id="lookup-message" class="inline-message" role="alert" aria-live="polite"></p>
@@ -747,7 +747,7 @@
       <!-- Invitation & RSVP Form (hidden until lookup success) -->
       <div id="invitation-section" aria-live="polite" role="region" aria-hidden="true" style="display:none; margin-top:1rem;">
         <div id="guest-list-section">
-          <label>Please select attendance for each party member:</label>
+          <label><center>Please select attendance for each party member:</center></label>
           <div id="party-members-list" class="party-members-container">
             <!-- Individual guest buttons will be populated here -->
           </div>
@@ -755,6 +755,7 @@
 
         <form id="rsvp-form" aria-label="RSVP Form">
           <div id="email-section">
+            <br>
             <label for="email">Your Email (for confirmation):</label>
             <input type="email" id="email" name="email" required aria-required="true" autocomplete="email" />
           </div>
@@ -764,7 +765,7 @@
         </form>
 
         <div id="thank-you-message" style="display:none;">
-          <p>Thank you for RSVPing! We can't wait to celebrate with you all, iA!</p>
+          <p><center>Thank you for RSVPing! We can't wait to celebrate with you all, iA!</center></p>
         </div>
       </div>
     </div>
@@ -776,7 +777,7 @@
   </div>
 
   <section id="admin-section">
-    <h2>Admin Portal</h2>
+    <h2><center>Admin Portal</center></h2>
     <form id="admin-auth" aria-label="Admin Login Form">
       <input type="password" id="admin-password" placeholder="Admin Password" aria-required="true" autocomplete="current-password" />
       <button type="submit">Login</button>
@@ -784,7 +785,7 @@
     </form>
 
     <div id="guest-list" style="display:none; margin-top: 1rem;">
-      <h3>Guest List</h3>
+      <h3><center>Guest List</center></h3>
       <p id="total-headcount"></p>
       <table>
         <thead>
