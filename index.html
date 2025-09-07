@@ -1239,14 +1239,21 @@
           }
 
           const tr = document.createElement("tr");
-          tr.classList.toggle("confirmed", guest.rsvp_status === "Confirmed");
-          tr.classList.toggle("rejected", guest.rsvp_status === "Declined");
+          if (guest.rsvp_status === "Confirmed") {
+            tr.classList.add("confirmed");
+            tr.style.color = "#2d7d32";
+            tr.style.fontWeight = "600";
+          } else if (guest.rsvp_status === "Declined") {
+            tr.classList.add("rejected");
+            tr.style.color = "#d32f2f";
+            tr.style.fontWeight = "600";
+          }
 
           tr.innerHTML = `
             <td>${guest.full_name}</td>
             <td>${guest.rsvp_status || "Not responded"}</td>
-            <td>${guest.guest_limit || 1}</td>
-            <td>${guestsAttending}</td>
+            <td style="text-align: center;">${guest.guest_limit || 1}</td>
+            <td style="text-align: center;">${guestsAttending}</td>
           `;
           tbody.appendChild(tr);
         });
