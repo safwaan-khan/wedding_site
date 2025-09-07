@@ -1174,7 +1174,7 @@
           thankYouText = "Thank you for letting us know. We'll miss you on our special day, iA!";
         }
         
-        thankYouMessage.querySelector('p').textContent = thankYouText;
+        thankYouMessage.innerHTML = `<p><center>${thankYouText}</center></p>`;
         thankYouMessage.scrollIntoView({ behavior: "smooth" });
 
         // Try to send confirmation email if EmailJS is available and someone is attending
