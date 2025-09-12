@@ -594,7 +594,7 @@
       }
     }
 
-    /* Mobile optimizations - NO SCROLLING + proper proportions */
+    /* Mobile optimizations - FIXED HEIGHT FOR RSVP */
     @media (max-width: 767px) {
       html, body {
         height: 100vh;
@@ -617,10 +617,17 @@
       }
       
       .hero-container {
+        /* Default max-height for hero and info content */
         max-height: clamp(50vh, 55vh, 60vh);
         padding: clamp(0.6rem, 2vw, 1rem);
         margin-bottom: clamp(0.5rem, 1.5vw, 0.8rem);
         overflow-y: auto;
+      }
+
+      /* Special taller container for RSVP content to fit all elements */
+      .hero-container:has(#rsvp-content.active) {
+        max-height: clamp(65vh, 70vh, 75vh);
+        padding: clamp(0.5rem, 1.8vw, 0.8rem);
       }
       
       .hero-title {
@@ -655,9 +662,24 @@
         overflow-y: auto;
       }
       
+      /* Adjust party members container for mobile RSVP */
       .party-members-container {
-        max-height: 30vh;
+        max-height: clamp(22vh, 25vh, 28vh);
         overflow-y: auto;
+      }
+
+      /* Compact spacing for RSVP form elements on mobile */
+      #rsvp-content form {
+        gap: clamp(0.4rem, 1vw, 0.6rem);
+      }
+
+      #rsvp-content .content-section h2 {
+        margin-bottom: clamp(0.5rem, 1.2vw, 0.8rem);
+      }
+
+      #email-section {
+        margin-top: clamp(0.3rem, 0.8vw, 0.5rem);
+        margin-bottom: clamp(0.3rem, 0.8vw, 0.5rem);
       }
       
       #admin-section {
@@ -756,6 +778,12 @@
       .hero-container {
         padding: 0.4rem;
         margin-bottom: 0.2rem;
+        max-height: clamp(75vh, 80vh, 85vh);
+      }
+
+      /* Even taller for RSVP in landscape */
+      .hero-container:has(#rsvp-content.active) {
+        max-height: clamp(85vh, 88vh, 90vh);
       }
       
       .button-container {
@@ -777,7 +805,7 @@
       }
       
       .party-members-container {
-        max-height: 25vh;
+        max-height: clamp(30vh, 35vh, 40vh);
       }
     }
 
@@ -795,6 +823,10 @@
       
       .party-members-container {
         max-height: 20vh;
+      }
+
+      .hero-container:has(#rsvp-content.active) {
+        max-height: clamp(88vh, 90vh, 92vh);
       }
     }
   </style>
