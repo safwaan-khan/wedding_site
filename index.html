@@ -1266,10 +1266,15 @@
           }
         }
 
-        // Show thank you, hide form and party member list
+        // Show thank you with smooth animation, hide form and party member list
         document.getElementById("guest-list-section").style.display = "none";
         rsvpForm.style.display = "none";
         thankYouMessage.style.display = "block";
+        
+        // Trigger thank you message animation
+        setTimeout(() => {
+          thankYouMessage.classList.add('revealed');
+        }, 100);
         
         // Update thank you message based on attendance
         const attendingNames = partyMembers
