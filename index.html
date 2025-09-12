@@ -1015,8 +1015,9 @@
       document.getElementById("fullName").value = "";
       clearMessage(lookupMessage);
       
-      // Remove expanded class when resetting
-      document.getElementById("hero-container").classList.remove("rsvp-expanded");
+      // Remove all expanded classes when resetting
+      const heroContainer = document.getElementById("hero-container");
+      heroContainer.classList.remove("rsvp-expanded", "rsvp-form-visible");
     }
 
     // Make functions globally available
