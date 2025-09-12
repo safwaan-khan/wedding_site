@@ -606,7 +606,7 @@
         padding: clamp(0.4rem, 1.5vw, 0.8rem);
         min-height: 100vh;
         min-height: 100dvh;
-        justify-content: center;
+        justify-content: flex-start;
         align-items: center;
         gap: clamp(0.4rem, 1.2vw, 0.6rem);
       }
@@ -617,10 +617,17 @@
       }
       
       .hero-container {
+        /* Dynamic height based on content - hero vs RSVP */
         max-height: clamp(50vh, 55vh, 60vh);
         padding: clamp(0.6rem, 2vw, 1rem);
         margin-bottom: clamp(0.5rem, 1.5vw, 0.8rem);
         overflow-y: auto;
+      }
+      
+      /* Expand container when RSVP content is active */
+      .hero-container.rsvp-expanded {
+        max-height: calc(100vh - clamp(200px, 25vh, 280px));
+        min-height: 60vh;
       }
       
       .hero-title {
@@ -938,6 +945,9 @@
       infoContent.classList.remove("active");
       rsvpContent.classList.remove("active");
       
+      // Remove expanded class from hero container
+      document.getElementById("hero-container").classList.remove("rsvp-expanded");
+      
       // Show admin button when back to hero
       document.querySelector('.admin-button-wrapper').style.display = "block";
       
@@ -951,6 +961,9 @@
       infoContent.classList.add("active");
       rsvpContent.classList.remove("active");
       adminSection.style.display = "none";
+      
+      // Remove expanded class from hero container
+      document.getElementById("hero-container").classList.remove("rsvp-expanded");
       
       // Hide admin button
       document.querySelector('.admin-button-wrapper').style.display = "none";
@@ -966,6 +979,9 @@
       infoContent.classList.remove("active");
       rsvpContent.classList.add("active");
       adminSection.style.display = "none";
+      
+      // Add expanded class to hero container for mobile
+      document.getElementById("hero-container").classList.add("rsvp-expanded");
       
       // Hide admin button
       document.querySelector('.admin-button-wrapper').style.display = "none";
@@ -998,6 +1014,9 @@
       invitationSection.setAttribute("aria-hidden", "true");
       document.getElementById("fullName").value = "";
       clearMessage(lookupMessage);
+      
+      // Remove expanded class when resetting
+      document.getElementById("hero-container").classList.remove("rsvp-expanded");
     }
 
     // Make functions globally available
