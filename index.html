@@ -1178,7 +1178,7 @@
         invitationSection.style.display = "block";
         invitationSection.setAttribute("aria-hidden", "false");
         thankYouMessage.style.display = "none";
-        rsvpForm.style.display = "flex";
+        rsvpForm.style.display = "none"; // Hide initially until selection made
 
         // Reset messages and inputs
         clearMessage(rsvpMessage);
@@ -1187,7 +1187,7 @@
         // Render party members
         renderPartyMembers();
         
-        // Update email section visibility
+        // Update email section visibility (will also check if form should show)
         updateEmailSectionVisibility();
 
         setMessage(lookupMessage, "Guest found! Please complete your RSVP below.", true);
