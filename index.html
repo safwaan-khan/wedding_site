@@ -16,11 +16,11 @@
       <button class="back-button" onclick="showHeroContent()">← Back</button>
       <h2>Nikkah Information</h2>
       <p><strong>Date:</strong> Saturday, December 6th, 2025</p>
-      <p><strong>Time:</strong> 3:30 PM</p>
+      <p><strong>Time:</strong> 3:15 PM</p>
       <p><strong>Venue:</strong> South Bay Islamic Association (SBIA)</p>
       <p><strong>Address:</strong> <a href="https://www.google.com/maps/search/?api=1&query=2345+Harris+Way,+San+Jose,+CA+95131" target="_blank">2345 Harris Way, San Jose, CA 95131</a></p>
       <br>
-      <p>We're so excited to celebrate this special day with you! Athaan for Asr will be at 3:10PM. Asr will begin promptly at 3:30PM with the Nikkah following after prayer iA!</p>
+      <p>We're so excited to celebrate this special day with you! More details will be shared closer to the date.</p>
     </div>
 
     <!-- RSVP Content -->
@@ -304,20 +304,34 @@
         }, index * 100);
       });
       
-      // Add event listeners to attendance buttons
-      setTimeout(() => {
-        document.querySelectorAll('.attendance-btn').forEach(btn => {
-          btn.addEventListener('click', function() {
-            const memberId = this.dataset.memberId;
-            const memberIdKey = memberId === '-1' ? -1 : parseInt(memberId);
-            const action = this.dataset.action;
-            
-            memberAttendance[memberIdKey] = action;
-            renderPartyMembers();
-            updateEmailSectionVisibility();
-          });
+      // Add event listeners to attendance buttons - immediate response
+      document.querySelectorAll('.attendance-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+          const memberId = this.dataset.memberId;
+          const memberIdKey = memberId === '-1' ? -1 : parseInt(memberId);
+          const action = this.dataset.action;
+          
+          memberAttendance[memberIdKey] = action;
+          
+          // Update button states immediately without re-rendering entire list
+          const memberButtons = this.parentElement;
+          const acceptBtn = memberButtons.querySelector('.accept-btn');
+          const declineBtn = memberButtons.querySelector('.decline-btn');
+          
+          // Remove selected classes from both buttons
+          acceptBtn.classList.remove('accept-selected');
+          declineBtn.classList.remove('decline-selected');
+          
+          // Add selected class to clicked button
+          if (action === 'accept') {
+            acceptBtn.classList.add('accept-selected');
+          } else {
+            declineBtn.classList.add('decline-selected');
+          }
+          
+          updateEmailSectionVisibility();
         });
-      }, partyMembers.length * 100 + 100);
+      });
     }
 
     // Function to check if all party members have selected attendance
