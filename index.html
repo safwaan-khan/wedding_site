@@ -1,835 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Nikkah RSVP - Manal & Safwaan</title>
-
-  <!-- Favicon -->
-  <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
-  <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
-  <link rel="shortcut icon" href="favicon.ico">
-
-  <!-- Fonts -->
-  <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Playfair+Display&family=Josefin+Sans:wght@300;600&display=swap" rel="stylesheet" />
-
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
-    body {
-      font-family: 'Josefin Sans', sans-serif;
-      color: #2b3a67;
-      background: url('Background.jpeg') no-repeat center center fixed;
-      background-size: cover;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      min-height: 100vh;
-      padding: clamp(0.5rem, 2vw, 2rem);
-      transition: padding 0.3s ease;
-      overflow: auto;
-    }
-
-    .logo {
-      max-width: clamp(92px, 17.25vw, 138px);
-      margin-bottom: clamp(0.3rem, 1.5vw, 1rem);
-      transition: all 0.3s ease;
-    }
-
-    .hero-container {
-      background: rgba(255, 255, 255, 0.2);
-      backdrop-filter: blur(6px);
-      border-radius: clamp(12px, 3vw, 20px);
-      padding: clamp(0.8rem, 2.5vw, 2rem) clamp(0.8rem, 2vw, 1.8rem);
-      text-align: center;
-      max-width: min(480px, 92vw);
-      width: 100%;
-      box-shadow: 0 0 25px rgba(173, 216, 230, 0.3);
-      margin-bottom: clamp(0.8rem, 2vw, 1.5rem);
-      color: #2b3a67;
-      transition: all 0.3s ease;
-      max-height: 72vh;
-      overflow-y: auto;
-    }
-
-    /* Fade transition classes */
-    .fade-out {
-      opacity: 0;
-      transition: opacity 0.3s ease-out;
-    }
-
-    .fade-in {
-      opacity: 1;
-      transition: opacity 0.3s ease-in;
-    }
-
-    .hero-title {
-      font-family: 'Great Vibes', cursive;
-      font-size: clamp(1.8rem, 5.5vw, 2.8rem);
-      margin-bottom: 0.2rem;
-      color: #2b3a67;
-      transition: font-size 0.3s ease;
-    }
-
-    .hero-date {
-      font-family: 'Josefin Sans', sans-serif;
-      font-size: clamp(1rem, 2.8vw, 1.3rem);
-      color: #2b3a67;
-      margin-bottom: clamp(0.6rem, 1.8vw, 1.2rem);
-      transition: font-size 0.3s ease;
-    }
-
-    .hero-image {
-      max-width: 100%;
-      width: 100%;
-      height: auto;
-      border-radius: clamp(24px, 2vw, 36px);
-      margin-bottom: 0;
-      box-shadow: none;
-      transition: border-radius 0.3s ease;
-      max-height: clamp(20vh, 28vh, 32vh);
-      object-fit: contain;
-      object-position: center;
-      background: transparent;
-      border: none;
-    }
-
-    .button-container {
-      display: flex;
-      justify-content: center;
-      gap: clamp(0.6rem, 2vw, 1.5rem);
-      margin-bottom: clamp(0.8rem, 2vw, 1.5rem);
-      max-width: min(480px, 92vw);
-      width: 100%;
-    }
-
-    .toggle-button {
-      background: rgba(173, 216, 230, 0.3);
-      border: 1px solid rgba(43, 58, 103, 0.4);
-      padding: clamp(0.5rem, 1.8vw, 0.7rem) clamp(1rem, 2.8vw, 1.5rem);
-      border-radius: 999px;
-      font-family: 'Josefin Sans', sans-serif;
-      font-size: clamp(1rem, 2.2vw, 1.15rem);
-      color: #2b3a67;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      user-select: none;
-      white-space: nowrap;
-      flex: 1;
-      text-align: center;
-      min-width: 0;
-      backdrop-filter: blur(6px);
-      box-shadow: 0 0 15px rgba(173, 216, 230, 0.2);
-    }
-
-    .toggle-button:hover, .toggle-button[aria-expanded="true"] {
-      background: rgba(43, 58, 103, 0.8);
-      color: white;
-    }
-
-    /* Content sections that will appear in hero area */
-    .content-section {
-      display: none;
-      text-align: left;
-      opacity: 0;
-      transition: opacity 0.3s ease;
-    }
-
-    .content-section.active {
-      display: block;
-      opacity: 1;
-    }
-
-    .content-section h2 {
-      font-family: 'Great Vibes', cursive;
-      font-size: clamp(1.4rem, 3.5vw, 1.9rem);
-      margin-bottom: clamp(0.6rem, 1.8vw, 1.2rem);
-      color: #2b3a67;
-      text-align: center;
-      transition: font-size 0.3s ease;
-    }
-
-    .content-section h3 {
-      font-family: 'Playfair Display', serif;
-      font-size: clamp(1rem, 2.5vw, 1.25rem);
-      margin-bottom: clamp(0.5rem, 1.2vw, 0.8rem);
-      color: #2b3a67;
-      text-align: center;
-      transition: font-size 0.3s ease;
-    }
-
-    .content-section p {
-      font-size: clamp(1rem, 2.2vw, 1.1rem);
-      line-height: 1.3;
-      margin-bottom: clamp(0.3rem, 0.8vw, 0.6rem);
-    }
-
-    .content-section a {
-      color: #2b3a67;
-      text-decoration: underline;
-      transition: color 0.3s ease;
-    }
-
-    .content-section a:hover {
-      color: #1b2550;
-    }
-
-    /* Admin section special styling for wider content */
-    #admin-section {
-      max-width: min(800px, 95vw);
-      background: rgba(255, 255, 255, 0.25);
-      backdrop-filter: blur(8px);
-      border-radius: clamp(12px, 3vw, 16px);
-      padding: clamp(1.5rem, 4vw, 2.5rem);
-      margin-bottom: clamp(1rem, 2.5vw, 1.5rem);
-      box-shadow: 0 0 30px rgba(43, 58, 103, 0.4);
-      display: none;
-      color: #2b3a67;
-      transition: all 0.3s ease;
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      max-height: 90vh;
-      overflow-y: auto;
-    }
-
-    form {
-      display: flex;
-      flex-direction: column;
-      gap: clamp(0.5rem, 1.2vw, 0.8rem);
-      color: #2b3a67;
-    }
-
-    label {
-      font-weight: 600;
-      font-size: clamp(0.95rem, 2vw, 1.05rem);
-      text-align: center;
-    }
-
-    /* Special styling for the guest lookup label */
-    #lookup-form label {
-      font-size: clamp(0.97rem, 2.2vw, 1.07rem);
-      text-align: center;
-    }
-
-    /* Special styling for party member selection label */
-    #guest-list-section > label {
-      font-size: clamp(0.97rem, 2.2vw, 1.07rem);
-      text-align: center;
-    }
-
-    input[type="text"],
-    input[type="email"],
-    input[type="password"] {
-      padding: clamp(0.4rem, 1.5vw, 0.6rem) clamp(0.6rem, 1.8vw, 0.8rem);
-      border: 2px solid #2b3a67;
-      border-radius: clamp(4px, 1vw, 8px);
-      font-size: clamp(0.95rem, 2vw, 1.05rem);
-      color: #2b3a67;
-      background: rgba(255,255,255,0.9);
-      transition: all 0.3s ease;
-      width: 100%;
-      box-sizing: border-box;
-    }
-
-    input[type="text"]:focus,
-    input[type="email"]:focus,
-    input[type="password"]:focus {
-      border-color: #1b2550;
-      background: white;
-      outline: none;
-    }
-
-    /* Party Members Styling - More compact */
-    .party-members-container {
-      display: flex;
-      flex-direction: column;
-      gap: clamp(0.4rem, 1.2vw, 0.7rem);
-      margin-top: clamp(0.3rem, 1vw, 0.5rem);
-      padding: clamp(0.5rem, 1.5vw, 0.8rem);
-      background: rgba(255, 255, 255, 0.1);
-      border-radius: clamp(6px, 1.5vw, 10px);
-      border: 1px solid rgba(43, 58, 103, 0.2);
-    }
-
-    .party-member {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: clamp(0.4rem, 1.2vw, 0.6rem);
-      background: rgba(255, 255, 255, 0.2);
-      border-radius: clamp(4px, 1vw, 6px);
-      border: 1px solid rgba(43, 58, 103, 0.15);
-    }
-
-    .party-member-name {
-      font-weight: 600;
-      font-size: clamp(0.95rem, 2.1vw, 1.05rem);
-      color: #2b3a67;
-      flex: 1;
-    }
-
-    .party-member-buttons {
-      display: flex;
-      gap: clamp(0.3rem, 0.8vw, 0.5rem);
-    }
-
-    .attendance-btn {
-      background: rgba(255, 255, 255, 0.3);
-      border: 1.5px solid #2b3a67;
-      padding: clamp(0.25rem, 0.8vw, 0.35rem) clamp(0.5rem, 1.2vw, 0.7rem);
-      border-radius: clamp(3px, 0.8vw, 5px);
-      font-family: 'Josefin Sans', sans-serif;
-      font-size: clamp(0.85rem, 1.8vw, 0.95rem);
-      color: #2b3a67;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      user-select: none;
-      min-width: clamp(3rem, 7vw, 3.5rem);
-      text-align: center;
-    }
-
-    .attendance-btn:hover {
-      background: rgba(43, 58, 103, 0.1);
-    }
-
-    .attendance-btn.accept-selected {
-      background: rgba(45, 125, 50, 0.2);
-      border-color: #2d7d32;
-      color: #2d7d32;
-      font-weight: 600;
-    }
-
-    .attendance-btn.decline-selected {
-      background: rgba(211, 47, 47, 0.2);
-      border-color: #d32f2f;
-      color: #d32f2f;
-      font-weight: 600;
-    }
-
-    .attendance-btn.accept-selected:hover {
-      background: rgba(45, 125, 50, 0.3);
-    }
-
-    .attendance-btn.decline-selected:hover {
-      background: rgba(211, 47, 47, 0.3);
-    }
-
-    button[type="submit"] {
-      background: #2b3a67;
-      border: none;
-      color: white;
-      font-weight: 600;
-      font-size: clamp(1rem, 2.2vw, 1.15rem);
-      padding: clamp(0.5rem, 1.5vw, 0.7rem);
-      border-radius: clamp(5px, 1.2vw, 8px);
-      cursor: pointer;
-      transition: all 0.3s ease;
-      width: 100%;
-      box-sizing: border-box;
-    }
-
-    button[type="submit"]:hover {
-      background: #1b2550;
-    }
-
-    button[type="submit"]:disabled {
-      background: #8896b8;
-      cursor: not-allowed;
-    }
-
-    .inline-message {
-      font-size: clamp(0.9rem, 2vw, 1rem);
-      margin-top: -0.3rem;
-      min-height: 1rem;
-      color: #a05b5b;
-      text-align: center;
-    }
-
-    .inline-message.success {
-      color: #2d7d32;
-    }
-
-    #thank-you-message {
-      font-size: clamp(1.13rem, 2.7vw, 1.28rem);
-      color: #2b3a67;
-      margin-top: 0.8rem;
-      font-weight: normal;
-      font-style: normal;
-      text-align: center;
-    }
-
-    /* Table Styles - Much wider for admin */
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 1rem;
-      font-size: clamp(0.95rem, 2.4vw, 1.15rem);
-      background: rgba(255, 255, 255, 0.1);
-      border-radius: 8px;
-      overflow: hidden;
-    }
-
-    th, td {
-      border: 1px solid #2b3a67;
-      padding: clamp(0.5rem, 1.5vw, 0.8rem);
-      text-align: left;
-      word-wrap: break-word;
-      font-size: clamp(0.9rem, 2.2vw, 1.1rem);
-    }
-
-    thead {
-      background: rgba(43, 58, 103, 0.2);
-      color: #1b2550;
-      font-weight: 600;
-    }
-
-    tbody tr:nth-child(even) {
-      background: rgba(255, 255, 255, 0.1);
-    }
-
-    tr.confirmed {
-      background-color: rgba(45, 125, 50, 0.2);
-      font-weight: 600;
-    }
-
-    tr.rejected {
-      background-color: rgba(211, 47, 47, 0.2);
-      font-weight: 600;
-      color: #d32f2f;
-    }
-
-    #total-headcount {
-      font-weight: 600;
-      font-size: clamp(1.15rem, 2.7vw, 1.45rem);
-      color: #1b2550;
-      margin-bottom: 1rem;
-      text-align: right;
-    }
-
-    /* Admin button moved to bottom */
-    .admin-button-wrapper {
-      position: absolute;
-      bottom: clamp(0.8rem, 2vw, 1.5rem);
-      left: 50%;
-      transform: translateX(-50%);
-      text-align: center;
-    }
-
-    .admin-button {
-      background: transparent;
-      border: 1px solid #2b3a67;
-      padding: clamp(0.3rem, 1.5vw, 0.5rem) clamp(0.8rem, 2.5vw, 1.2rem);
-      border-radius: 999px;
-      font-size: clamp(0.85rem, 2vw, 1rem);
-      color: #2b3a67;
-      cursor: pointer;
-      transition: all 0.3s ease;
-    }
-
-    .admin-button:hover,
-    .admin-button[aria-expanded="true"] {
-      background: #2b3a67;
-      color: white;
-    }
-
-    /* Back button styling */
-    .back-button {
-      background: rgba(173, 216, 230, 0.5);
-      border: 1px solid #2b3a67;
-      padding: clamp(0.3rem, 1.5vw, 0.5rem) clamp(0.8rem, 2.5vw, 1.2rem);
-      border-radius: 999px;
-      font-family: 'Josefin Sans', sans-serif;
-      font-size: clamp(0.85rem, 2vw, 1rem);
-      color: #2b3a67;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      margin-bottom: clamp(0.4rem, 1.2vw, 0.8rem);
-      align-self: flex-start;
-    }
-
-    .back-button:hover {
-      background: rgba(43, 58, 103, 0.6);
-      color: white;
-    }
-
-    /* Radio button styling for cleaner look */
-    .radio-container {
-      display: flex;
-      gap: clamp(0.8rem, 2vw, 1.5rem);
-      margin-bottom: clamp(0.5rem, 1.2vw, 0.8rem);
-      justify-content: center;
-      flex-wrap: wrap;
-    }
-
-    .radio-container label {
-      display: flex;
-      align-items: center;
-      gap: 0.4rem;
-      font-weight: normal;
-      font-size: clamp(0.95rem, 2vw, 1.05rem);
-      cursor: pointer;
-    }
-
-    .radio-container input[type="radio"] {
-      margin: 0;
-      transform: scale(1.1);
-    }
-
-    /* Hide email section when no one is attending */
-    #email-section.hidden {
-      display: none !important;
-    }
-
-    /* Responsive Breakpoints */
-    
-    /* Large screens - scale everything up */
-    @media (min-width: 1200px) {
-      body {
-        padding: 3rem;
-      }
-      
-      .logo {
-        max-width: 184px;
-        margin-bottom: 1.5rem;
-      }
-      
-      .hero-container {
-        max-width: 550px;
-        padding: 2.5rem 2rem;
-        margin-bottom: 2rem;
-        max-height: 75vh;
-      }
-      
-      .hero-image {
-        max-height: 35vh;
-        border-radius: 15px;
-      }
-      
-      .button-container {
-        max-width: 550px;
-        gap: 2rem;
-        margin-bottom: 2rem;
-      }
-      
-      .toggle-button {
-        padding: 0.8rem 1.8rem;
-        font-size: 1.25rem;
-      }
-      
-      #admin-section {
-        max-width: 1000px;
-        padding: 3rem;
-      }
-      
-      .hero-title {
-        font-size: 3.2rem;
-      }
-      
-      .hero-date {
-        font-size: 1.5rem;
-        margin-bottom: 1.8rem;
-      }
-      
-      .content-section h2 {
-        font-size: 2.2rem;
-        margin-bottom: 1.5rem;
-      }
-      
-      .content-section h3 {
-        font-size: 1.4rem;
-        margin-bottom: 1rem;
-      }
-      
-      .content-section p {
-        font-size: 1.15rem;
-        margin-bottom: 0.8rem;
-      }
-      
-      #total-headcount {
-        font-size: 1.55rem;
-      }
-      
-      th, td {
-        padding: 1rem;
-        font-size: 1.15rem;
-      }
-
-      #lookup-form label {
-        font-size: 1.09rem;
-      }
-
-      #guest-list-section > label {
-        font-size: 1.09rem;
-      }
-
-      #thank-you-message {
-        font-size: 1.31rem;
-      }
-    }
-
-    /* Tablet landscape */
-    @media (min-width: 768px) and (max-width: 1199px) {
-      .hero-container {
-        max-width: 520px;
-        max-height: 68vh;
-      }
-      
-      .hero-image {
-        max-height: 30vh;
-      }
-      
-      .button-container {
-        max-width: 520px;
-      }
-      
-      #admin-section {
-        max-width: 900px;
-      }
-    }
-
-    /* Mobile optimizations - FIXED HEIGHT FOR RSVP */
-    @media (max-width: 767px) {
-      html, body {
-        height: 100vh;
-        height: 100dvh;
-        overflow: hidden;
-      }
-      
-      body {
-        padding: clamp(0.4rem, 1.5vw, 0.8rem);
-        min-height: 100vh;
-        min-height: 100dvh;
-        justify-content: center;
-        align-items: center;
-        gap: clamp(0.4rem, 1.2vw, 0.6rem);
-      }
-      
-      .logo {
-        max-width: clamp(110px, 18vw, 130px);
-        margin-bottom: clamp(0.4rem, 1.2vw, 0.6rem);
-      }
-      
-      .hero-container {
-        /* Default max-height for hero and info content */
-        max-height: clamp(50vh, 55vh, 60vh);
-        padding: clamp(0.6rem, 2vw, 1rem);
-        margin-bottom: clamp(0.5rem, 1.5vw, 0.8rem);
-        overflow-y: auto;
-      }
-
-      /* Special taller container for RSVP content to fit all elements */
-      .hero-container:has(#rsvp-content.active) {
-        max-height: clamp(65vh, 70vh, 75vh);
-        padding: clamp(0.5rem, 1.8vw, 0.8rem);
-      }
-      
-      .hero-title {
-        font-size: clamp(2.2rem, 6vw, 2.8rem);
-        margin-bottom: 0.15rem;
-      }
-      
-      .hero-date {
-        font-size: clamp(1.1rem, 3vw, 1.4rem);
-        margin-bottom: clamp(0.5rem, 1.5vw, 0.8rem);
-      }
-      
-      .hero-image {
-        max-height: clamp(25vh, 30vh, 35vh);
-        width: 100%;
-        height: auto;
-        object-fit: contain;
-        object-position: center;
-      }
-      
-      .button-container {
-        margin-bottom: clamp(0.5rem, 1.5vw, 0.8rem);
-        gap: clamp(0.5rem, 1.5vw, 0.8rem);
-      }
-      
-      .toggle-button {
-        padding: clamp(0.45rem, 1.5vw, 0.65rem) clamp(0.8rem, 2.5vw, 1.2rem);
-        font-size: clamp(1rem, 2.5vw, 1.2rem);
-      }
-      
-      .content-section {
-        overflow-y: auto;
-      }
-      
-      /* Adjust party members container for mobile RSVP */
-      .party-members-container {
-        max-height: clamp(22vh, 25vh, 28vh);
-        overflow-y: auto;
-      }
-
-      /* Compact spacing for RSVP form elements on mobile */
-      #rsvp-content form {
-        gap: clamp(0.4rem, 1vw, 0.6rem);
-      }
-
-      #rsvp-content .content-section h2 {
-        margin-bottom: clamp(0.5rem, 1.2vw, 0.8rem);
-      }
-
-      #email-section {
-        margin-top: clamp(0.3rem, 0.8vw, 0.5rem);
-        margin-bottom: clamp(0.3rem, 0.8vw, 0.5rem);
-      }
-      
-      #admin-section {
-        position: fixed;
-        top: 5vh;
-        left: 5vw;
-        right: 5vw;
-        bottom: 5vh;
-        max-width: none;
-        max-height: none;
-        transform: none;
-        padding: clamp(1rem, 3vw, 1.5rem);
-        z-index: 1000;
-      }
-      
-      .admin-button-wrapper {
-        position: fixed;
-        bottom: clamp(1rem, 3vw, 1.5rem);
-        left: 50%;
-        transform: translateX(-50%);
-      }
-      
-      .admin-button {
-        padding: clamp(0.35rem, 1.2vw, 0.5rem) clamp(0.8rem, 2.5vw, 1.2rem);
-        font-size: clamp(0.9rem, 2.2vw, 1rem);
-      }
-      
-      /* Make table more readable on mobile */
-      table {
-        font-size: clamp(0.75rem, 2vw, 0.9rem);
-      }
-      
-      th, td {
-        padding: clamp(0.25rem, 0.8vw, 0.4rem);
-        font-size: clamp(0.7rem, 1.8vw, 0.85rem);
-      }
-
-      th:nth-child(3), td:nth-child(3),
-      th:nth-child(4), td:nth-child(4) {
-        text-align: center;
-      }
-    }
-
-    /* Small mobile */
-    @media (max-width: 480px) {
-      .logo {
-        max-width: clamp(110px, 20vw, 130px);
-      }
-      
-      .hero-title {
-        font-size: clamp(2.2rem, 6.5vw, 2.8rem);
-      }
-      
-      .hero-date {
-        font-size: clamp(1.1rem, 3.2vw, 1.4rem);
-      }
-    }
-
-    /* Very small screens */
-    @media (max-width: 320px) {
-      .logo {
-        max-width: clamp(100px, 18vw, 120px);
-      }
-      
-      .hero-title {
-        font-size: clamp(2rem, 6vw, 2.4rem);
-      }
-      
-      .hero-date {
-        font-size: clamp(1rem, 3vw, 1.2rem);
-      }
-    }
-
-    /* Landscape mobile orientation - optimize for limited height */
-    @media (max-width: 767px) and (orientation: landscape) {
-      body {
-        padding: 0.2rem;
-        gap: 0.2rem;
-      }
-      
-      .logo {
-        max-width: clamp(70px, 12vw, 90px);
-        margin-bottom: 0.1rem;
-      }
-      
-      .hero-title {
-        font-size: clamp(1.8rem, 4.5vw, 2.2rem);
-        margin-bottom: 0.05rem;
-      }
-      
-      .hero-date {
-        font-size: clamp(0.9rem, 2.5vw, 1.1rem);
-        margin-bottom: 0.2rem;
-      }
-      
-      .hero-container {
-        padding: 0.4rem;
-        margin-bottom: 0.2rem;
-        max-height: clamp(75vh, 80vh, 85vh);
-      }
-
-      /* Even taller for RSVP in landscape */
-      .hero-container:has(#rsvp-content.active) {
-        max-height: clamp(85vh, 88vh, 90vh);
-      }
-      
-      .button-container {
-        margin-bottom: 0.2rem;
-      }
-      
-      .toggle-button {
-        padding: 0.3rem 0.6rem;
-        font-size: clamp(0.9rem, 2.2vw, 1rem);
-      }
-      
-      .admin-button-wrapper {
-        bottom: 0.2rem;
-      }
-      
-      .admin-button {
-        padding: 0.2rem 0.5rem;
-        font-size: clamp(0.75rem, 1.8vw, 0.85rem);
-      }
-      
-      .party-members-container {
-        max-height: clamp(30vh, 35vh, 40vh);
-      }
-    }
-
-    /* Very short screens */
-    @media (max-height: 500px) {
-      body {
-        padding: 0.2rem;
-        gap: 0.1rem;
-      }
-      
-      .logo {
-        max-width: clamp(60px, 10vw, 80px);
-        margin-bottom: 0.1rem;
-      }
-      
-      .party-members-container {
-        max-height: 20vh;
-      }
-
-      .hero-container:has(#rsvp-content.active) {
-        max-height: clamp(88vh, 90vh, 92vh);
-      }
-    }
-  </style>
+</style>
 </head>
 <body>
   <img src="Bismillah.png" alt="Bismillah" class="logo" />
@@ -847,11 +16,11 @@
       <button class="back-button" onclick="showHeroContent()">← Back</button>
       <h2>Nikkah Information</h2>
       <p><strong>Date:</strong> Saturday, December 6th, 2025</p>
-      <p><strong>Time:</strong> 4:00 PM</p>
-      <p><strong>Venue:</strong> South Bay Islamic Association - Masjid al-Mustafa</p>
+      <p><strong>Time:</strong> 3:30 PM</p>
+      <p><strong>Venue:</strong> South Bay Islamic Association (SBIA)</p>
       <p><strong>Address:</strong> <a href="https://www.google.com/maps/search/?api=1&query=2345+Harris+Way,+San+Jose,+CA+95131" target="_blank">2345 Harris Way, San Jose, CA 95131</a></p>
       <br>
-      <p>We're so excited to celebrate this special day with you! More details will be shared closer to the date.</p>
+      <p>We're so excited to celebrate this special day with you! Athaan for Asr will be at 3:10PM. Asr will begin promptly at 3:30PM with the Nikkah following after prayer iA!</p>
     </div>
 
     <!-- RSVP Content -->
@@ -943,6 +112,7 @@
     let currentGuest = null;
     let partyMembers = [];
     let memberAttendance = {};
+    let isTransitioning = false;
 
     // DOM Elements
     const infoBtn = document.getElementById("info-btn");
@@ -964,28 +134,77 @@
     const guestListDiv = document.getElementById("guest-list");
     const emailSection = document.getElementById("email-section");
 
-    // Content switching functions
-    function showHeroContent() {
-      heroContent.style.display = "block";
+    // Enhanced content switching functions with smooth transitions
+    async function transitionElements(outgoing, incoming) {
+      if (isTransitioning) return;
+      isTransitioning = true;
+
+      // Add transitioning classes to create fade-out effect
+      outgoing.forEach(element => {
+        if (element) element.classList.add('transitioning');
+      });
+
+      // Wait for fade-out transition
+      await new Promise(resolve => setTimeout(resolve, 400));
+
+      // Hide outgoing content and show incoming
+      if (heroContent.style.display !== "none") {
+        heroContent.style.display = "none";
+      }
       infoContent.classList.remove("active");
       rsvpContent.classList.remove("active");
+      adminSection.style.display = "none";
+      adminSection.classList.remove("show");
+
+      // Show incoming content
+      if (incoming === 'hero') {
+        heroContent.style.display = "block";
+        document.querySelector('.admin-button-wrapper').style.display = "block";
+      } else if (incoming === 'info') {
+        infoContent.classList.add("active");
+        document.querySelector('.admin-button-wrapper').style.display = "none";
+      } else if (incoming === 'rsvp') {
+        rsvpContent.classList.add("active");
+        document.querySelector('.admin-button-wrapper').style.display = "none";
+      } else if (incoming === 'admin') {
+        adminSection.style.display = "block";
+        setTimeout(() => adminSection.classList.add("show"), 50);
+      }
+
+      // Wait for elements to be positioned
+      await new Promise(resolve => setTimeout(resolve, 50));
+
+      // Remove transitioning classes to create fade-in effect
+      outgoing.forEach(element => {
+        if (element) element.classList.remove('transitioning');
+      });
+
+      isTransitioning = false;
+    }
+
+    function showHeroContent() {
+      const outgoingElements = [
+        document.querySelector('.hero-container'),
+        document.querySelector('.button-container'),
+        document.querySelector('.admin-button-wrapper')
+      ];
       
-      // Show admin button when back to hero
-      document.querySelector('.admin-button-wrapper').style.display = "block";
+      transitionElements(outgoingElements, 'hero');
       
       // Reset button states
       infoBtn.setAttribute("aria-expanded", "false");
       rsvpBtn.setAttribute("aria-expanded", "false");
+      adminBtn.setAttribute("aria-expanded", "false");
     }
 
     function showInfoContent() {
-      heroContent.style.display = "none";
-      infoContent.classList.add("active");
-      rsvpContent.classList.remove("active");
-      adminSection.style.display = "none";
+      const outgoingElements = [
+        document.querySelector('.hero-container'),
+        document.querySelector('.button-container'),
+        document.querySelector('.admin-button-wrapper')
+      ];
       
-      // Hide admin button
-      document.querySelector('.admin-button-wrapper').style.display = "none";
+      transitionElements(outgoingElements, 'info');
       
       // Update button states
       infoBtn.setAttribute("aria-expanded", "true");
@@ -994,13 +213,13 @@
     }
 
     function showRsvpContent() {
-      heroContent.style.display = "none";
-      infoContent.classList.remove("active");
-      rsvpContent.classList.add("active");
-      adminSection.style.display = "none";
+      const outgoingElements = [
+        document.querySelector('.hero-container'),
+        document.querySelector('.button-container'),
+        document.querySelector('.admin-button-wrapper')
+      ];
       
-      // Hide admin button
-      document.querySelector('.admin-button-wrapper').style.display = "none";
+      transitionElements(outgoingElements, 'rsvp');
       
       // Update button states
       infoBtn.setAttribute("aria-expanded", "false");
@@ -1011,10 +230,18 @@
     function toggleAdminSection() {
       const isVisible = adminSection.style.display === "block";
       if (isVisible) {
-        adminSection.style.display = "none";
+        adminSection.classList.remove("show");
+        setTimeout(() => {
+          adminSection.style.display = "none";
+        }, 300);
         adminBtn.setAttribute("aria-expanded", "false");
       } else {
-        adminSection.style.display = "block";
+        const outgoingElements = [
+          document.querySelector('.hero-container'),
+          document.querySelector('.button-container')
+        ];
+        
+        transitionElements(outgoingElements, 'admin');
         adminBtn.setAttribute("aria-expanded", "true");
         
         // Hide other content
@@ -1036,16 +263,24 @@
     window.showHeroContent = showHeroContent;
     window.resetRsvpForm = resetRsvpForm;
 
-    // Event Listeners for Section Toggles
-    infoBtn.addEventListener("click", showInfoContent);
-    rsvpBtn.addEventListener("click", showRsvpContent);
-    adminBtn.addEventListener("click", toggleAdminSection);
+    // Event Listeners for Section Toggles with debouncing
+    infoBtn.addEventListener("click", () => {
+      if (!isTransitioning) showInfoContent();
+    });
+    
+    rsvpBtn.addEventListener("click", () => {
+      if (!isTransitioning) showRsvpContent();
+    });
+    
+    adminBtn.addEventListener("click", () => {
+      if (!isTransitioning) toggleAdminSection();
+    });
 
-    // Function to render party members - now ALL members including party leader
+    // Function to render party members with staggered animations
     function renderPartyMembers() {
       partyMembersList.innerHTML = '';
       
-      partyMembers.forEach(member => {
+      partyMembers.forEach((member, index) => {
         const memberDiv = document.createElement('div');
         memberDiv.className = 'party-member';
         
@@ -1062,23 +297,27 @@
         `;
         
         partyMembersList.appendChild(memberDiv);
+        
+        // Staggered animation for each member
+        setTimeout(() => {
+          memberDiv.classList.add('show');
+        }, index * 100);
       });
       
       // Add event listeners to attendance buttons
-      document.querySelectorAll('.attendance-btn').forEach(btn => {
-        btn.addEventListener('click', function() {
-          const memberId = this.dataset.memberId;
-          // Convert to number if it's a valid number, otherwise keep as string/number
-          const memberIdKey = memberId === '-1' ? -1 : parseInt(memberId);
-          const action = this.dataset.action;
-          
-          memberAttendance[memberIdKey] = action;
-          renderPartyMembers();
-          
-          // Check if email section should be shown/hidden
-          updateEmailSectionVisibility();
+      setTimeout(() => {
+        document.querySelectorAll('.attendance-btn').forEach(btn => {
+          btn.addEventListener('click', function() {
+            const memberId = this.dataset.memberId;
+            const memberIdKey = memberId === '-1' ? -1 : parseInt(memberId);
+            const action = this.dataset.action;
+            
+            memberAttendance[memberIdKey] = action;
+            renderPartyMembers();
+            updateEmailSectionVisibility();
+          });
         });
-      });
+      }, partyMembers.length * 100 + 100);
     }
 
     // Function to check if all party members have selected attendance
@@ -1105,12 +344,16 @@
 
     function setMessage(element, message, isSuccess = true) {
       element.textContent = message;
-      element.className = isSuccess ? "inline-message success" : "inline-message";
+      element.className = isSuccess ? "inline-message success show" : "inline-message show";
+      setTimeout(() => element.classList.add('show'), 50);
     }
 
     function clearMessage(element) {
-      element.textContent = "";
-      element.className = "inline-message";
+      element.classList.remove('show');
+      setTimeout(() => {
+        element.textContent = "";
+        element.className = "inline-message";
+      }, 300);
     }
 
     // Guest Lookup Form
@@ -1186,19 +429,23 @@
           partyMembers.unshift(mainGuestMember);
         }
 
-        // Hide the lookup form and show invitation section
+        // Hide the lookup form and show invitation section with animation
         document.getElementById("lookup-form").style.display = "none";
-        invitationSection.style.display = "block";
-        invitationSection.setAttribute("aria-hidden", "false");
-        thankYouMessage.style.display = "none";
-        rsvpForm.style.display = "flex";
+        setTimeout(() => {
+          invitationSection.style.display = "block";
+          invitationSection.setAttribute("aria-hidden", "false");
+          thankYouMessage.style.display = "none";
+          rsvpForm.style.display = "flex";
+        }, 300);
 
         // Reset messages and inputs
         clearMessage(rsvpMessage);
         document.getElementById("email").value = "";
 
-        // Render party members
-        renderPartyMembers();
+        // Render party members with animation
+        setTimeout(() => {
+          renderPartyMembers();
+        }, 400);
         
         // Update email section visibility
         updateEmailSectionVisibility();
@@ -1312,7 +559,7 @@
       }
     });
 
-    // Admin Authentication
+    // Admin Authentication with enhanced animations
     document.getElementById("admin-auth").addEventListener("submit", async (e) => {
       e.preventDefault();
       clearMessage(adminMessage);
@@ -1335,7 +582,7 @@
           return;
         }
 
-        // Populate guest table
+        // Populate guest table with animations
         const tbody = document.getElementById("guest-rows");
         tbody.innerHTML = "";
         let totalGuestsConfirmed = 0;
@@ -1366,7 +613,18 @@
           tbody.appendChild(tr);
         });
 
-        document.getElementById("total-headcount").innerText = `Total Confirmed Attending: ${totalGuestsConfirmed}`;
+        // Animate table and headcount appearance
+        const totalHeadcount = document.getElementById("total-headcount");
+        totalHeadcount.innerText = `Total Confirmed Attending: ${totalGuestsConfirmed}`;
+        
+        setTimeout(() => {
+          totalHeadcount.classList.add('show');
+        }, 200);
+        
+        setTimeout(() => {
+          document.querySelector('table').classList.add('show');
+        }, 400);
+        
         guestListDiv.style.display = "block";
 
         // Clear password input
@@ -1389,4 +647,759 @@
     }
   </script>
 </body>
-</html>
+</html><!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Nikkah RSVP - Manal & Safwaan</title>
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
+  <link rel="shortcut icon" href="favicon.ico">
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Playfair+Display&family=Josefin+Sans:wght@300;600&display=swap" rel="stylesheet" />
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Josefin Sans', sans-serif;
+      color: #2b3a67;
+      background: url('Background.jpeg') no-repeat center center fixed;
+      background-size: cover;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding: clamp(0.5rem, 2vw, 2rem);
+      transition: padding 0.6s ease;
+      overflow: auto;
+    }
+
+    .logo {
+      max-width: clamp(92px, 17.25vw, 138px);
+      margin-bottom: clamp(0.3rem, 1.5vw, 1rem);
+      transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .logo.transitioning {
+      opacity: 0;
+      transform: translateY(-20px);
+    }
+
+    .hero-container {
+      background: rgba(255, 255, 255, 0.2);
+      backdrop-filter: blur(6px);
+      border-radius: clamp(12px, 3vw, 20px);
+      padding: clamp(0.8rem, 2.5vw, 2rem) clamp(0.8rem, 2vw, 1.8rem);
+      text-align: center;
+      max-width: min(480px, 92vw);
+      width: 100%;
+      box-shadow: 0 0 25px rgba(173, 216, 230, 0.3);
+      margin-bottom: clamp(0.8rem, 2vw, 1.5rem);
+      color: #2b3a67;
+      transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+      max-height: 72vh;
+      overflow-y: auto;
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .hero-container.transitioning {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+
+    /* Enhanced fade transition classes */
+    .fade-out {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .fade-in {
+      opacity: 1;
+      transform: translateY(0);
+      transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .hero-title {
+      font-family: 'Great Vibes', cursive;
+      font-size: clamp(1.8rem, 5.5vw, 2.8rem);
+      margin-bottom: 0.2rem;
+      color: #2b3a67;
+      transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .hero-title.transitioning {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+
+    .hero-date {
+      font-family: 'Josefin Sans', sans-serif;
+      font-size: clamp(1rem, 2.8vw, 1.3rem);
+      color: #2b3a67;
+      margin-bottom: clamp(0.6rem, 1.8vw, 1.2rem);
+      transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .hero-date.transitioning {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+
+    .hero-image {
+      max-width: 100%;
+      width: 100%;
+      height: auto;
+      border-radius: clamp(24px, 2vw, 36px);
+      margin-bottom: 0;
+      box-shadow: none;
+      transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+      max-height: clamp(20vh, 28vh, 32vh);
+      object-fit: contain;
+      object-position: center;
+      background: transparent;
+      border: none;
+      opacity: 1;
+      transform: scale(1) translateY(0);
+    }
+
+    .hero-image.transitioning {
+      opacity: 0;
+      transform: scale(0.95) translateY(20px);
+    }
+
+    .button-container {
+      display: flex;
+      justify-content: center;
+      gap: clamp(0.6rem, 2vw, 1.5rem);
+      margin-bottom: clamp(0.8rem, 2vw, 1.5rem);
+      max-width: min(480px, 92vw);
+      width: 100%;
+      opacity: 1;
+      transform: translateY(0);
+      transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .button-container.transitioning {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+
+    .toggle-button {
+      background: rgba(173, 216, 230, 0.3);
+      border: 1px solid rgba(43, 58, 103, 0.4);
+      padding: clamp(0.5rem, 1.8vw, 0.7rem) clamp(1rem, 2.8vw, 1.5rem);
+      border-radius: 999px;
+      font-family: 'Josefin Sans', sans-serif;
+      font-size: clamp(1rem, 2.2vw, 1.15rem);
+      color: #2b3a67;
+      cursor: pointer;
+      transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+      user-select: none;
+      white-space: nowrap;
+      flex: 1;
+      text-align: center;
+      min-width: 0;
+      backdrop-filter: blur(6px);
+      box-shadow: 0 0 15px rgba(173, 216, 230, 0.2);
+      transform: scale(1);
+    }
+
+    .toggle-button:hover {
+      background: rgba(43, 58, 103, 0.8);
+      color: white;
+      transform: scale(1.05);
+      box-shadow: 0 0 20px rgba(173, 216, 230, 0.4);
+    }
+
+    .toggle-button[aria-expanded="true"] {
+      background: rgba(43, 58, 103, 0.8);
+      color: white;
+      transform: scale(1.02);
+    }
+
+    /* Content sections that will appear in hero area */
+    .content-section {
+      display: none;
+      text-align: left;
+      opacity: 0;
+      transform: translateY(40px);
+      transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .content-section.active {
+      display: block;
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .content-section h2 {
+      font-family: 'Great Vibes', cursive;
+      font-size: clamp(1.4rem, 3.5vw, 1.9rem);
+      margin-bottom: clamp(0.6rem, 1.8vw, 1.2rem);
+      color: #2b3a67;
+      text-align: center;
+      transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+      opacity: 0;
+      transform: translateY(20px);
+    }
+
+    .content-section.active h2 {
+      opacity: 1;
+      transform: translateY(0);
+      transition-delay: 0.2s;
+    }
+
+    .content-section h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(1rem, 2.5vw, 1.25rem);
+      margin-bottom: clamp(0.5rem, 1.2vw, 0.8rem);
+      color: #2b3a67;
+      text-align: center;
+      transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+      opacity: 0;
+      transform: translateY(20px);
+    }
+
+    .content-section.active h3 {
+      opacity: 1;
+      transform: translateY(0);
+      transition-delay: 0.3s;
+    }
+
+    .content-section p {
+      font-size: clamp(1rem, 2.2vw, 1.1rem);
+      line-height: 1.3;
+      margin-bottom: clamp(0.3rem, 0.8vw, 0.6rem);
+      opacity: 0;
+      transform: translateY(15px);
+      transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .content-section.active p {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .content-section.active p:nth-of-type(1) { transition-delay: 0.4s; }
+    .content-section.active p:nth-of-type(2) { transition-delay: 0.5s; }
+    .content-section.active p:nth-of-type(3) { transition-delay: 0.6s; }
+    .content-section.active p:nth-of-type(4) { transition-delay: 0.7s; }
+    .content-section.active p:nth-of-type(5) { transition-delay: 0.8s; }
+
+    .content-section a {
+      color: #2b3a67;
+      text-decoration: underline;
+      transition: all 0.4s ease;
+    }
+
+    .content-section a:hover {
+      color: #1b2550;
+      text-shadow: 0 0 8px rgba(43, 58, 103, 0.3);
+    }
+
+    /* Admin section special styling for wider content */
+    #admin-section {
+      max-width: min(800px, 95vw);
+      background: rgba(255, 255, 255, 0.25);
+      backdrop-filter: blur(8px);
+      border-radius: clamp(12px, 3vw, 16px);
+      padding: clamp(1.5rem, 4vw, 2.5rem);
+      margin-bottom: clamp(1rem, 2.5vw, 1.5rem);
+      box-shadow: 0 0 30px rgba(43, 58, 103, 0.4);
+      display: none;
+      color: #2b3a67;
+      transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) scale(0.9);
+      max-height: 90vh;
+      overflow-y: auto;
+      opacity: 0;
+    }
+
+    #admin-section.show {
+      opacity: 1;
+      transform: translate(-50%, -50%) scale(1);
+    }
+
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: clamp(0.5rem, 1.2vw, 0.8rem);
+      color: #2b3a67;
+    }
+
+    label {
+      font-weight: 600;
+      font-size: clamp(0.95rem, 2vw, 1.05rem);
+      text-align: center;
+      opacity: 0;
+      transform: translateY(10px);
+      transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .content-section.active label {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Special styling for the guest lookup label */
+    #lookup-form label {
+      font-size: clamp(0.97rem, 2.2vw, 1.07rem);
+      text-align: center;
+    }
+
+    /* Special styling for party member selection label */
+    #guest-list-section > label {
+      font-size: clamp(0.97rem, 2.2vw, 1.07rem);
+      text-align: center;
+    }
+
+    input[type="text"],
+    input[type="email"],
+    input[type="password"] {
+      padding: clamp(0.4rem, 1.5vw, 0.6rem) clamp(0.6rem, 1.8vw, 0.8rem);
+      border: 2px solid #2b3a67;
+      border-radius: clamp(4px, 1vw, 8px);
+      font-size: clamp(0.95rem, 2vw, 1.05rem);
+      color: #2b3a67;
+      background: rgba(255,255,255,0.9);
+      transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+      width: 100%;
+      box-sizing: border-box;
+      opacity: 0;
+      transform: translateY(15px);
+    }
+
+    .content-section.active input[type="text"],
+    .content-section.active input[type="email"],
+    .content-section.active input[type="password"] {
+      opacity: 1;
+      transform: translateY(0);
+      transition-delay: 0.3s;
+    }
+
+    input[type="text"]:focus,
+    input[type="email"]:focus,
+    input[type="password"]:focus {
+      border-color: #1b2550;
+      background: white;
+      outline: none;
+      transform: translateY(0) scale(1.02);
+      box-shadow: 0 0 15px rgba(43, 58, 103, 0.2);
+    }
+
+    /* Party Members Styling - More compact */
+    .party-members-container {
+      display: flex;
+      flex-direction: column;
+      gap: clamp(0.4rem, 1.2vw, 0.7rem);
+      margin-top: clamp(0.3rem, 1vw, 0.5rem);
+      padding: clamp(0.5rem, 1.5vw, 0.8rem);
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: clamp(6px, 1.5vw, 10px);
+      border: 1px solid rgba(43, 58, 103, 0.2);
+      opacity: 0;
+      transform: translateY(20px);
+      transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .content-section.active .party-members-container {
+      opacity: 1;
+      transform: translateY(0);
+      transition-delay: 0.4s;
+    }
+
+    .party-member {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: clamp(0.4rem, 1.2vw, 0.6rem);
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: clamp(4px, 1vw, 6px);
+      border: 1px solid rgba(43, 58, 103, 0.15);
+      opacity: 0;
+      transform: translateY(10px);
+      transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .party-member.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .party-member-name {
+      font-weight: 600;
+      font-size: clamp(0.95rem, 2.1vw, 1.05rem);
+      color: #2b3a67;
+      flex: 1;
+    }
+
+    .party-member-buttons {
+      display: flex;
+      gap: clamp(0.3rem, 0.8vw, 0.5rem);
+    }
+
+    .attendance-btn {
+      background: rgba(255, 255, 255, 0.3);
+      border: 1.5px solid #2b3a67;
+      padding: clamp(0.25rem, 0.8vw, 0.35rem) clamp(0.5rem, 1.2vw, 0.7rem);
+      border-radius: clamp(3px, 0.8vw, 5px);
+      font-family: 'Josefin Sans', sans-serif;
+      font-size: clamp(0.85rem, 1.8vw, 0.95rem);
+      color: #2b3a67;
+      cursor: pointer;
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      user-select: none;
+      min-width: clamp(3rem, 7vw, 3.5rem);
+      text-align: center;
+      transform: scale(1);
+    }
+
+    .attendance-btn:hover {
+      background: rgba(43, 58, 103, 0.1);
+      transform: scale(1.05);
+    }
+
+    .attendance-btn.accept-selected {
+      background: rgba(45, 125, 50, 0.2);
+      border-color: #2d7d32;
+      color: #2d7d32;
+      font-weight: 600;
+      transform: scale(1.02);
+    }
+
+    .attendance-btn.decline-selected {
+      background: rgba(211, 47, 47, 0.2);
+      border-color: #d32f2f;
+      color: #d32f2f;
+      font-weight: 600;
+      transform: scale(1.02);
+    }
+
+    .attendance-btn.accept-selected:hover {
+      background: rgba(45, 125, 50, 0.3);
+      transform: scale(1.08);
+    }
+
+    .attendance-btn.decline-selected:hover {
+      background: rgba(211, 47, 47, 0.3);
+      transform: scale(1.08);
+    }
+
+    button[type="submit"] {
+      background: #2b3a67;
+      border: none;
+      color: white;
+      font-weight: 600;
+      font-size: clamp(1rem, 2.2vw, 1.15rem);
+      padding: clamp(0.5rem, 1.5vw, 0.7rem);
+      border-radius: clamp(5px, 1.2vw, 8px);
+      cursor: pointer;
+      transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+      width: 100%;
+      box-sizing: border-box;
+      opacity: 0;
+      transform: translateY(20px) scale(0.98);
+    }
+
+    .content-section.active button[type="submit"] {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+      transition-delay: 0.6s;
+    }
+
+    button[type="submit"]:hover {
+      background: #1b2550;
+      transform: translateY(0) scale(1.02);
+      box-shadow: 0 4px 15px rgba(43, 58, 103, 0.3);
+    }
+
+    button[type="submit"]:disabled {
+      background: #8896b8;
+      cursor: not-allowed;
+      transform: translateY(0) scale(1);
+    }
+
+    .inline-message {
+      font-size: clamp(0.9rem, 2vw, 1rem);
+      margin-top: -0.3rem;
+      min-height: 1rem;
+      color: #a05b5b;
+      text-align: center;
+      opacity: 0;
+      transform: translateY(10px);
+      transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .inline-message.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .inline-message.success {
+      color: #2d7d32;
+    }
+
+    #thank-you-message {
+      font-size: clamp(1.13rem, 2.7vw, 1.28rem);
+      color: #2b3a67;
+      margin-top: 0.8rem;
+      font-weight: normal;
+      font-style: normal;
+      text-align: center;
+      opacity: 0;
+      transform: translateY(30px) scale(0.95);
+      transition: all 1s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    #thank-you-message.revealed {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+
+    /* Table Styles - Much wider for admin */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 1rem;
+      font-size: clamp(0.95rem, 2.4vw, 1.15rem);
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 8px;
+      overflow: hidden;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    table.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    th, td {
+      border: 1px solid #2b3a67;
+      padding: clamp(0.5rem, 1.5vw, 0.8rem);
+      text-align: left;
+      word-wrap: break-word;
+      font-size: clamp(0.9rem, 2.2vw, 1.1rem);
+      transition: all 0.4s ease;
+    }
+
+    th:hover, td:hover {
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    thead {
+      background: rgba(43, 58, 103, 0.2);
+      color: #1b2550;
+      font-weight: 600;
+    }
+
+    tbody tr:nth-child(even) {
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    tr.confirmed {
+      background-color: rgba(45, 125, 50, 0.2);
+      font-weight: 600;
+    }
+
+    tr.rejected {
+      background-color: rgba(211, 47, 47, 0.2);
+      font-weight: 600;
+      color: #d32f2f;
+    }
+
+    #total-headcount {
+      font-weight: 600;
+      font-size: clamp(1.15rem, 2.7vw, 1.45rem);
+      color: #1b2550;
+      margin-bottom: 1rem;
+      text-align: right;
+      opacity: 0;
+      transform: translateY(15px);
+      transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    #total-headcount.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Admin button moved to bottom */
+    .admin-button-wrapper {
+      position: absolute;
+      bottom: clamp(0.8rem, 2vw, 1.5rem);
+      left: 50%;
+      transform: translateX(-50%);
+      text-align: center;
+      opacity: 1;
+      transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .admin-button-wrapper.transitioning {
+      opacity: 0;
+      transform: translateX(-50%) translateY(20px);
+    }
+
+    .admin-button {
+      background: transparent;
+      border: 1px solid #2b3a67;
+      padding: clamp(0.3rem, 1.5vw, 0.5rem) clamp(0.8rem, 2.5vw, 1.2rem);
+      border-radius: 999px;
+      font-size: clamp(0.85rem, 2vw, 1rem);
+      color: #2b3a67;
+      cursor: pointer;
+      transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+      transform: scale(1);
+    }
+
+    .admin-button:hover {
+      background: #2b3a67;
+      color: white;
+      transform: scale(1.05);
+      box-shadow: 0 0 15px rgba(43, 58, 103, 0.3);
+    }
+
+    .admin-button[aria-expanded="true"] {
+      background: #2b3a67;
+      color: white;
+      transform: scale(1.02);
+    }
+
+    /* Back button styling */
+    .back-button {
+      background: rgba(173, 216, 230, 0.5);
+      border: 1px solid #2b3a67;
+      padding: clamp(0.3rem, 1.5vw, 0.5rem) clamp(0.8rem, 2.5vw, 1.2rem);
+      border-radius: 999px;
+      font-family: 'Josefin Sans', sans-serif;
+      font-size: clamp(0.85rem, 2vw, 1rem);
+      color: #2b3a67;
+      cursor: pointer;
+      transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+      margin-bottom: clamp(0.4rem, 1.2vw, 0.8rem);
+      align-self: flex-start;
+      opacity: 0;
+      transform: translateX(-20px);
+    }
+
+    .content-section.active .back-button {
+      opacity: 1;
+      transform: translateX(0);
+      transition-delay: 0.1s;
+    }
+
+    .back-button:hover {
+      background: rgba(43, 58, 103, 0.6);
+      color: white;
+      transform: translateX(0) scale(1.05);
+    }
+
+    /* Radio button styling for cleaner look */
+    .radio-container {
+      display: flex;
+      gap: clamp(0.8rem, 2vw, 1.5rem);
+      margin-bottom: clamp(0.5rem, 1.2vw, 0.8rem);
+      justify-content: center;
+      flex-wrap: wrap;
+      opacity: 0;
+      transform: translateY(15px);
+      transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .content-section.active .radio-container {
+      opacity: 1;
+      transform: translateY(0);
+      transition-delay: 0.5s;
+    }
+
+    .radio-container label {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-weight: normal;
+      font-size: clamp(0.95rem, 2vw, 1.05rem);
+      cursor: pointer;
+      transition: all 0.4s ease;
+    }
+
+    .radio-container label:hover {
+      transform: scale(1.02);
+    }
+
+    .radio-container input[type="radio"] {
+      margin: 0;
+      transform: scale(1.1);
+      transition: all 0.3s ease;
+    }
+
+    .radio-container input[type="radio"]:checked {
+      transform: scale(1.2);
+    }
+
+    /* Hide email section when no one is attending */
+    #email-section.hidden {
+      display: none !important;
+    }
+
+    #email-section {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .content-section.active #email-section {
+      opacity: 1;
+      transform: translateY(0);
+      transition-delay: 0.7s;
+    }
+
+    /* Responsive Breakpoints */
+    
+    /* Large screens - scale everything up */
+    @media (min-width: 1200px) {
+      body {
+        padding: 3rem;
+      }
+      
+      .logo {
+        max-width: 184px;
+        margin-bottom: 1.5rem;
+      }
+      
+      .hero-container {
+        max-width: 550px;
+        padding: 2.5rem 2rem;
+        margin-bottom: 2rem;
+        max-height: 75vh;
+      }
+      
+      .hero-image {
+        max-height: 35vh;
+        border-radius: 15px;
+      }
+      
+      .button-container {
+        max-width: 550px;
+        gap: 2rem;
