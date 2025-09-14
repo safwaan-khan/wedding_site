@@ -862,11 +862,6 @@
       transform: translateY(40px);
       transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
     }
-    .content-section .invitation-text {
-      font-size: clamp(1.35rem, 3.5vw, 1.65rem);
-      font-weight: 500;
-      line-height: 1.4;
-    }
 
     .content-section.active {
       display: block;
@@ -921,7 +916,11 @@
       opacity: 1;
       transform: translateY(0);
     }
-
+    .content-section .invitation-text {
+      font-size: clamp(1.35rem, 3.5vw, 1.65rem);
+      font-weight: 500;
+      line-height: 1.4;
+    }
     .content-section.active p:nth-of-type(1) { transition-delay: 0.4s; }
     .content-section.active p:nth-of-type(2) { transition-delay: 0.5s; }
     .content-section.active p:nth-of-type(3) { transition-delay: 0.6s; }
