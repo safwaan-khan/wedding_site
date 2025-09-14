@@ -1503,7 +1503,21 @@
 
       } catch (err) {
         console.error('Admin error:', err);
-        setMessage(adminMessage, "Error loading guest list. 184px;
+        setMessage(adminMessage, "Error loading guest list. Please try again.", false);
+      }
+    });
+  </script>
+  
+  <!-- EmailJS -->
+  <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
+  <script>
+    // Initialize EmailJS when available
+    if (typeof emailjs !== 'undefined') {
+      emailjs.init("RtSgLTRPRpIr-3a8T");
+    }
+  </script>
+</body>
+</html> 184px;
         margin-bottom: 1.5rem;
       }
       
