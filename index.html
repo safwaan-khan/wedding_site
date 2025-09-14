@@ -139,7 +139,7 @@
     .button-container {
       display: flex;
       justify-content: center;
-      gap: clamp(0.6rem, 2vw, 1.5rem);
+      gap: clamp(0.6rem, 1.5vw, 1rem);
       margin-bottom: clamp(0.8rem, 2vw, 1.5rem);
       max-width: min(480px, 92vw);
       width: 100%;
@@ -156,10 +156,10 @@
     .toggle-button {
       background: rgba(173, 216, 230, 0.3);
       border: 1px solid rgba(43, 58, 103, 0.4);
-      padding: clamp(0.5rem, 1.8vw, 0.7rem) clamp(1rem, 2.8vw, 1.5rem);
+      padding: clamp(0.5rem, 1.8vw, 0.7rem) clamp(0.8rem, 2.2vw, 1.2rem);
       border-radius: 999px;
       font-family: 'Josefin Sans', sans-serif;
-      font-size: clamp(1rem, 2.2vw, 1.15rem);
+      font-size: clamp(0.9rem, 2vw, 1.05rem);
       color: #2b3a67;
       cursor: pointer;
       transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
@@ -255,6 +255,19 @@
       font-weight: 600;
       line-height: 1.4;
       margin-bottom: clamp(0.4rem, 1.2vw, 0.8rem);
+    }
+
+    /* Larger text for Invite section centered content */
+    #invite-content .invitation-text {
+      font-size: clamp(1.8rem, 4.8vw, 2.3rem);
+      font-weight: 600;
+      line-height: 1.4;
+      margin-bottom: clamp(0.5rem, 1.5vw, 1rem);
+    }
+
+    #invite-content h2 {
+      font-size: clamp(1.7rem, 4.2vw, 2.3rem);
+      margin-bottom: clamp(0.8rem, 2.2vw, 1.5rem);
     }
     
     .content-section.active p:nth-of-type(1) { transition-delay: 0.4s; }
@@ -737,23 +750,6 @@
       }
       
       .logo {
-        max-width: 184px;
-        margin-bottom: 1.5rem;
-      }
-      
-      .hero-container {
-        max-width: 550px;
-        padding: 2.5rem 2rem;
-        margin-bottom: 2rem;
-        max-height: 75vh;
-      }
-      
-      .hero-image {
-        max-height: 35vh;
-        border-radius: 15px;
-      }
-      
-      .button-container {
         max-width: 550px;
         gap: 2rem;
       }
@@ -772,11 +768,12 @@
       
       .button-container {
         flex-direction: row;
+        gap: clamp(0.4rem, 1vw, 0.8rem);
       }
       
       .toggle-button {
-        padding: 0.7rem 1.2rem;
-        font-size: 1rem;
+        padding: 0.7rem 0.8rem;
+        font-size: 0.9rem;
       }
     }
 
@@ -788,12 +785,15 @@
       }
       
       .button-container {
-        gap: 1rem;
+        gap: 0.5rem;
+        flex-wrap: wrap;
       }
       
       .toggle-button {
-        padding: 0.6rem 1rem;
-        font-size: 0.95rem;
+        padding: 0.6rem 0.7rem;
+        font-size: 0.85rem;
+        flex: 1;
+        min-width: calc(33% - 0.33rem);
       }
       
       #admin-section {
@@ -812,6 +812,23 @@
       <h1 class="hero-title">Manal & Safwaan</h1>
       <p class="hero-date">12.06.2025</p>
       <img src="hero.png" alt="Wedding Image" class="hero-image" />
+    </div>
+
+    <!-- Invite Content -->
+    <div id="invite-content" class="content-section">
+      <button class="back-button" onclick="showHeroContent()">← Back</button>
+      <p class="invitation-text"><center>You are invited to the Nikkah Ceremony of</center></p>
+      <h2><center>Manal</center></h2> 
+      <p class="invitation-text"><center>daughter of Laeeq & Uzma Ahmed</center></p> 
+      <p class="invitation-text"><center>with</center></p> 
+      <h2><center>Safwaan</center></h2> 
+      <p class="invitation-text"><center>son of Uzair & Maheen Khan</center></p> 
+      <p><strong>Date:</strong> Saturday, December 6th, 2025</p>
+      <p><strong>Time:</strong> 3:00 PM</p>
+      <p><strong>Venue:</strong> South Bay Islamic Association (SBIA)</p>
+      <p><strong>Address:</strong> <a href="https://www.google.com/maps/search/?api=1&query=2345+Harris+Way,+San+Jose,+CA+95131" target="_blank">2345 Harris Way, San Jose, CA 95131</a></p>
+      <br>
+      <p>Athaan for Asr will be at 3:10PM. Iqamah will be at 3:30PM. Inshallah, the Nikkah Ceremony will start shortly after the conclusion of Asr.</p>
     </div>
 
     <!-- Info Content -->
@@ -872,6 +889,7 @@
   </div>
 
   <div class="button-container">
+    <button id="invite-btn" class="toggle-button" aria-expanded="false">Invite</button>
     <button id="info-btn" class="toggle-button" aria-expanded="false">Info</button>
     <button id="rsvp-btn" class="toggle-button" aria-expanded="false">RSVP</button>
   </div>
@@ -923,11 +941,13 @@
     let isTransitioning = false;
 
     // DOM Elements
+    const inviteBtn = document.getElementById("invite-btn");
     const infoBtn = document.getElementById("info-btn");
     const rsvpBtn = document.getElementById("rsvp-btn");
     const adminBtn = document.getElementById("admin-btn");
 
     const heroContent = document.getElementById("hero-content");
+    const inviteContent = document.getElementById("invite-content");
     const infoContent = document.getElementById("info-content");
     const rsvpContent = document.getElementById("rsvp-content");
     const adminSection = document.getElementById("admin-section");
@@ -959,6 +979,7 @@
       if (heroContent.style.display !== "none") {
         heroContent.style.display = "none";
       }
+      inviteContent.classList.remove("active");
       infoContent.classList.remove("active");
       rsvpContent.classList.remove("active");
       adminSection.style.display = "none";
@@ -968,6 +989,9 @@
       if (incoming === 'hero') {
         heroContent.style.display = "block";
         document.querySelector('.admin-button-wrapper').style.display = "block";
+      } else if (incoming === 'invite') {
+        inviteContent.classList.add("active");
+        document.querySelector('.admin-button-wrapper').style.display = "none";
       } else if (incoming === 'info') {
         infoContent.classList.add("active");
         document.querySelector('.admin-button-wrapper').style.display = "none";
@@ -1000,6 +1024,23 @@
       transitionElements(outgoingElements, 'hero');
       
       // Reset button states
+      inviteBtn.setAttribute("aria-expanded", "false");
+      infoBtn.setAttribute("aria-expanded", "false");
+      rsvpBtn.setAttribute("aria-expanded", "false");
+      adminBtn.setAttribute("aria-expanded", "false");
+    }
+
+    function showInviteContent() {
+      const outgoingElements = [
+        document.querySelector('.hero-container'),
+        document.querySelector('.button-container'),
+        document.querySelector('.admin-button-wrapper')
+      ];
+      
+      transitionElements(outgoingElements, 'invite');
+      
+      // Update button states
+      inviteBtn.setAttribute("aria-expanded", "true");
       infoBtn.setAttribute("aria-expanded", "false");
       rsvpBtn.setAttribute("aria-expanded", "false");
       adminBtn.setAttribute("aria-expanded", "false");
@@ -1015,6 +1056,7 @@
       transitionElements(outgoingElements, 'info');
       
       // Update button states
+      inviteBtn.setAttribute("aria-expanded", "false");
       infoBtn.setAttribute("aria-expanded", "true");
       rsvpBtn.setAttribute("aria-expanded", "false");
       adminBtn.setAttribute("aria-expanded", "false");
@@ -1030,6 +1072,7 @@
       transitionElements(outgoingElements, 'rsvp');
       
       // Update button states
+      inviteBtn.setAttribute("aria-expanded", "false");
       infoBtn.setAttribute("aria-expanded", "false");
       rsvpBtn.setAttribute("aria-expanded", "true");
       adminBtn.setAttribute("aria-expanded", "false");
@@ -1053,6 +1096,7 @@
         adminBtn.setAttribute("aria-expanded", "true");
         
         // Hide other content
+        inviteBtn.setAttribute("aria-expanded", "false");
         infoBtn.setAttribute("aria-expanded", "false");
         rsvpBtn.setAttribute("aria-expanded", "false");
       }
@@ -1072,6 +1116,10 @@
     window.resetRsvpForm = resetRsvpForm;
 
     // Event Listeners for Section Toggles with debouncing
+    inviteBtn.addEventListener("click", () => {
+      if (!isTransitioning) showInviteContent();
+    });
+    
     infoBtn.addEventListener("click", () => {
       if (!isTransitioning) showInfoContent();
     });
@@ -1455,18 +1503,21 @@
 
       } catch (err) {
         console.error('Admin error:', err);
-        setMessage(adminMessage, "Error loading guest list. Please try again.", false);
+        setMessage(adminMessage, "Error loading guest list. 184px;
+        margin-bottom: 1.5rem;
       }
-    });
-  </script>
-  
-  <!-- EmailJS -->
-  <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
-  <script>
-    // Initialize EmailJS when available
-    if (typeof emailjs !== 'undefined') {
-      emailjs.init("RtSgLTRPRpIr-3a8T");
-    }
-  </script>
-</body>
-</html>
+      
+      .hero-container {
+        max-width: 550px;
+        padding: 2.5rem 2rem;
+        margin-bottom: 2rem;
+        max-height: 75vh;
+      }
+      
+      .hero-image {
+        max-height: 35vh;
+        border-radius: 15px;
+      }
+      
+      .button-container {
+        max-width:
