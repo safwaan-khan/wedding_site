@@ -1471,18 +1471,17 @@
           if (attendanceChoice) {
             console.log(`Updating party member ${member.full_name} (ID: ${member.id}) with status: ${attendanceChoice}`);
             
-            // Create update promise with explicit select to avoid updated_at issues
+            // Create update promise
             const updatePromise = supabase
               .from("party_members")
               .update({ attendance_status: attendanceChoice })
               .eq("id", member.id)
-              .select('id, attendance_status')
               .then(({ data, error }) => {
                 if (error) {
                   console.error(`Error updating party member ${member.full_name} (ID: ${member.id}):`, error);
                   throw new Error(`Failed to update ${member.full_name}: ${error.message}`);
                 } else {
-                  console.log(`Successfully updated party member ${member.full_name} with status: ${attendanceChoice}`, data);
+                  console.log(`Successfully updated party member ${member.full_name} with status: ${attendanceChoice}`);
                   return { member, success: true };
                 }
               });
