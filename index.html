@@ -1444,58 +1444,19 @@
           return;
         }
 
-        // Update individual party member attendance (including main guest)
+        // Update individual party member attendance (only for actual party members, not main guest)
         for (const member of partyMembers) {
+          // Skip the main guest - their status is already updated in guests table above
+          if (member.is_main_guest) continue;
+          
           if (member.id && memberAttendance[member.id]) {
-            if (member.is_main_guest) {
-              // For main guest, we need to create/update a party_members record
-              // First check if a party member record exists for the main guest
-              const { data: existingRecord, error: checkError } = await supabase
-                .from("party_members")
-                .select("id")
-                .eq("guest_id", currentGuest.id)
-                .eq("is_main_guest", true)
-                .single();
-
-              if (checkError && checkError.code !== 'PGRST116') { // PGRST116 = no rows returned
-                console.error('Error checking for existing main guest record:', checkError);
-              }
-
-              if (existingRecord) {
-                // Update existing record
-                const { error: mainGuestUpdateError } = await supabase
-                  .from("party_members")
-                  .update({ attendance_status: memberAttendance[member.id] })
-                  .eq("id", existingRecord.id);
-                  
-                if (mainGuestUpdateError) {
-                  console.error('Main guest party member update error:', mainGuestUpdateError);
-                }
-              } else {
-                // Create new record for main guest
-                const { error: mainGuestInsertError } = await supabase
-                  .from("party_members")
-                  .insert({
-                    guest_id: currentGuest.id,
-                    full_name: currentGuest.full_name,
-                    is_main_guest: true,
-                    attendance_status: memberAttendance[member.id]
-                  });
-                  
-                if (mainGuestInsertError) {
-                  console.error('Main guest party member insert error:', mainGuestInsertError);
-                }
-              }
-            } else {
-              // For other party members, just update as before
-              const { error: memberUpdateError } = await supabase
-                .from("party_members")
-                .update({ attendance_status: memberAttendance[member.id] })
-                .eq("id", member.id);
-                
-              if (memberUpdateError) {
-                console.error('Party member update error:', memberUpdateError);
-              }
+            const { error: memberUpdateError } = await supabase
+              .from("party_members")
+              .update({ attendance_status: memberAttendance[member.id] })
+              .eq("id", member.id);
+              
+            if (memberUpdateError) {
+              console.error('Party member update error:', memberUpdateError);
             }
           }
         }
@@ -1610,33 +1571,13 @@
             // Determine main guest's individual attendance status
             let mainGuestStatus = 'Pending';
             
-            // If the guest has submitted an RSVP, check if they personally are attending
-            if (guest.rsvp_status === 'Confirmed' || guest.rsvp_status === 'Declined') {
-              // Check if there are party members with individual statuses
-              if (guestPartyMembers.length > 0) {
-                // Look for the main guest in party members or use overall RSVP
-                const mainGuestPartyRecord = guestPartyMembers.find(pm => pm.is_main_guest === true);
-                if (mainGuestPartyRecord && mainGuestPartyRecord.attendance_status) {
-                  mainGuestStatus = mainGuestPartyRecord.attendance_status === 'accept' ? 'Confirmed' : 'Declined';
-                } else {
-                  // If no individual record, assume they're attending if anyone in party is
-                  const anyoneAttending = guestPartyMembers.some(pm => pm.attendance_status === 'accept');
-                  if (guest.rsvp_status === 'Confirmed' && anyoneAttending) {
-                    mainGuestStatus = 'Confirmed';
-                  } else if (guest.rsvp_status === 'Declined') {
-                    mainGuestStatus = 'Declined';
-                  } else {
-                    mainGuestStatus = 'Pending';
-                  }
-                }
-              } else {
-                // No party members, use overall RSVP status for main guest
-                if (guest.rsvp_status === 'Confirmed') {
-                  mainGuestStatus = 'Confirmed';
-                } else if (guest.rsvp_status === 'Declined') {
-                  mainGuestStatus = 'Declined';
-                }
-              }
+            // For main guests, use the rsvp_status from guests table
+            if (guest.rsvp_status === 'Confirmed') {
+              mainGuestStatus = 'Confirmed';
+            } else if (guest.rsvp_status === 'Declined') {
+              mainGuestStatus = 'Declined';
+            } else {
+              mainGuestStatus = 'Pending';
             }
 
             // Add main guest to the list
