@@ -6,8 +6,8 @@
   <title>Nikkah RSVP - Manal & Safwaan</title>
 
   <!-- Favicon -->
-  <link rel="icon" type="image/png" sizes="32x32" img_src="favicon-32x32.png">
-  <link rel="icon" type="image/png" sizes="16x16" img_src="favicon-16x16.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
   <link rel="shortcut icon" href="favicon.ico">
 
   <!-- Fonts -->
@@ -561,13 +561,14 @@
 
     .inline-message {
       font-size: clamp(0.9rem, 2vw, 1rem);
-      margin-top: -0.3rem;
+      margin-top: clamp(0.3rem, 0.8vw, 0.5rem);
       min-height: 1rem;
-      color: #a05b5b;
+      color: #d32f2f;
       text-align: center;
       opacity: 0;
       transform: translateY(10px);
       transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+      font-weight: 500;
     }
 
     .inline-message.show {
@@ -577,6 +578,11 @@
 
     .inline-message.success {
       color: #2d7d32;
+    }
+
+    .inline-message.error {
+      color: #d32f2f;
+      font-weight: 600;
     }
 
     #thank-you-message {
@@ -1255,6 +1261,9 @@
           }
           
           updateEmailSectionVisibility();
+          
+          // Clear any existing RSVP error messages when user makes selections
+          clearMessage(rsvpMessage);
         });
       });
     }
@@ -1281,10 +1290,24 @@
       }
     }
 
+    // UPDATED: Enhanced message handling with persistent error messages
     function setMessage(element, message, isSuccess = true) {
       element.textContent = message;
-      element.className = isSuccess ? "inline-message success show" : "inline-message show";
-      setTimeout(() => element.classList.add('show'), 50);
+      
+      if (isSuccess) {
+        element.className = "inline-message success show";
+      } else {
+        element.className = "inline-message error show";
+      }
+      
+      // Only auto-clear success messages after 5 seconds, keep error messages persistent
+      if (isSuccess) {
+        setTimeout(() => {
+          if (element.classList.contains('success')) {
+            clearMessage(element);
+          }
+        }, 5000);
+      }
     }
 
     function clearMessage(element) {
@@ -1298,7 +1321,9 @@
     // Guest Lookup Form
     document.getElementById("lookup-form").addEventListener("submit", async (e) => {
       e.preventDefault();
+      // Clear any previous messages when starting a new lookup
       clearMessage(lookupMessage);
+      
       const inputName = document.getElementById("fullName").value.trim();
 
       if (!inputName) {
@@ -1405,9 +1430,17 @@
       }
     });
 
-    // RSVP Form Submission - FIXED SECTION
+    // Add input event listener to clear lookup errors when user starts typing
+    document.getElementById("fullName").addEventListener("input", () => {
+      if (lookupMessage.classList.contains('error')) {
+        clearMessage(lookupMessage);
+      }
+    });
+
+    // RSVP Form Submission - FIXED SECTION with persistent error handling
     rsvpForm.addEventListener("submit", async (e) => {
       e.preventDefault();
+      // Clear any previous messages when starting submission
       clearMessage(rsvpMessage);
 
       const email = document.getElementById("email").value.trim();
@@ -1556,10 +1589,19 @@
       }
     });
 
+    // Add input event listener to clear RSVP errors when user starts typing email
+    document.getElementById("email").addEventListener("input", () => {
+      if (rsvpMessage.classList.contains('error')) {
+        clearMessage(rsvpMessage);
+      }
+    });
+
     // Admin Authentication with updated table logic and filtering
     document.getElementById("admin-auth").addEventListener("submit", async (e) => {
       e.preventDefault();
+      // Clear any previous messages when starting login attempt
       clearMessage(adminMessage);
+      
       const password = document.getElementById("admin-password").value;
 
       // Determine filter based on password
@@ -1774,6 +1816,13 @@
       } catch (err) {
         console.error('Admin error:', err);
         setMessage(adminMessage, "Error loading guest data. Please check your connection and try again.", false);
+      }
+    });
+
+    // Add input event listener to clear admin errors when user starts typing password
+    document.getElementById("admin-password").addEventListener("input", () => {
+      if (adminMessage.classList.contains('error')) {
+        clearMessage(adminMessage);
       }
     });
   </script>
