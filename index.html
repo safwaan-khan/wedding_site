@@ -36,7 +36,7 @@
     }
 
     .logo {
-      max-width: clamp(120px, 22.5vw, 180px);
+      max-width: clamp(92px, 17.25vw, 138px);
       margin-bottom: clamp(0.3rem, 1.5vw, 1rem);
       transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
       opacity: 1;
@@ -302,13 +302,14 @@
       display: none;
       color: #2b3a67;
       transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
-      position: absolute;
+      position: fixed;
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%) scale(0.9);
       max-height: 90vh;
       overflow-y: auto;
       opacity: 0;
+      z-index: 1000;
     }
 
     #admin-section.show {
@@ -812,26 +813,37 @@
   <div class="hero-container" id="hero-container">
     <!-- Default Hero Content -->
     <div id="hero-content">
-      <h1 class="hero-title">Safwaan & Manal</h1>
+      <h1 class="hero-title">Manal & Safwaan</h1>
       <p class="hero-date">12.06.2025</p>
       <img src="hero.png" alt="Wedding Image" class="hero-image" />
     </div>
 
     <!-- Invite Content -->
     <div id="invite-content" class="content-section">
-      <p class="large-invitation-text">You are invited to the Nikkah Ceremony of</p>
+      <button class="back-button" onclick="showHeroContent()">← Back</button>
+      <p class="extra-large-invitation-text">You are invited to the Nikkah Ceremony of</p>
       <h2>Manal</h2> 
-      <p class="large-invitation-text">Daughter of Laeeq & Uzma Ahmed</p> 
-      <p class="extra-large-invitation-text">&</p> 
+      <p class="large-invitation-text">daughter of Laeeq & Uzma Ahmed</p> 
+      <p class="extra-large-invitation-text">with</p> 
       <h2>Safwaan</h2> 
-      <p class="large-invitation-text">Son of Uzair & Maheen Khan</p> 
-      <p class="large-invitation-text">Saturday, December 6th, 2025 at 3:00PM</p> 
-      <p class="large-invitation-text">Masjid al-Mustafa</p> 
+      <p class="large-invitation-text">son of Uzair & Maheen Khan</p> 
+      <p><strong>Date:</strong> Saturday, December 6th, 2025</p>
+      <p><strong>Time:</strong> 3:00 PM</p>
+      <p><strong>Venue:</strong> South Bay Islamic Association (SBIA)</p>
+      <p><strong>Address:</strong> <a href="https://www.google.com/maps/search/?api=1&query=2345+Harris+Way,+San+Jose,+CA+95131" target="_blank">2345 Harris Way, San Jose, CA 95131</a></p>
+      <br>
+      <p>Athaan for Asr will be at 3:10PM. Iqamah will be at 3:30PM. Inshallah, the Nikkah Ceremony will start shortly after the conclusion of Asr.</p>
     </div>
 
     <!-- Info Content -->
     <div id="info-content" class="content-section">
       <button class="back-button" onclick="showHeroContent()">← Back</button>
+      <p class="extra-large-invitation-text">You are invited to the Nikkah Ceremony of</p>
+      <h2>Manal</h2> 
+      <p class="large-invitation-text">daughter of Laeeq & Uzma Ahmed</p> 
+      <p class="extra-large-invitation-text">with</p> 
+      <h2>Safwaan</h2> 
+      <p class="large-invitation-text">son of Uzair & Maheen Khan</p> 
       <p><strong>Date:</strong> Saturday, December 6th, 2025</p>
       <p><strong>Time:</strong> 3:00 PM</p>
       <p><strong>Venue:</strong> South Bay Islamic Association (SBIA)</p>
