@@ -1391,6 +1391,76 @@
         console.log("Found guest:", foundGuest);
         currentGuest = foundGuest;
         
+        // Test 5: Get party members for this guest
+        console.log("Test 5: Getting party members for guest ID:", foundGuest.id);
+        
+        let guestPartyMembers = [];
+        try {
+          const { data: partyResult, error: partyError } = await supabase
+            .from("party_members")
+            .select("*")
+            .eq("guest_id", foundGuest.id);
+
+          if (partyError) {
+            console.warn("Party member fetch error:", partyError);
+          } else {
+            guestPartyMembers = partyResult || [];
+            console.log("Party members for this guest:", guestPartyMembers);
+          }
+        } catch (partyErr) {
+          console.warn("Party member fetch failed:", partyErr);
+        }
+
+        partyMembers = [...guestPartyMembers];
+        memberAttendance = {};
+
+        // Always include the main guest as a party member if not already in the list
+        const mainGuestInMembers = partyMembers.find(m => 
+          m.full_name && m.full_name.toLowerCase().trim() === foundGuest.full_name.toLowerCase().trim()
+        );
+        
+        if (!mainGuestInMembers) {
+          console.log("Adding main guest as party member");
+          const mainGuestMember = { 
+            id: -1,
+            full_name: foundGuest.full_name, 
+            guest_id: foundGuest.id,
+            is_main_guest: true
+          };
+          partyMembers.unshift(mainGuestMember);
+        }
+
+        console.log("Final party members list:", partyMembers);
+
+        // Hide the lookup form and show invitation section
+        document.getElementById("lookup-form").style.display = "none";
+        setTimeout(() => {
+          invitationSection.style.display = "block";
+          invitationSection.setAttribute("aria-hidden", "false");
+          thankYouMessage.style.display = "none";
+          rsvpForm.style.display = "flex";
+        }, 300);
+
+        // Reset messages and inputs
+        clearMessage(rsvpMessage);
+        document.getElementById("email").value = "";
+
+        // Render party members with animation
+        setTimeout(() => {
+          renderPartyMembers();
+        }, 400);
+        
+        // Update email section visibility
+        updateEmailSectionVisibility();
+
+        setMessage(lookupMessage, "Guest found! Please complete your RSVP below.", true);
+
+      } catch (err) {
+        console.error('Lookup error:', err);
+        setMessage(lookupMessage, "Error searching for guest. Please try again.", false);
+      }
+    });
+        
         // Get all party members for this guest
         const guestPartyMembers = partyData.filter(p => p.guest_id === foundGuest.id);
         partyMembers = [...guestPartyMembers];
