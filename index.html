@@ -753,7 +753,7 @@
       }
       
       .logo {
-        max-width: 550px;
+        max-width: 200px;
         gap: 2rem;
       }
       
@@ -1136,7 +1136,7 @@
         const attendance = memberAttendance[member.id];
         
         memberDiv.innerHTML = `
-          <div class="party-member-name">${member.name}</div>
+          <div class="party-member-name">${member.full_name || member.name}</div>
           <div class="party-member-buttons">
             <button type="button" class="attendance-btn accept-btn ${attendance === 'accept' ? 'accept-selected' : ''}" 
                     data-member-id="${member.id}" data-action="accept">Accept</button>
@@ -1157,10 +1157,9 @@
       document.querySelectorAll('.attendance-btn').forEach(btn => {
         btn.addEventListener('click', function() {
           const memberId = this.dataset.memberId;
-          const memberIdKey = memberId === '-1' ? -1 : parseInt(memberId);
           const action = this.dataset.action;
           
-          memberAttendance[memberIdKey] = action;
+          memberAttendance[memberId] = action;
           
           // Update button states immediately without re-rendering entire list
           const memberButtons = this.parentElement;
@@ -1219,7 +1218,7 @@
       }, 300);
     }
 
-    // Guest Lookup Form
+    // Guest Lookup Form - FIXED VERSION
     document.getElementById("lookup-form").addEventListener("submit", async (e) => {
       e.preventDefault();
       clearMessage(lookupMessage);
@@ -1230,18 +1229,21 @@
         return;
       }
 
-      const nameLower = inputName.toLowerCase();
+      console.log('Looking up guest:', inputName);
 
       try {
-        // Fetch all guests and their party members
+        // Fetch all guests first
         const { data: guestData, error: guestError } = await supabase
           .from("guests")
           .select("*");
 
         if (guestError) {
+          console.error('Guest fetch error:', guestError);
           setMessage(lookupMessage, "Failed to lookup guests. Please try again later.", false);
           return;
         }
+
+        console.log('All guests:', guestData);
 
         // Fetch all party members
         const { data: partyData, error: partyError } = await supabase
@@ -1249,18 +1251,33 @@
           .select("*");
 
         if (partyError) {
+          console.error('Party members fetch error:', partyError);
           setMessage(lookupMessage, "Failed to lookup party members. Please try again later.", false);
           return;
         }
 
-        // First, try to find the guest by their full name
-        let foundGuest = guestData.find(g => g.full_name.trim().toLowerCase() === nameLower);
+        console.log('All party members:', partyData);
+
+        const nameLower = inputName.toLowerCase().trim();
+
+        // First, try to find the guest by their full_name
+        let foundGuest = guestData.find(g => 
+          g.full_name && g.full_name.toLowerCase().trim() === nameLower
+        );
+
+        console.log('Found guest by full_name:', foundGuest);
 
         // If not found as main guest, search in party members
         if (!foundGuest) {
-          const foundPartyMember = partyData.find(p => p.name.trim().toLowerCase() === nameLower);
+          const foundPartyMember = partyData.find(p => 
+            p.full_name && p.full_name.toLowerCase().trim() === nameLower
+          );
+          
+          console.log('Found party member:', foundPartyMember);
+          
           if (foundPartyMember) {
             foundGuest = guestData.find(g => g.id === foundPartyMember.guest_id);
+            console.log('Found guest via party member:', foundGuest);
           }
         }
 
@@ -1270,29 +1287,33 @@
         }
 
         currentGuest = foundGuest;
+        console.log('Current guest set to:', currentGuest);
         
-        // Get all party members for this guest
+        // Get all party members for this guest (including the main guest)
         const guestPartyMembers = partyData.filter(p => p.guest_id === foundGuest.id);
-        partyMembers = [...guestPartyMembers];
-        memberAttendance = {};
-
-        // Always include the main guest as a party member if not already in the list
-        const mainGuestInMembers = partyMembers.find(m => 
-          m.name.toLowerCase().trim() === foundGuest.full_name.toLowerCase().trim()
-        );
         
-        if (!mainGuestInMembers) {
-          // Add the main guest as the first party member with a numeric ID
-          const mainGuestMember = { 
-            id: -1, // Use -1 as a special ID for the main guest
-            name: foundGuest.full_name, 
-            guest_id: foundGuest.id,
-            is_main_guest: true
-          };
-          partyMembers.unshift(mainGuestMember);
-        }
+        // Always include the main guest as the first party member
+        partyMembers = [{
+          id: foundGuest.id,
+          full_name: foundGuest.full_name,
+          guest_id: foundGuest.id,
+          is_main_guest: true,
+          attendance_status: null
+        }];
+        
+        // Add other party members
+        partyMembers = partyMembers.concat(guestPartyMembers.map(member => ({
+          id: member.id,
+          full_name: member.full_name,
+          guest_id: member.guest_id,
+          attendance_status: member.attendance_status
+        })));
+        
+        memberAttendance = {};
+        
+        console.log('Party members:', partyMembers);
 
-        // Hide the lookup form and show invitation section with animation
+        // Hide the lookup form and show invitation section
         document.getElementById("lookup-form").style.display = "none";
         setTimeout(() => {
           invitationSection.style.display = "block";
@@ -1321,7 +1342,7 @@
       }
     });
 
-    // RSVP Form Submission
+    // RSVP Form Submission - FIXED VERSION
     rsvpForm.addEventListener("submit", async (e) => {
       e.preventDefault();
       clearMessage(rsvpMessage);
@@ -1344,39 +1365,50 @@
       }
 
       try {
+        console.log('Submitting RSVP for:', currentGuest);
+        console.log('Member attendance:', memberAttendance);
+
         // Update main guest RSVP in DB
         const rsvpStatus = isAnyoneAttending ? "Confirmed" : "Declined";
-        const updateData = { rsvp_status: rsvpStatus, guest_count: guestCount };
+        const updateData = { 
+          rsvp_status: rsvpStatus, 
+          guest_count: guestCount 
+        };
         
         // Only include email if someone is attending
         if (isAnyoneAttending && email) {
           updateData.email = email;
         }
         
-        const { error } = await supabase
+        const { error: guestUpdateError } = await supabase
           .from("guests")
           .update(updateData)
           .eq("id", currentGuest.id);
 
-        if (error) {
+        if (guestUpdateError) {
+          console.error('Guest update error:', guestUpdateError);
           setMessage(rsvpMessage, "Failed to RSVP. Please try again later.", false);
           return;
         }
 
-        // Update individual party member attendance
+        // Update individual party member attendance (skip the main guest which is handled above)
         for (const member of partyMembers) {
-          // Skip the main guest member if it's not in the database (ID -1)
-          if (member.is_main_guest && member.id === -1) continue;
+          // Skip the main guest member
+          if (member.is_main_guest) continue;
           
-          if (member.id && typeof member.id === 'number' && member.id > 0) {
-            await supabase
+          if (member.id && memberAttendance[member.id]) {
+            const { error: memberUpdateError } = await supabase
               .from("party_members")
-              .update({ attendance_status: memberAttendance[member.id] || 'decline' })
+              .update({ attendance_status: memberAttendance[member.id] })
               .eq("id", member.id);
+              
+            if (memberUpdateError) {
+              console.error('Party member update error:', memberUpdateError);
+            }
           }
         }
 
-        // Show thank you with smooth animation, hide form and party member list
+        // Show thank you with smooth animation
         document.getElementById("guest-list-section").style.display = "none";
         rsvpForm.style.display = "none";
         thankYouMessage.style.display = "block";
@@ -1389,7 +1421,7 @@
         // Update thank you message based on attendance
         const attendingNames = partyMembers
           .filter(member => memberAttendance[member.id] === 'accept')
-          .map(member => member.name);
+          .map(member => member.full_name);
         
         let thankYouText;
         if (attendingNames.length > 0) {
@@ -1412,7 +1444,6 @@
             });
           } catch (err) {
             console.error("EmailJS error:", err);
-            // Don't show error to user, just log it
           }
         }
 
@@ -1422,7 +1453,7 @@
       }
     });
 
-    // Admin Authentication with enhanced animations
+    // Admin Authentication - FIXED VERSION
     document.getElementById("admin-auth").addEventListener("submit", async (e) => {
       e.preventDefault();
       clearMessage(adminMessage);
@@ -1434,24 +1465,48 @@
       }
 
       try {
-        // Fetch guest list
-        const { data, error } = await supabase
+        console.log('Loading admin data...');
+        
+        // Fetch guest list with party members
+        const { data: guestData, error: guestError } = await supabase
           .from("guests")
           .select("*")
-          .order("created_at", { ascending: false });
+          .order("full_name", { ascending: true });
 
-        if (error) {
+        if (guestError) {
+          console.error('Admin guest fetch error:', guestError);
           setMessage(adminMessage, "Failed to load guest list. Please try again.", false);
           return;
         }
+
+        // Fetch all party members for counting
+        const { data: partyData, error: partyError } = await supabase
+          .from("party_members")
+          .select("*");
+
+        if (partyError) {
+          console.error('Admin party fetch error:', partyError);
+        }
+
+        console.log('Admin guest data:', guestData);
+        console.log('Admin party data:', partyData);
 
         // Populate guest table with animations
         const tbody = document.getElementById("guest-rows");
         tbody.innerHTML = "";
         let totalGuestsConfirmed = 0;
 
-        data.forEach(guest => {
-          const guestsAttending = guest.guest_count || 0;
+        guestData.forEach(guest => {
+          let guestsAttending = guest.guest_count || 0;
+          
+          // Also count party members if they have accepted
+          if (partyData) {
+            const memberAttendees = partyData.filter(p => 
+              p.guest_id === guest.id && p.attendance_status === 'accept'
+            ).length;
+            guestsAttending += memberAttendees;
+          }
+          
           if (guest.rsvp_status === "Confirmed") {
             totalGuestsConfirmed += guestsAttending;
           }
@@ -1468,7 +1523,7 @@
           }
 
           tr.innerHTML = `
-            <td>${guest.full_name}</td>
+            <td>${guest.full_name || 'Unknown'}</td>
             <td>${guest.rsvp_status || "Not responded"}</td>
             <td style="text-align: center;">${guest.guest_limit || 1}</td>
             <td style="text-align: center;">${guestsAttending}</td>
