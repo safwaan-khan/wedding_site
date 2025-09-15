@@ -6,8 +6,8 @@
   <title>Nikkah RSVP - Manal & Safwaan</title>
 
   <!-- Favicon -->
-  <link rel="icon" type="image/png" sizes="32x32" href="https://github.com/safwaan-khan/wedding_site/blob/main/favicon-32x32.png">
-  <link rel="icon" type="image/png" sizes="16x16" href="https://github.com/safwaan-khan/wedding_site/blob/main/favicon-16x16.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="https://raw.githubusercontent.com/safwaan-khan/wedding_site/main/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="https://raw.githubusercontent.com/safwaan-khan/wedding_site/main/favicon-16x16.png">
 
   <!-- Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Playfair+Display&family=Josefin+Sans:wght@300;600&display=swap" rel="stylesheet" />
@@ -1261,8 +1261,10 @@
           
           updateEmailSectionVisibility();
           
-          // Clear any existing RSVP error messages when user makes selections
-          clearMessage(rsvpMessage);
+          // Only clear RSVP error messages if ALL members have now responded
+          if (allMembersResponded()) {
+            clearMessage(rsvpMessage);
+          }
         });
       });
     }
