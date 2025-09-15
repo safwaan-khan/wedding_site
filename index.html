@@ -1506,7 +1506,7 @@
       }
     });
 
-    // COMPLETELY FIXED Admin Authentication
+    // Admin Authentication with updated table logic
     document.getElementById("admin-auth").addEventListener("submit", async (e) => {
       e.preventDefault();
       clearMessage(adminMessage);
@@ -1542,7 +1542,6 @@
 
         if (partyError) {
           console.error('Admin party fetch error:', partyError);
-          // Don't fail completely, just log the error
           console.warn('Party members could not be loaded');
         }
 
@@ -1564,28 +1563,66 @@
         const allIndividualGuests = [];
 
         if (guestData && guestData.length > 0) {
-          // First, add all main guests
+          // Process each main guest and their party members
           guestData.forEach(guest => {
+            // Find party members for this guest
+            const guestPartyMembers = partyData ? partyData.filter(p => p.guest_id === guest.id) : [];
+            
+            // Determine main guest's individual attendance status
+            let mainGuestStatus = 'Pending';
+            
+            // If the guest has submitted an RSVP, check if they personally are attending
+            if (guest.rsvp_status === 'Confirmed' || guest.rsvp_status === 'Declined') {
+              // Check if there are party members with individual statuses
+              if (guestPartyMembers.length > 0) {
+                // Look for the main guest in party members or use overall RSVP
+                const mainGuestPartyRecord = guestPartyMembers.find(pm => pm.is_main_guest === true);
+                if (mainGuestPartyRecord && mainGuestPartyRecord.attendance_status) {
+                  mainGuestStatus = mainGuestPartyRecord.attendance_status === 'accept' ? 'Confirmed' : 'Declined';
+                } else {
+                  // If no individual record, assume they're attending if anyone in party is
+                  const anyoneAttending = guestPartyMembers.some(pm => pm.attendance_status === 'accept');
+                  if (guest.rsvp_status === 'Confirmed' && anyoneAttending) {
+                    mainGuestStatus = 'Confirmed';
+                  } else if (guest.rsvp_status === 'Declined') {
+                    mainGuestStatus = 'Declined';
+                  } else {
+                    mainGuestStatus = 'Pending';
+                  }
+                }
+              } else {
+                // No party members, use overall RSVP status for main guest
+                if (guest.rsvp_status === 'Confirmed') {
+                  mainGuestStatus = 'Confirmed';
+                } else if (guest.rsvp_status === 'Declined') {
+                  mainGuestStatus = 'Declined';
+                }
+              }
+            }
+
+            // Add main guest to the list
             allIndividualGuests.push({
               name: guest.full_name || 'Unknown Name',
               type: 'Main Guest',
-              status: guest.rsvp_status || 'Pending',
-              sortOrder: guest.rsvp_status === 'Confirmed' ? 1 : guest.rsvp_status === 'Declined' ? 2 : 3
+              status: mainGuestStatus,
+              sortOrder: mainGuestStatus === 'Confirmed' ? 1 : mainGuestStatus === 'Declined' ? 2 : 3,
+              guestId: guest.id
             });
 
             // Count main guest
-            if (guest.rsvp_status === 'Confirmed') {
+            if (mainGuestStatus === 'Confirmed') {
               totalConfirmedPeople++;
-            } else if (guest.rsvp_status === 'Declined') {
+            } else if (mainGuestStatus === 'Declined') {
               totalDeclinedPeople++;
             } else {
               totalPendingPeople++;
             }
-          });
 
-          // Then add all party members
-          if (partyData) {
-            partyData.forEach(partyMember => {
+            // Add party members with their individual attendance status
+            guestPartyMembers.forEach(partyMember => {
+              // Skip if this is marked as the main guest record
+              if (partyMember.is_main_guest) return;
+              
               let status = 'Pending';
               if (partyMember.attendance_status === 'accept') {
                 status = 'Confirmed';
@@ -1594,6 +1631,12 @@
                 status = 'Declined';
                 totalDeclinedPeople++;
               } else {
+                // If no individual response yet but main guest has responded
+                if (guest.rsvp_status && guest.rsvp_status !== 'Pending') {
+                  status = 'Pending Response';
+                } else {
+                  status = 'Pending';
+                }
                 totalPendingPeople++;
               }
 
@@ -1601,10 +1644,12 @@
                 name: partyMember.full_name || 'Unknown Name',
                 type: 'Party Member',
                 status: status,
-                sortOrder: status === 'Confirmed' ? 1 : status === 'Declined' ? 2 : 3
+                sortOrder: status === 'Confirmed' ? 1 : status === 'Declined' ? 2 : 3,
+                guestId: guest.id,
+                partyMemberId: partyMember.id
               });
             });
-          }
+          });
 
           // Sort guests: Confirmed first, then Declined, then Pending
           allIndividualGuests.sort((a, b) => a.sortOrder - b.sortOrder);
