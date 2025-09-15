@@ -1444,19 +1444,58 @@
           return;
         }
 
-        // Update individual party member attendance (skip the main guest which is handled above)
+        // Update individual party member attendance (including main guest)
         for (const member of partyMembers) {
-          // Skip the main guest member
-          if (member.is_main_guest) continue;
-          
           if (member.id && memberAttendance[member.id]) {
-            const { error: memberUpdateError } = await supabase
-              .from("party_members")
-              .update({ attendance_status: memberAttendance[member.id] })
-              .eq("id", member.id);
-              
-            if (memberUpdateError) {
-              console.error('Party member update error:', memberUpdateError);
+            if (member.is_main_guest) {
+              // For main guest, we need to create/update a party_members record
+              // First check if a party member record exists for the main guest
+              const { data: existingRecord, error: checkError } = await supabase
+                .from("party_members")
+                .select("id")
+                .eq("guest_id", currentGuest.id)
+                .eq("is_main_guest", true)
+                .single();
+
+              if (checkError && checkError.code !== 'PGRST116') { // PGRST116 = no rows returned
+                console.error('Error checking for existing main guest record:', checkError);
+              }
+
+              if (existingRecord) {
+                // Update existing record
+                const { error: mainGuestUpdateError } = await supabase
+                  .from("party_members")
+                  .update({ attendance_status: memberAttendance[member.id] })
+                  .eq("id", existingRecord.id);
+                  
+                if (mainGuestUpdateError) {
+                  console.error('Main guest party member update error:', mainGuestUpdateError);
+                }
+              } else {
+                // Create new record for main guest
+                const { error: mainGuestInsertError } = await supabase
+                  .from("party_members")
+                  .insert({
+                    guest_id: currentGuest.id,
+                    full_name: currentGuest.full_name,
+                    is_main_guest: true,
+                    attendance_status: memberAttendance[member.id]
+                  });
+                  
+                if (mainGuestInsertError) {
+                  console.error('Main guest party member insert error:', mainGuestInsertError);
+                }
+              }
+            } else {
+              // For other party members, just update as before
+              const { error: memberUpdateError } = await supabase
+                .from("party_members")
+                .update({ attendance_status: memberAttendance[member.id] })
+                .eq("id", member.id);
+                
+              if (memberUpdateError) {
+                console.error('Party member update error:', memberUpdateError);
+              }
             }
           }
         }
