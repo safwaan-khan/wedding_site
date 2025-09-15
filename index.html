@@ -290,30 +290,68 @@
       text-shadow: 0 0 8px rgba(43, 58, 103, 0.3);
     }
 
-    /* Admin section special styling for wider content */
+    /* FIXED Admin section styling */
     #admin-section {
-      max-width: min(800px, 95vw);
-      background: rgba(255, 255, 255, 0.25);
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.7);
       backdrop-filter: blur(8px);
-      border-radius: clamp(12px, 3vw, 16px);
-      padding: clamp(1.5rem, 4vw, 2.5rem);
-      margin-bottom: clamp(1rem, 2.5vw, 1.5rem);
-      box-shadow: 0 0 30px rgba(43, 58, 103, 0.4);
+      z-index: 1000;
       display: none;
-      color: #2b3a67;
-      transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%) scale(0.9);
-      max-height: 90vh;
+      justify-content: center;
+      align-items: center;
+      padding: clamp(1rem, 3vw, 2rem);
       overflow-y: auto;
-      opacity: 0;
     }
 
     #admin-section.show {
-      opacity: 1;
-      transform: translate(-50%, -50%) scale(1);
+      display: flex;
+    }
+
+    .admin-content {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(12px);
+      border-radius: clamp(12px, 2vw, 20px);
+      padding: clamp(2rem, 4vw, 3rem);
+      width: 100%;
+      max-width: 1200px;
+      max-height: 90vh;
+      overflow-y: auto;
+      box-shadow: 0 20px 40px rgba(43, 58, 103, 0.3);
+      color: #2b3a67;
+      position: relative;
+    }
+
+    .admin-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2rem;
+      border-bottom: 2px solid rgba(43, 58, 103, 0.2);
+      padding-bottom: 1rem;
+    }
+
+    .admin-close {
+      background: #d32f2f;
+      border: none;
+      color: white;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      font-size: 1.5rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s ease;
+    }
+
+    .admin-close:hover {
+      background: #b71c1c;
+      transform: scale(1.1);
     }
 
     form {
@@ -371,6 +409,12 @@
       opacity: 1;
       transform: translateY(0);
       transition-delay: 0.3s;
+    }
+
+    /* Admin form inputs should be visible */
+    #admin-section input[type="password"] {
+      opacity: 1;
+      transform: translateY(0);
     }
 
     input[type="text"]:focus,
@@ -497,6 +541,12 @@
       transition-delay: 0.6s;
     }
 
+    /* Admin form submit buttons should be visible */
+    #admin-section button[type="submit"] {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+
     button[type="submit"]:hover {
       background: #1b2550;
       transform: translateY(0) scale(1.02);
@@ -546,15 +596,16 @@
       transform: translateY(0) scale(1);
     }
 
-    /* Table Styles - Much wider for admin */
+    /* FIXED Table Styles */
     table {
       width: 100%;
       border-collapse: collapse;
-      margin-top: 1rem;
-      font-size: clamp(0.95rem, 2.4vw, 1.15rem);
-      background: rgba(255, 255, 255, 0.1);
-      border-radius: 8px;
+      margin-top: 1.5rem;
+      font-size: clamp(0.85rem, 1.8vw, 1rem);
+      background: rgba(255, 255, 255, 0.9);
+      border-radius: 12px;
       overflow: hidden;
+      box-shadow: 0 4px 20px rgba(43, 58, 103, 0.2);
       opacity: 0;
       transform: translateY(20px);
       transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
@@ -566,45 +617,50 @@
     }
 
     th, td {
-      border: 1px solid #2b3a67;
-      padding: clamp(0.5rem, 1.5vw, 0.8rem);
+      border: 1px solid rgba(43, 58, 103, 0.3);
+      padding: clamp(0.5rem, 1.2vw, 0.8rem);
       text-align: left;
       word-wrap: break-word;
-      font-size: clamp(0.9rem, 2.2vw, 1.1rem);
+      font-size: clamp(0.8rem, 1.6vw, 0.95rem);
       transition: all 0.4s ease;
     }
 
     th:hover, td:hover {
-      background: rgba(255, 255, 255, 0.1);
+      background: rgba(43, 58, 103, 0.1);
     }
 
     thead {
-      background: rgba(43, 58, 103, 0.2);
-      color: #1b2550;
+      background: rgba(43, 58, 103, 0.8);
+      color: white;
       font-weight: 600;
     }
 
     tbody tr:nth-child(even) {
-      background: rgba(255, 255, 255, 0.1);
+      background: rgba(173, 216, 230, 0.1);
     }
 
     tr.confirmed {
-      background-color: rgba(45, 125, 50, 0.2);
+      background-color: rgba(45, 125, 50, 0.2) !important;
       font-weight: 600;
+      color: #2d7d32;
     }
 
-    tr.rejected {
-      background-color: rgba(211, 47, 47, 0.2);
+    tr.declined {
+      background-color: rgba(211, 47, 47, 0.2) !important;
       font-weight: 600;
       color: #d32f2f;
     }
 
     #total-headcount {
-      font-weight: 600;
-      font-size: clamp(1.15rem, 2.7vw, 1.45rem);
+      font-weight: 700;
+      font-size: clamp(1.2rem, 2.8vw, 1.6rem);
       color: #1b2550;
       margin-bottom: 1rem;
-      text-align: right;
+      text-align: center;
+      padding: 1rem;
+      background: rgba(45, 125, 50, 0.2);
+      border-radius: 10px;
+      border: 2px solid #2d7d32;
       opacity: 0;
       transform: translateY(15px);
       transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
@@ -778,6 +834,10 @@
         padding: 0.7rem 0.8rem;
         font-size: 0.9rem;
       }
+
+      .admin-content {
+        padding: 1.5rem;
+      }
     }
 
     /* Small screens */
@@ -799,9 +859,18 @@
         min-width: calc(33% - 0.33rem);
       }
       
-      #admin-section {
-        padding: 1.5rem 1rem;
-        max-height: 85vh;
+      .admin-content {
+        padding: 1rem;
+        max-height: 95vh;
+      }
+
+      table {
+        font-size: 0.75rem;
+      }
+
+      th, td {
+        padding: 0.4rem;
+        font-size: 0.7rem;
       }
     }
   </style>
@@ -886,28 +955,35 @@
     <button id="rsvp-btn" class="toggle-button" aria-expanded="false">RSVP</button>
   </div>
 
+  <!-- FIXED Admin Section -->
   <section id="admin-section">
-    <h2><center>Admin Portal</center></h2>
-    <form id="admin-auth" aria-label="Admin Login Form">
-      <input type="password" id="admin-password" placeholder="Admin Password" aria-required="true" autocomplete="current-password" />
-      <button type="submit">Login</button>
-      <p class="inline-message" id="admin-message" role="alert" aria-live="polite"></p>
-    </form>
+    <div class="admin-content">
+      <div class="admin-header">
+        <h2>Admin Portal</h2>
+        <button class="admin-close" onclick="closeAdminSection()" aria-label="Close Admin Portal">×</button>
+      </div>
 
-    <div id="guest-list" style="display:none; margin-top: 1rem;">
-      <h3><center>Guest List</center></h3>
-      <p id="total-headcount"></p>
-      <table>
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th>RSVP Status</th>
-            <th>Guests Allowed</th>
-            <th>Guests Attending</th>
-          </tr>
-        </thead>
-        <tbody id="guest-rows"></tbody>
-      </table>
+      <form id="admin-auth" aria-label="Admin Login Form">
+        <input type="password" id="admin-password" placeholder="Admin Password" aria-required="true" autocomplete="current-password" />
+        <button type="submit">Login</button>
+        <p class="inline-message" id="admin-message" role="alert" aria-live="polite"></p>
+      </form>
+
+      <div id="guest-list" style="display:none; margin-top: 1rem;">
+        <p id="total-headcount"></p>
+        <table>
+          <thead>
+            <tr>
+              <th>Guest Name</th>
+              <th>RSVP Status</th>
+              <th>Email</th>
+              <th>Party Size Limit</th>
+              <th>Attending Count</th>
+            </tr>
+          </thead>
+          <tbody id="guest-rows"></tbody>
+        </table>
+      </div>
     </div>
   </section>
 
@@ -974,7 +1050,6 @@
       inviteContent.classList.remove("active");
       infoContent.classList.remove("active");
       rsvpContent.classList.remove("active");
-      adminSection.style.display = "none";
       adminSection.classList.remove("show");
 
       // Show incoming content
@@ -991,8 +1066,8 @@
         rsvpContent.classList.add("active");
         document.querySelector('.admin-button-wrapper').style.display = "none";
       } else if (incoming === 'admin') {
-        adminSection.style.display = "block";
-        setTimeout(() => adminSection.classList.add("show"), 50);
+        adminSection.classList.add("show");
+        document.querySelector('.admin-button-wrapper').style.display = "none";
       }
 
       // Wait for elements to be positioned
@@ -1070,28 +1145,25 @@
       adminBtn.setAttribute("aria-expanded", "false");
     }
 
-    function toggleAdminSection() {
-      const isVisible = adminSection.style.display === "block";
-      if (isVisible) {
-        adminSection.classList.remove("show");
-        setTimeout(() => {
-          adminSection.style.display = "none";
-        }, 300);
-        adminBtn.setAttribute("aria-expanded", "false");
-      } else {
-        const outgoingElements = [
-          document.querySelector('.hero-container'),
-          document.querySelector('.button-container')
-        ];
-        
-        transitionElements(outgoingElements, 'admin');
-        adminBtn.setAttribute("aria-expanded", "true");
-        
-        // Hide other content
-        inviteBtn.setAttribute("aria-expanded", "false");
-        infoBtn.setAttribute("aria-expanded", "false");
-        rsvpBtn.setAttribute("aria-expanded", "false");
-      }
+    function showAdminSection() {
+      const outgoingElements = [
+        document.querySelector('.hero-container'),
+        document.querySelector('.button-container'),
+        document.querySelector('.admin-button-wrapper')
+      ];
+      
+      transitionElements(outgoingElements, 'admin');
+      adminBtn.setAttribute("aria-expanded", "true");
+      
+      // Hide other content
+      inviteBtn.setAttribute("aria-expanded", "false");
+      infoBtn.setAttribute("aria-expanded", "false");
+      rsvpBtn.setAttribute("aria-expanded", "false");
+    }
+
+    function closeAdminSection() {
+      adminSection.classList.remove("show");
+      showHeroContent();
     }
 
     // Reset RSVP form function
@@ -1106,6 +1178,7 @@
     // Make functions globally available
     window.showHeroContent = showHeroContent;
     window.resetRsvpForm = resetRsvpForm;
+    window.closeAdminSection = closeAdminSection;
 
     // Event Listeners for Section Toggles with debouncing
     inviteBtn.addEventListener("click", () => {
@@ -1121,7 +1194,7 @@
     });
     
     adminBtn.addEventListener("click", () => {
-      if (!isTransitioning) toggleAdminSection();
+      if (!isTransitioning) showAdminSection();
     });
 
     // Function to render party members with staggered animations
@@ -1217,7 +1290,7 @@
       }, 300);
     }
 
-    // Guest Lookup Form - FIXED VERSION
+    // Guest Lookup Form
     document.getElementById("lookup-form").addEventListener("submit", async (e) => {
       e.preventDefault();
       clearMessage(lookupMessage);
@@ -1227,8 +1300,6 @@
         setMessage(lookupMessage, "Please enter a name to look up your invitation.", false);
         return;
       }
-
-      console.log('Looking up guest:', inputName);
 
       try {
         // Fetch all guests first
@@ -1242,8 +1313,6 @@
           return;
         }
 
-        console.log('All guests:', guestData);
-
         // Fetch all party members
         const { data: partyData, error: partyError } = await supabase
           .from("party_members")
@@ -1255,8 +1324,6 @@
           return;
         }
 
-        console.log('All party members:', partyData);
-
         const nameLower = inputName.toLowerCase().trim();
 
         // First, try to find the guest by their full_name
@@ -1264,19 +1331,14 @@
           g.full_name && g.full_name.toLowerCase().trim() === nameLower
         );
 
-        console.log('Found guest by full_name:', foundGuest);
-
         // If not found as main guest, search in party members
         if (!foundGuest) {
           const foundPartyMember = partyData.find(p => 
             p.full_name && p.full_name.toLowerCase().trim() === nameLower
           );
           
-          console.log('Found party member:', foundPartyMember);
-          
           if (foundPartyMember) {
             foundGuest = guestData.find(g => g.id === foundPartyMember.guest_id);
-            console.log('Found guest via party member:', foundGuest);
           }
         }
 
@@ -1286,7 +1348,6 @@
         }
 
         currentGuest = foundGuest;
-        console.log('Current guest set to:', currentGuest);
         
         // Get all party members for this guest (including the main guest)
         const guestPartyMembers = partyData.filter(p => p.guest_id === foundGuest.id);
@@ -1309,8 +1370,6 @@
         })));
         
         memberAttendance = {};
-        
-        console.log('Party members:', partyMembers);
 
         // Hide the lookup form and show invitation section
         document.getElementById("lookup-form").style.display = "none";
@@ -1341,7 +1400,7 @@
       }
     });
 
-    // RSVP Form Submission - FIXED VERSION
+    // RSVP Form Submission
     rsvpForm.addEventListener("submit", async (e) => {
       e.preventDefault();
       clearMessage(rsvpMessage);
@@ -1364,9 +1423,6 @@
       }
 
       try {
-        console.log('Submitting RSVP for:', currentGuest);
-        console.log('Member attendance:', memberAttendance);
-
         // Update main guest RSVP in DB
         const rsvpStatus = isAnyoneAttending ? "Confirmed" : "Declined";
         const updateData = { 
@@ -1452,7 +1508,7 @@
       }
     });
 
-    // Admin Authentication - FIXED VERSION
+    // COMPLETELY FIXED Admin Authentication
     document.getElementById("admin-auth").addEventListener("submit", async (e) => {
       e.preventDefault();
       clearMessage(adminMessage);
@@ -1466,7 +1522,10 @@
       try {
         console.log('Loading admin data...');
         
-        // Fetch guest list with party members
+        // Show loading message
+        setMessage(adminMessage, "Loading guest data...", true);
+        
+        // Fetch guest list with all data
         const { data: guestData, error: guestError } = await supabase
           .from("guests")
           .select("*")
@@ -1485,72 +1544,111 @@
 
         if (partyError) {
           console.error('Admin party fetch error:', partyError);
+          // Don't fail completely, just log the error
+          console.warn('Party members could not be loaded');
         }
 
-        console.log('Admin guest data:', guestData);
-        console.log('Admin party data:', partyData);
+        console.log('Admin guest data loaded:', guestData?.length || 0, 'guests');
+        console.log('Admin party data loaded:', partyData?.length || 0, 'party members');
 
-        // Populate guest table with animations
+        // Clear the auth form and show success
+        document.getElementById("admin-password").value = "";
+        setMessage(adminMessage, `Successfully loaded ${guestData?.length || 0} guests!`, true);
+
+        // Populate guest table with improved logic
         const tbody = document.getElementById("guest-rows");
         tbody.innerHTML = "";
         let totalGuestsConfirmed = 0;
+        let totalDeclined = 0;
+        let totalPending = 0;
 
-        guestData.forEach(guest => {
-          let guestsAttending = guest.guest_count || 0;
-          
-          // Also count party members if they have accepted
-          if (partyData) {
-            const memberAttendees = partyData.filter(p => 
-              p.guest_id === guest.id && p.attendance_status === 'accept'
-            ).length;
-            guestsAttending += memberAttendees;
-          }
-          
-          if (guest.rsvp_status === "Confirmed") {
-            totalGuestsConfirmed += guestsAttending;
-          }
+        if (guestData && guestData.length > 0) {
+          guestData.forEach((guest, index) => {
+            // Calculate attending count more accurately
+            let attendingCount = 0;
+            
+            // Count main guest if confirmed
+            if (guest.rsvp_status === "Confirmed") {
+              attendingCount = guest.guest_count || 1; // Use guest_count if available, otherwise 1
+            }
+            
+            // Also count party members who explicitly accepted (if we have party data)
+            if (partyData) {
+              const acceptedPartyMembers = partyData.filter(p => 
+                p.guest_id === guest.id && p.attendance_status === 'accept'
+              ).length;
+              attendingCount += acceptedPartyMembers;
+            }
 
+            // Update totals
+            if (guest.rsvp_status === "Confirmed") {
+              totalGuestsConfirmed += attendingCount;
+            } else if (guest.rsvp_status === "Declined") {
+              totalDeclined++;
+            } else {
+              totalPending++;
+            }
+
+            const tr = document.createElement("tr");
+            
+            // Apply row styling based on status
+            if (guest.rsvp_status === "Confirmed") {
+              tr.classList.add("confirmed");
+            } else if (guest.rsvp_status === "Declined") {
+              tr.classList.add("declined");
+            }
+
+            tr.innerHTML = `
+              <td><strong>${guest.full_name || 'Unknown Name'}</strong></td>
+              <td><strong>${guest.rsvp_status || "Pending"}</strong></td>
+              <td>${guest.email || 'No email provided'}</td>
+              <td style="text-align: center;">${guest.guest_limit || 1}</td>
+              <td style="text-align: center; font-weight: bold;">${attendingCount}</td>
+            `;
+            
+            tbody.appendChild(tr);
+            
+            // Animate each row with delay
+            setTimeout(() => {
+              tr.style.opacity = '1';
+              tr.style.transform = 'translateY(0)';
+            }, index * 50);
+          });
+        } else {
+          // No guests found
           const tr = document.createElement("tr");
-          if (guest.rsvp_status === "Confirmed") {
-            tr.classList.add("confirmed");
-            tr.style.color = "#2d7d32";
-            tr.style.fontWeight = "600";
-          } else if (guest.rsvp_status === "Declined") {
-            tr.classList.add("rejected");
-            tr.style.color = "#d32f2f";
-            tr.style.fontWeight = "600";
-          }
-
-          tr.innerHTML = `
-            <td>${guest.full_name || 'Unknown'}</td>
-            <td>${guest.rsvp_status || "Not responded"}</td>
-            <td style="text-align: center;">${guest.guest_limit || 1}</td>
-            <td style="text-align: center;">${guestsAttending}</td>
-          `;
+          tr.innerHTML = `<td colspan="5" style="text-align: center; font-style: italic; color: #666;">No guests found in database</td>`;
           tbody.appendChild(tr);
-        });
+        }
 
-        // Animate table and headcount appearance
+        // Update and show total headcount with more detail
         const totalHeadcount = document.getElementById("total-headcount");
-        totalHeadcount.innerText = `Total Confirmed Attending: ${totalGuestsConfirmed}`;
+        totalHeadcount.innerHTML = `
+          <div style="text-align: center; padding: 1rem; background: linear-gradient(135deg, rgba(45, 125, 50, 0.2), rgba(43, 58, 103, 0.2)); border-radius: 10px; border: 2px solid #2d7d32;">
+            <div style="font-size: clamp(1.3rem, 3vw, 1.8rem); color: #2d7d32; margin-bottom: 0.5rem;">
+              📊 <strong>Total Confirmed Attending: ${totalGuestsConfirmed}</strong>
+            </div>
+            <div style="font-size: clamp(0.9rem, 2vw, 1.1rem); color: #2b3a67;">
+              Confirmed: <strong>${guestData.filter(g => g.rsvp_status === 'Confirmed').length}</strong> | 
+              Declined: <strong>${totalDeclined}</strong> | 
+              Pending: <strong>${totalPending}</strong>
+            </div>
+          </div>
+        `;
         
+        // Show the guest list section with animation
         setTimeout(() => {
+          guestListDiv.style.display = "block";
           totalHeadcount.classList.add('show');
-        }, 200);
+        }, 300);
         
         setTimeout(() => {
           document.querySelector('table').classList.add('show');
-        }, 400);
+        }, 600);
         
-        guestListDiv.style.display = "block";
-
-        // Clear password input
-        document.getElementById("admin-password").value = "";
-        setMessage(adminMessage, "Login successful!", true);
-
       } catch (err) {
         console.error('Admin error:', err);
-        setMessage(adminMessage, "Error loading guest list. Please try again.", false);
+        setMessage(adminMessage, "Error loading guest data. Please check your connection and try again.", false);
       }
     });
   </script>
