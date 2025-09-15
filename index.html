@@ -249,22 +249,25 @@
       transform: translateY(0);
     }
     
-    /* Updated styling for invitation text - making it larger */
-    .content-section .invitation-text {
-      font-size: clamp(1.55rem, 4.2vw, 1.95rem);
-      font-weight: 600;
-      line-height: 1.4;
-      margin-bottom: clamp(0.4rem, 1.2vw, 0.8rem);
+    /* NEW: Direct class-based styling for invitation text */
+    .large-invitation-text {
+      font-size: clamp(1.6rem, 4.5vw, 2.1rem) !important;
+      font-weight: 600 !important;
+      line-height: 1.4 !important;
+      margin-bottom: clamp(0.4rem, 1.2vw, 0.8rem) !important;
+      text-align: center !important;
     }
 
-    /* Larger text for Invite section centered content */
-    #invite-content .invitation-text {
-      font-size: clamp(1.8rem, 4.8vw, 2.3rem);
-      font-weight: 600;
-      line-height: 1.4;
-      margin-bottom: clamp(0.5rem, 1.5vw, 1rem);
+    /* Extra large for main invitation section */
+    .extra-large-invitation-text {
+      font-size: clamp(1.9rem, 5.2vw, 2.5rem) !important;
+      font-weight: 600 !important;
+      line-height: 1.4 !important;
+      margin-bottom: clamp(0.5rem, 1.5vw, 1rem) !important;
+      text-align: center !important;
     }
 
+    /* Updated h2 styling for invite section */
     #invite-content h2 {
       font-size: clamp(1.7rem, 4.2vw, 2.3rem);
       margin-bottom: clamp(0.8rem, 2.2vw, 1.5rem);
@@ -817,12 +820,12 @@
     <!-- Invite Content -->
     <div id="invite-content" class="content-section">
       <button class="back-button" onclick="showHeroContent()">← Back</button>
-      <p class="invitation-text"><center>You are invited to the Nikkah Ceremony of</center></p>
-      <h2><center>Manal</center></h2> 
-      <p class="invitation-text"><center>daughter of Laeeq & Uzma Ahmed</center></p> 
-      <p class="invitation-text"><center>with</center></p> 
-      <h2><center>Safwaan</center></h2> 
-      <p class="invitation-text"><center>son of Uzair & Maheen Khan</center></p> 
+      <p class="extra-large-invitation-text">You are invited to the Nikkah Ceremony of</p>
+      <h2>Manal</h2> 
+      <p class="large-invitation-text">daughter of Laeeq & Uzma Ahmed</p> 
+      <p class="extra-large-invitation-text">with</p> 
+      <h2>Safwaan</h2> 
+      <p class="large-invitation-text">son of Uzair & Maheen Khan</p> 
       <p><strong>Date:</strong> Saturday, December 6th, 2025</p>
       <p><strong>Time:</strong> 3:00 PM</p>
       <p><strong>Venue:</strong> South Bay Islamic Association (SBIA)</p>
@@ -834,12 +837,12 @@
     <!-- Info Content -->
     <div id="info-content" class="content-section">
       <button class="back-button" onclick="showHeroContent()">← Back</button>
-      <p class="invitation-text"><center>You are invited to the Nikkah Ceremony of</center></p>
-      <h2><center>Manal</center></h2> 
-      <p class="invitation-text"><center>daughter of Laeeq & Uzma Ahmed</center></p> 
-      <p class="invitation-text"><center>with</center></p> 
-      <h2><center>Safwaan</center></h2> 
-      <p class="invitation-text"><center>son of Uzair & Maheen Khan</center></p> 
+      <p class="extra-large-invitation-text">You are invited to the Nikkah Ceremony of</p>
+      <h2>Manal</h2> 
+      <p class="large-invitation-text">daughter of Laeeq & Uzma Ahmed</p> 
+      <p class="extra-large-invitation-text">with</p> 
+      <h2>Safwaan</h2> 
+      <p class="large-invitation-text">son of Uzair & Maheen Khan</p> 
       <p><strong>Date:</strong> Saturday, December 6th, 2025</p>
       <p><strong>Time:</strong> 3:00 PM</p>
       <p><strong>Venue:</strong> South Bay Islamic Association (SBIA)</p>
@@ -1517,21 +1520,4 @@
     }
   </script>
 </body>
-</html> 184px;
-        margin-bottom: 1.5rem;
-      }
-      
-      .hero-container {
-        max-width: 550px;
-        padding: 2.5rem 2rem;
-        margin-bottom: 2rem;
-        max-height: 75vh;
-      }
-      
-      .hero-image {
-        max-height: 35vh;
-        border-radius: 15px;
-      }
-      
-      .button-container {
-        max-width:
+</html>
