@@ -1327,13 +1327,24 @@
       const nameLower = inputName.toLowerCase();
 
       try {
+        console.log("Looking up guest:", inputName);
+
         // Fetch all guests and their party members
         const { data: guestData, error: guestError } = await supabase
           .from("guests")
           .select("*");
 
+        console.log("Guest data:", guestData, "Error:", guestError);
+
         if (guestError) {
+          console.error("Guest lookup error:", guestError);
           setMessage(lookupMessage, "Failed to lookup guests. Please try again later.", false);
+          return;
+        }
+
+        if (!guestData || guestData.length === 0) {
+          console.log("No guest data found in database");
+          setMessage(lookupMessage, "No guests found in database. Please contact the hosts.", false);
           return;
         }
 
@@ -1342,27 +1353,42 @@
           .from("party_members")
           .select("*");
 
+        console.log("Party data:", partyData, "Error:", partyError);
+
         if (partyError) {
-          setMessage(lookupMessage, "Failed to lookup party members. Please try again later.", false);
-          return;
+          console.error("Party member lookup error:", partyError);
+          // Continue without party members if this fails
         }
 
         // First, try to find the guest by their full name
-        let foundGuest = guestData.find(g => g.full_name.trim().toLowerCase() === nameLower);
+        let foundGuest = guestData.find(g => {
+          const guestName = g.full_name ? g.full_name.trim().toLowerCase() : '';
+          console.log("Comparing:", guestName, "with", nameLower);
+          return guestName === nameLower;
+        });
 
         // If not found as main guest, search in party members
-        if (!foundGuest) {
-          const foundPartyMember = partyData.find(p => p.name.trim().toLowerCase() === nameLower);
+        if (!foundGuest && partyData) {
+          const foundPartyMember = partyData.find(p => {
+            const memberName = p.name ? p.name.trim().toLowerCase() : '';
+            console.log("Comparing party member:", memberName, "with", nameLower);
+            return memberName === nameLower;
+          });
+          
           if (foundPartyMember) {
             foundGuest = guestData.find(g => g.id === foundPartyMember.guest_id);
+            console.log("Found guest via party member:", foundGuest);
           }
         }
 
         if (!foundGuest) {
+          console.log("No guest found for:", inputName);
+          console.log("Available guests:", guestData.map(g => g.full_name));
           setMessage(lookupMessage, "Guest not found. Please check the spelling and try again.", false);
           return;
         }
 
+        console.log("Found guest:", foundGuest);
         currentGuest = foundGuest;
         
         // Get all party members for this guest
@@ -1483,7 +1509,7 @@
         // Update thank you message based on attendance
         const attendingNames = partyMembers
           .filter(member => memberAttendance[member.id] === 'accept')
-          .map(member => member.name);
+          .map(member => member.full_name);
         
         let thankYouText;
         if (attendingNames.length > 0) {
