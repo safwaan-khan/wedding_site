@@ -1398,7 +1398,7 @@
       }
     });
 
-    // RSVP Form Submission
+    // RSVP Form Submission - FIXED SECTION
     rsvpForm.addEventListener("submit", async (e) => {
       e.preventDefault();
       clearMessage(rsvpMessage);
@@ -1452,13 +1452,20 @@
           return;
         }
 
-        // Update individual party member attendance (for actual party members only, not main guest)
+        // FIXED: Update individual party member attendance correctly
+        console.log('Updating party members with attendance data:', memberAttendance);
+        
         for (const member of partyMembers) {
           // Skip the main guest - their status is already updated in guests table above
-          if (member.is_main_guest) continue;
+          if (member.is_main_guest) {
+            console.log(`Skipping main guest ${member.full_name} - already updated in guests table`);
+            continue;
+          }
           
           // Only update if this member has an attendance selection
           if (memberAttendance[member.id]) {
+            console.log(`Updating party member ${member.full_name} (ID: ${member.id}) with status: ${memberAttendance[member.id]}`);
+            
             const { error: memberUpdateError } = await supabase
               .from("party_members")
               .update({ attendance_status: memberAttendance[member.id] })
@@ -1466,9 +1473,13 @@
               
             if (memberUpdateError) {
               console.error('Party member update error:', memberUpdateError);
+              setMessage(rsvpMessage, `Failed to update ${member.full_name}. Please try again.`, false);
+              return;
             } else {
-              console.log(`Updated party member ${member.full_name} with status: ${memberAttendance[member.id]}`);
+              console.log(`Successfully updated party member ${member.full_name} with status: ${memberAttendance[member.id]}`);
             }
+          } else {
+            console.log(`No attendance data for party member ${member.full_name} (ID: ${member.id})`);
           }
         }
 
@@ -1615,6 +1626,8 @@
               if (partyMember.is_main_guest) return;
               
               let status = 'Pending';
+              
+              // FIXED: Check attendance_status properly
               if (partyMember.attendance_status === 'accept') {
                 status = 'Confirmed';
                 totalConfirmedPeople++;
