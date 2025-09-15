@@ -819,15 +819,14 @@
 
     <!-- Invite Content -->
     <div id="invite-content" class="content-section">
-      <button class="back-button" onclick="showHeroContent()">← Back</button>
       <p class="large-invitation-text">You are invited to the Nikkah Ceremony of</p>
       <h2>Manal</h2> 
       <p class="large-invitation-text">Daughter of Laeeq & Uzma Ahmed</p> 
       <p class="extra-large-invitation-text">with</p> 
       <h2>Safwaan</h2> 
       <p class="large-invitation-text">Son of Uzair & Maheen Khan</p> 
-      <p class="large-invitation-text">on Saturday, December 6th, 2025 at 3:00PM</p> 
-      <p class="large-invitation-text">at Masjid al-Mustafa</p> 
+      <p class="large-invitation-text">Saturday, December 6th, 2025 at 3:00PM</p> 
+      <p class="large-invitation-text">Masjid al-Mustafa</p> 
     </div>
 
     <!-- Info Content -->
@@ -838,7 +837,7 @@
       <p><strong>Venue:</strong> South Bay Islamic Association (SBIA)</p>
       <p><strong>Address:</strong> <a href="https://www.google.com/maps/search/?api=1&query=2345+Harris+Way,+San+Jose,+CA+95131" target="_blank">2345 Harris Way, San Jose, CA 95131</a></p>
       <br>
-      <p>Athaan for Asr will be at 3:10PM. Iqamah will be at 3:30PM. Inshallah, the Nikkah Ceremony will start shortly after the conclusion of Asr.</p>
+      <p>Athaan for Asr will be at 3:10PM. Iqamah will be at 3:30PM. InshAllah, the Nikkah Ceremony will start shortly after the conclusion of Asr.</p>
     </div>
 
     <!-- RSVP Content -->
@@ -875,7 +874,7 @@
         </form>
 
         <div id="thank-you-message" style="display:none;">
-          <p><center>Thank you for RSVPing! We can't wait to celebrate with you all, iA!</center></p>
+          <p><center>Thank you for RSVPing! We look forward to your presence at this special occasion, iA!</center></p>
         </div>
       </div>
     </div>
@@ -1427,7 +1426,7 @@
         if (attendingNames.length > 0) {
           thankYouText = `Thank you for RSVPing! We can't wait to celebrate with ${attendingNames.length > 1 ? 'you all' : 'you'}, iA!`;
         } else {
-          thankYouText = "Thank you for letting us know. We'll miss you on our special day, iA!";
+          thankYouText = "Thank you for letting us know. We will miss you on this special day, iA!";
         }
         
         thankYouMessage.innerHTML = `<p><center>${thankYouText}</center></p>`;
