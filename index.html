@@ -975,10 +975,8 @@
           <thead>
             <tr>
               <th>Guest Name</th>
+              <th>Guest Type</th>
               <th>RSVP Status</th>
-              <th>Email</th>
-              <th>Party Size Limit</th>
-              <th>Attending Count</th>
             </tr>
           </thead>
           <tbody id="guest-rows"></tbody>
@@ -1555,55 +1553,77 @@
         document.getElementById("admin-password").value = "";
         setMessage(adminMessage, `Successfully loaded ${guestData?.length || 0} guests!`, true);
 
-        // Populate guest table with improved logic
+        // Populate guest table with individual guests
         const tbody = document.getElementById("guest-rows");
         tbody.innerHTML = "";
-        let totalGuestsConfirmed = 0;
-        let totalDeclined = 0;
-        let totalPending = 0;
+        let totalConfirmedPeople = 0;
+        let totalDeclinedPeople = 0;
+        let totalPendingPeople = 0;
+
+        // Create array to hold all individual guests
+        const allIndividualGuests = [];
 
         if (guestData && guestData.length > 0) {
-          guestData.forEach((guest, index) => {
-            // Calculate attending count more accurately
-            let attendingCount = 0;
-            
-            // Count main guest if confirmed
-            if (guest.rsvp_status === "Confirmed") {
-              attendingCount = guest.guest_count || 1; // Use guest_count if available, otherwise 1
-            }
-            
-            // Also count party members who explicitly accepted (if we have party data)
-            if (partyData) {
-              const acceptedPartyMembers = partyData.filter(p => 
-                p.guest_id === guest.id && p.attendance_status === 'accept'
-              ).length;
-              attendingCount += acceptedPartyMembers;
-            }
+          // First, add all main guests
+          guestData.forEach(guest => {
+            allIndividualGuests.push({
+              name: guest.full_name || 'Unknown Name',
+              type: 'Main Guest',
+              status: guest.rsvp_status || 'Pending',
+              sortOrder: guest.rsvp_status === 'Confirmed' ? 1 : guest.rsvp_status === 'Declined' ? 2 : 3
+            });
 
-            // Update totals
-            if (guest.rsvp_status === "Confirmed") {
-              totalGuestsConfirmed += attendingCount;
-            } else if (guest.rsvp_status === "Declined") {
-              totalDeclined++;
+            // Count main guest
+            if (guest.rsvp_status === 'Confirmed') {
+              totalConfirmedPeople++;
+            } else if (guest.rsvp_status === 'Declined') {
+              totalDeclinedPeople++;
             } else {
-              totalPending++;
+              totalPendingPeople++;
             }
+          });
 
+          // Then add all party members
+          if (partyData) {
+            partyData.forEach(partyMember => {
+              let status = 'Pending';
+              if (partyMember.attendance_status === 'accept') {
+                status = 'Confirmed';
+                totalConfirmedPeople++;
+              } else if (partyMember.attendance_status === 'decline') {
+                status = 'Declined';
+                totalDeclinedPeople++;
+              } else {
+                totalPendingPeople++;
+              }
+
+              allIndividualGuests.push({
+                name: partyMember.full_name || 'Unknown Name',
+                type: 'Party Member',
+                status: status,
+                sortOrder: status === 'Confirmed' ? 1 : status === 'Declined' ? 2 : 3
+              });
+            });
+          }
+
+          // Sort guests: Confirmed first, then Declined, then Pending
+          allIndividualGuests.sort((a, b) => a.sortOrder - b.sortOrder);
+
+          // Populate table with all individual guests
+          allIndividualGuests.forEach((guest, index) => {
             const tr = document.createElement("tr");
             
             // Apply row styling based on status
-            if (guest.rsvp_status === "Confirmed") {
+            if (guest.status === "Confirmed") {
               tr.classList.add("confirmed");
-            } else if (guest.rsvp_status === "Declined") {
+            } else if (guest.status === "Declined") {
               tr.classList.add("declined");
             }
 
             tr.innerHTML = `
-              <td><strong>${guest.full_name || 'Unknown Name'}</strong></td>
-              <td><strong>${guest.rsvp_status || "Pending"}</strong></td>
-              <td>${guest.email || 'No email provided'}</td>
-              <td style="text-align: center;">${guest.guest_limit || 1}</td>
-              <td style="text-align: center; font-weight: bold;">${attendingCount}</td>
+              <td><strong>${guest.name}</strong></td>
+              <td>${guest.type}</td>
+              <td><strong>${guest.status}</strong></td>
             `;
             
             tbody.appendChild(tr);
@@ -1612,26 +1632,28 @@
             setTimeout(() => {
               tr.style.opacity = '1';
               tr.style.transform = 'translateY(0)';
-            }, index * 50);
+            }, index * 30);
           });
         } else {
           // No guests found
           const tr = document.createElement("tr");
-          tr.innerHTML = `<td colspan="5" style="text-align: center; font-style: italic; color: #666;">No guests found in database</td>`;
+          tr.innerHTML = `<td colspan="3" style="text-align: center; font-style: italic; color: #666;">No guests found in database</td>`;
           tbody.appendChild(tr);
         }
 
-        // Update and show total headcount with more detail
+        // Update and show total headcount with individual people count
         const totalHeadcount = document.getElementById("total-headcount");
+        const totalPeople = totalConfirmedPeople + totalDeclinedPeople + totalPendingPeople;
         totalHeadcount.innerHTML = `
           <div style="text-align: center; padding: 1rem; background: linear-gradient(135deg, rgba(45, 125, 50, 0.2), rgba(43, 58, 103, 0.2)); border-radius: 10px; border: 2px solid #2d7d32;">
             <div style="font-size: clamp(1.3rem, 3vw, 1.8rem); color: #2d7d32; margin-bottom: 0.5rem;">
-              📊 <strong>Total Confirmed Attending: ${totalGuestsConfirmed}</strong>
+              👥 <strong>Total Confirmed People: ${totalConfirmedPeople}</strong>
             </div>
             <div style="font-size: clamp(0.9rem, 2vw, 1.1rem); color: #2b3a67;">
-              Confirmed: <strong>${guestData.filter(g => g.rsvp_status === 'Confirmed').length}</strong> | 
-              Declined: <strong>${totalDeclined}</strong> | 
-              Pending: <strong>${totalPending}</strong>
+              Total People: <strong>${totalPeople}</strong> | 
+              Confirmed: <strong>${totalConfirmedPeople}</strong> | 
+              Declined: <strong>${totalDeclinedPeople}</strong> | 
+              Pending: <strong>${totalPendingPeople}</strong>
             </div>
           </div>
         `;
