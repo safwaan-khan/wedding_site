@@ -1421,8 +1421,16 @@
       }
 
       try {
-        // Update main guest RSVP in DB
-        const rsvpStatus = isAnyoneAttending ? "Confirmed" : "Declined";
+        // Update main guest RSVP status based on their individual selection
+        const mainGuestAttendance = memberAttendance[currentGuest.id]; // Main guest uses guest ID
+        let rsvpStatus = "Pending";
+        
+        if (mainGuestAttendance === 'accept') {
+          rsvpStatus = "Confirmed";
+        } else if (mainGuestAttendance === 'decline') {
+          rsvpStatus = "Declined";
+        }
+        
         const updateData = { 
           rsvp_status: rsvpStatus, 
           guest_count: guestCount 
@@ -1444,12 +1452,13 @@
           return;
         }
 
-        // Update individual party member attendance (only for actual party members, not main guest)
+        // Update individual party member attendance (for actual party members only, not main guest)
         for (const member of partyMembers) {
           // Skip the main guest - their status is already updated in guests table above
           if (member.is_main_guest) continue;
           
-          if (member.id && memberAttendance[member.id]) {
+          // Only update if this member has an attendance selection
+          if (memberAttendance[member.id]) {
             const { error: memberUpdateError } = await supabase
               .from("party_members")
               .update({ attendance_status: memberAttendance[member.id] })
@@ -1457,6 +1466,8 @@
               
             if (memberUpdateError) {
               console.error('Party member update error:', memberUpdateError);
+            } else {
+              console.log(`Updated party member ${member.full_name} with status: ${memberAttendance[member.id]}`);
             }
           }
         }
