@@ -6,8 +6,9 @@
   <title>Nikkah RSVP - Manal & Safwaan</title>
 
   <!-- Favicon -->
-  <link rel="icon" type="image/png" sizes="32x32" href="https://raw.githubusercontent.com/safwaan-khan/wedding_site/main/favicon-32x32.png">
-  <link rel="icon" type="image/png" sizes="16x16" href="https://raw.githubusercontent.com/safwaan-khan/wedding_site/main/favicon-16x16.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="https://raw.githubusercontent.com/yourusername/yourrepository/main/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="https://raw.githubusercontent.com/yourusername/yourrepository/main/favicon-16x16.png">
+  <link rel="shortcut icon" href="https://raw.githubusercontent.com/yourusername/yourrepository/main/favicon.ico">
 
   <!-- Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Playfair+Display&family=Josefin+Sans:wght@300;600&display=swap" rel="stylesheet" />
@@ -1297,17 +1298,15 @@
       
       if (isSuccess) {
         element.className = "inline-message success show";
-      } else {
-        element.className = "inline-message error show";
-      }
-      
-      // Only auto-clear success messages after 5 seconds, keep error messages persistent
-      if (isSuccess) {
+        // Only auto-clear success messages after 5 seconds
         setTimeout(() => {
           if (element.classList.contains('success')) {
             clearMessage(element);
           }
         }, 5000);
+      } else {
+        element.className = "inline-message error show";
+        // Error messages stay persistent - no auto-clear timeout
       }
     }
 
