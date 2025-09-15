@@ -1549,28 +1549,42 @@
       }
     });
 
-    // Admin Authentication with updated table logic
+    // Admin Authentication with updated table logic and filtering
     document.getElementById("admin-auth").addEventListener("submit", async (e) => {
       e.preventDefault();
       clearMessage(adminMessage);
       const password = document.getElementById("admin-password").value;
 
-      if (password !== "skhan") {
+      // Determine filter based on password
+      let whoFilter = null;
+      if (password === "skhan") {
+        whoFilter = "s";
+      } else if (password === "mahmed") {
+        whoFilter = "m";
+      } else if (password === "atpd") {
+        whoFilter = null; // Show all
+      } else {
         setMessage(adminMessage, "Incorrect admin password.", false);
         return;
       }
 
       try {
-        console.log('Loading admin data...');
+        console.log('Loading admin data with filter:', whoFilter);
         
         // Show loading message
         setMessage(adminMessage, "Loading guest data...", true);
         
-        // Fetch guest list with all data
-        const { data: guestData, error: guestError } = await supabase
+        // Fetch guest list with filtering
+        let guestQuery = supabase
           .from("guests")
           .select("*")
           .order("full_name", { ascending: true });
+        
+        if (whoFilter) {
+          guestQuery = guestQuery.eq("who", whoFilter);
+        }
+        
+        const { data: guestData, error: guestError } = await guestQuery;
 
         if (guestError) {
           console.error('Admin guest fetch error:', guestError);
@@ -1578,10 +1592,16 @@
           return;
         }
 
-        // Fetch all party members for counting
-        const { data: partyData, error: partyError } = await supabase
+        // Fetch party members with filtering
+        let partyQuery = supabase
           .from("party_members")
           .select("*");
+        
+        if (whoFilter) {
+          partyQuery = partyQuery.eq("who", whoFilter);
+        }
+        
+        const { data: partyData, error: partyError } = await partyQuery;
 
         if (partyError) {
           console.error('Admin party fetch error:', partyError);
@@ -1590,10 +1610,12 @@
 
         console.log('Admin guest data loaded:', guestData?.length || 0, 'guests');
         console.log('Admin party data loaded:', partyData?.length || 0, 'party members');
+        console.log('Filter applied:', whoFilter || 'none (showing all)');
 
         // Clear the auth form and show success
         document.getElementById("admin-password").value = "";
-        setMessage(adminMessage, `Successfully loaded ${guestData?.length || 0} guests!`, true);
+        let filterMessage = whoFilter ? ` (filtered by '${whoFilter}')` : ' (showing all)';
+        setMessage(adminMessage, `Successfully loaded ${guestData?.length || 0} guests${filterMessage}!`, true);
 
         // Populate guest table with individual guests
         const tbody = document.getElementById("guest-rows");
@@ -1608,7 +1630,7 @@
         if (guestData && guestData.length > 0) {
           // Process each main guest and their party members
           guestData.forEach(guest => {
-            // Find party members for this guest
+            // Find party members for this guest (filtered by who column)
             const guestPartyMembers = partyData ? partyData.filter(p => p.guest_id === guest.id) : [];
             
             // Determine main guest's individual attendance status
@@ -1629,7 +1651,8 @@
               type: 'Main Guest',
               status: mainGuestStatus,
               sortOrder: mainGuestStatus === 'Confirmed' ? 1 : mainGuestStatus === 'Declined' ? 2 : 3,
-              guestId: guest.id
+              guestId: guest.id,
+              who: guest.who || 'N/A'
             });
 
             // Count main guest
@@ -1648,7 +1671,7 @@
               
               let status = 'Pending';
               
-              // FIXED: Check attendance_status properly
+              // Check attendance_status properly
               if (partyMember.attendance_status === 'accept') {
                 status = 'Confirmed';
                 totalConfirmedPeople++;
@@ -1671,7 +1694,8 @@
                 status: status,
                 sortOrder: status === 'Confirmed' ? 1 : status === 'Declined' ? 2 : 3,
                 guestId: guest.id,
-                partyMemberId: partyMember.id
+                partyMemberId: partyMember.id,
+                who: partyMember.who || 'N/A'
               });
             });
           });
@@ -1711,13 +1735,15 @@
           tbody.appendChild(tr);
         }
 
-        // Update and show total headcount with individual people count
+        // Update and show total headcount with individual people count and filter info
         const totalHeadcount = document.getElementById("total-headcount");
         const totalPeople = totalConfirmedPeople + totalDeclinedPeople + totalPendingPeople;
+        const filterText = whoFilter ? ` (Filter: ${whoFilter.toUpperCase()})` : ' (All Guests)';
+        
         totalHeadcount.innerHTML = `
           <div style="text-align: center; padding: 1rem; background: linear-gradient(135deg, rgba(45, 125, 50, 0.2), rgba(43, 58, 103, 0.2)); border-radius: 10px; border: 2px solid #2d7d32;">
             <div style="font-size: clamp(1.3rem, 3vw, 1.8rem); color: #2d7d32; margin-bottom: 0.5rem;">
-              👥 <strong>Total Confirmed People: ${totalConfirmedPeople}</strong>
+              👥 <strong>Total Confirmed People: ${totalConfirmedPeople}</strong>${filterText}
             </div>
             <div style="font-size: clamp(0.9rem, 2vw, 1.1rem); color: #2b3a67;">
               Total People: <strong>${totalPeople}</strong> | 
