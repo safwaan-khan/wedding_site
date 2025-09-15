@@ -33,6 +33,27 @@
       padding: clamp(0.5rem, 2vw, 2rem);
       transition: padding 0.6s ease;
       overflow: auto;
+      position: relative;
+    }
+
+    /* Backdrop for admin modal */
+    .admin-backdrop {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(43, 58, 103, 0.8);
+      backdrop-filter: blur(8px);
+      z-index: 999;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .admin-backdrop.show {
+      opacity: 1;
+      visibility: visible;
     }
 
     .logo {
@@ -290,31 +311,57 @@
       text-shadow: 0 0 8px rgba(43, 58, 103, 0.3);
     }
 
-    /* Admin section special styling for wider content */
+    /* Fixed Admin section styling */
     #admin-section {
-      max-width: min(800px, 95vw);
-      background: rgba(255, 255, 255, 0.25);
-      backdrop-filter: blur(8px);
-      border-radius: clamp(12px, 3vw, 16px);
-      padding: clamp(1.5rem, 4vw, 2.5rem);
-      margin-bottom: clamp(1rem, 2.5vw, 1.5rem);
-      box-shadow: 0 0 30px rgba(43, 58, 103, 0.4);
-      display: none;
-      color: #2b3a67;
-      transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
       position: fixed;
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%) scale(0.9);
-      max-height: 90vh;
+      max-width: min(800px, 95vw);
+      width: 90vw;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(12px);
+      border-radius: clamp(16px, 3vw, 24px);
+      padding: clamp(1.5rem, 4vw, 2.5rem);
+      box-shadow: 0 20px 60px rgba(43, 58, 103, 0.4);
+      color: #2b3a67;
+      max-height: 85vh;
       overflow-y: auto;
-      opacity: 0;
       z-index: 1000;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
     #admin-section.show {
       opacity: 1;
+      visibility: visible;
       transform: translate(-50%, -50%) scale(1);
+    }
+
+    /* Close button for admin section */
+    .admin-close-btn {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      background: rgba(211, 47, 47, 0.1);
+      border: 1px solid #d32f2f;
+      border-radius: 50%;
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 18px;
+      color: #d32f2f;
+      font-weight: bold;
+      transition: all 0.3s ease;
+    }
+
+    .admin-close-btn:hover {
+      background: rgba(211, 47, 47, 0.2);
+      transform: scale(1.1);
     }
 
     form {
@@ -372,6 +419,12 @@
       opacity: 1;
       transform: translateY(0);
       transition-delay: 0.3s;
+    }
+
+    /* Admin section inputs should be visible immediately */
+    #admin-section input[type="password"] {
+      opacity: 1;
+      transform: translateY(0);
     }
 
     input[type="text"]:focus,
@@ -498,6 +551,12 @@
       transition-delay: 0.6s;
     }
 
+    /* Admin section buttons should be visible immediately */
+    #admin-section button[type="submit"] {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+
     button[type="submit"]:hover {
       background: #1b2550;
       transform: translateY(0) scale(1.02);
@@ -552,7 +611,7 @@
       width: 100%;
       border-collapse: collapse;
       margin-top: 1rem;
-      font-size: clamp(0.95rem, 2.4vw, 1.15rem);
+      font-size: clamp(0.85rem, 2vw, 1rem);
       background: rgba(255, 255, 255, 0.1);
       border-radius: 8px;
       overflow: hidden;
@@ -568,10 +627,10 @@
 
     th, td {
       border: 1px solid #2b3a67;
-      padding: clamp(0.5rem, 1.5vw, 0.8rem);
+      padding: clamp(0.4rem, 1.2vw, 0.6rem);
       text-align: left;
       word-wrap: break-word;
-      font-size: clamp(0.9rem, 2.2vw, 1.1rem);
+      font-size: clamp(0.8rem, 1.8vw, 0.95rem);
       transition: all 0.4s ease;
     }
 
@@ -602,7 +661,7 @@
 
     #total-headcount {
       font-weight: 600;
-      font-size: clamp(1.15rem, 2.7vw, 1.45rem);
+      font-size: clamp(1rem, 2.2vw, 1.2rem);
       color: #1b2550;
       margin-bottom: 1rem;
       text-align: right;
@@ -761,6 +820,11 @@
       .admin-button-wrapper {
         bottom: 2rem;
       }
+      
+      #admin-section {
+        max-width: 900px;
+        padding: 3rem;
+      }
     }
 
     /* Medium screens */
@@ -778,6 +842,12 @@
       .toggle-button {
         padding: 0.7rem 0.8rem;
         font-size: 0.9rem;
+      }
+      
+      #admin-section {
+        width: 95vw;
+        padding: 1.5rem;
+        max-height: 90vh;
       }
     }
 
@@ -801,13 +871,26 @@
       }
       
       #admin-section {
+        width: 95vw;
         padding: 1.5rem 1rem;
-        max-height: 85vh;
+        max-height: 90vh;
+      }
+      
+      table {
+        font-size: 0.8rem;
+      }
+      
+      th, td {
+        padding: 0.3rem;
+        font-size: 0.75rem;
       }
     }
   </style>
 </head>
 <body>
+  <!-- Admin backdrop -->
+  <div class="admin-backdrop" id="admin-backdrop"></div>
+
   <img src="Bismillah.png" alt="Bismillah" class="logo" />
 
   <div class="hero-container" id="hero-container">
@@ -899,6 +982,7 @@
   </div>
 
   <section id="admin-section">
+    <button class="admin-close-btn" id="admin-close-btn" aria-label="Close admin panel">×</button>
     <h2><center>Admin Portal</center></h2>
     <form id="admin-auth" aria-label="Admin Login Form">
       <input type="password" id="admin-password" placeholder="Admin Password" aria-required="true" autocomplete="current-password" />
@@ -949,6 +1033,8 @@
     const infoBtn = document.getElementById("info-btn");
     const rsvpBtn = document.getElementById("rsvp-btn");
     const adminBtn = document.getElementById("admin-btn");
+    const adminCloseBtn = document.getElementById("admin-close-btn");
+    const adminBackdrop = document.getElementById("admin-backdrop");
 
     const heroContent = document.getElementById("hero-content");
     const inviteContent = document.getElementById("invite-content");
@@ -986,8 +1072,6 @@
       inviteContent.classList.remove("active");
       infoContent.classList.remove("active");
       rsvpContent.classList.remove("active");
-      adminSection.style.display = "none";
-      adminSection.classList.remove("show");
 
       // Show incoming content
       if (incoming === 'hero') {
@@ -1002,9 +1086,6 @@
       } else if (incoming === 'rsvp') {
         rsvpContent.classList.add("active");
         document.querySelector('.admin-button-wrapper').style.display = "none";
-      } else if (incoming === 'admin') {
-        adminSection.style.display = "block";
-        setTimeout(() => adminSection.classList.add("show"), 50);
       }
 
       // Wait for elements to be positioned
@@ -1082,28 +1163,21 @@
       adminBtn.setAttribute("aria-expanded", "false");
     }
 
-    function toggleAdminSection() {
-      const isVisible = adminSection.style.display === "block";
-      if (isVisible) {
-        adminSection.classList.remove("show");
-        setTimeout(() => {
-          adminSection.style.display = "none";
-        }, 300);
-        adminBtn.setAttribute("aria-expanded", "false");
-      } else {
-        const outgoingElements = [
-          document.querySelector('.hero-container'),
-          document.querySelector('.button-container')
-        ];
-        
-        transitionElements(outgoingElements, 'admin');
-        adminBtn.setAttribute("aria-expanded", "true");
-        
-        // Hide other content
-        inviteBtn.setAttribute("aria-expanded", "false");
-        infoBtn.setAttribute("aria-expanded", "false");
-        rsvpBtn.setAttribute("aria-expanded", "false");
-      }
+    function showAdminSection() {
+      adminBackdrop.classList.add("show");
+      adminSection.classList.add("show");
+      adminBtn.setAttribute("aria-expanded", "true");
+      
+      // Hide other button states
+      inviteBtn.setAttribute("aria-expanded", "false");
+      infoBtn.setAttribute("aria-expanded", "false");
+      rsvpBtn.setAttribute("aria-expanded", "false");
+    }
+
+    function hideAdminSection() {
+      adminBackdrop.classList.remove("show");
+      adminSection.classList.remove("show");
+      adminBtn.setAttribute("aria-expanded", "false");
     }
 
     // Reset RSVP form function
@@ -1133,7 +1207,16 @@
     });
     
     adminBtn.addEventListener("click", () => {
-      if (!isTransitioning) toggleAdminSection();
+      if (!isTransitioning) showAdminSection();
+    });
+
+    // Admin close functionality
+    adminCloseBtn.addEventListener("click", hideAdminSection);
+    adminBackdrop.addEventListener("click", hideAdminSection);
+
+    // Prevent admin section from closing when clicking inside it
+    adminSection.addEventListener("click", (e) => {
+      e.stopPropagation();
     });
 
     // Function to render party members with staggered animations
@@ -1508,6 +1591,13 @@
       } catch (err) {
         console.error('Admin error:', err);
         setMessage(adminMessage, "Error loading guest list. Please try again.", false);
+      }
+    });
+
+    // ESC key to close admin panel
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && adminSection.classList.contains('show')) {
+        hideAdminSection();
       }
     });
   </script>
