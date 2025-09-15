@@ -1454,6 +1454,10 @@
 
         // FIXED: Update individual party member attendance correctly
         console.log('Updating party members with attendance data:', memberAttendance);
+        console.log('All party members:', partyMembers);
+        
+        // Update party members attendance status
+        const updatePromises = [];
         
         for (const member of partyMembers) {
           // Skip the main guest - their status is already updated in guests table above
@@ -1463,23 +1467,40 @@
           }
           
           // Only update if this member has an attendance selection
-          if (memberAttendance[member.id]) {
-            console.log(`Updating party member ${member.full_name} (ID: ${member.id}) with status: ${memberAttendance[member.id]}`);
+          const attendanceChoice = memberAttendance[member.id];
+          if (attendanceChoice) {
+            console.log(`Updating party member ${member.full_name} (ID: ${member.id}) with status: ${attendanceChoice}`);
             
-            const { error: memberUpdateError } = await supabase
+            // Create update promise
+            const updatePromise = supabase
               .from("party_members")
-              .update({ attendance_status: memberAttendance[member.id] })
-              .eq("id", member.id);
+              .update({ attendance_status: attendanceChoice })
+              .eq("id", member.id)
+              .then(({ data, error }) => {
+                if (error) {
+                  console.error(`Error updating party member ${member.full_name} (ID: ${member.id}):`, error);
+                  throw new Error(`Failed to update ${member.full_name}: ${error.message}`);
+                } else {
+                  console.log(`Successfully updated party member ${member.full_name} with status: ${attendanceChoice}`);
+                  return { member, success: true };
+                }
+              });
               
-            if (memberUpdateError) {
-              console.error('Party member update error:', memberUpdateError);
-              setMessage(rsvpMessage, `Failed to update ${member.full_name}. Please try again.`, false);
-              return;
-            } else {
-              console.log(`Successfully updated party member ${member.full_name} with status: ${memberAttendance[member.id]}`);
-            }
+            updatePromises.push(updatePromise);
           } else {
             console.log(`No attendance data for party member ${member.full_name} (ID: ${member.id})`);
+          }
+        }
+        
+        // Wait for all party member updates to complete
+        if (updatePromises.length > 0) {
+          try {
+            await Promise.all(updatePromises);
+            console.log('All party member updates completed successfully');
+          } catch (updateError) {
+            console.error('Party member update failed:', updateError);
+            setMessage(rsvpMessage, updateError.message || "Failed to update party member attendance. Please try again.", false);
+            return;
           }
         }
 
