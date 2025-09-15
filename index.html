@@ -33,27 +33,6 @@
       padding: clamp(0.5rem, 2vw, 2rem);
       transition: padding 0.6s ease;
       overflow: auto;
-      position: relative;
-    }
-
-    /* Backdrop for admin modal */
-    .admin-backdrop {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(43, 58, 103, 0.8);
-      backdrop-filter: blur(8px);
-      z-index: 999;
-      opacity: 0;
-      visibility: hidden;
-      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-
-    .admin-backdrop.show {
-      opacity: 1;
-      visibility: visible;
     }
 
     .logo {
@@ -311,57 +290,30 @@
       text-shadow: 0 0 8px rgba(43, 58, 103, 0.3);
     }
 
-    /* Fixed Admin section styling */
+    /* Admin section special styling for wider content */
     #admin-section {
-      position: fixed;
+      max-width: min(800px, 95vw);
+      background: rgba(255, 255, 255, 0.25);
+      backdrop-filter: blur(8px);
+      border-radius: clamp(12px, 3vw, 16px);
+      padding: clamp(1.5rem, 4vw, 2.5rem);
+      margin-bottom: clamp(1rem, 2.5vw, 1.5rem);
+      box-shadow: 0 0 30px rgba(43, 58, 103, 0.4);
+      display: none;
+      color: #2b3a67;
+      transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+      position: absolute;
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%) scale(0.9);
-      max-width: min(800px, 95vw);
-      width: 90vw;
-      background: rgba(255, 255, 255, 0.95);
-      backdrop-filter: blur(12px);
-      border-radius: clamp(16px, 3vw, 24px);
-      padding: clamp(1.5rem, 4vw, 2.5rem);
-      box-shadow: 0 20px 60px rgba(43, 58, 103, 0.4);
-      color: #2b3a67;
-      max-height: 85vh;
+      max-height: 90vh;
       overflow-y: auto;
-      z-index: 1000;
       opacity: 0;
-      visibility: hidden;
-      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
     #admin-section.show {
       opacity: 1;
-      visibility: visible;
       transform: translate(-50%, -50%) scale(1);
-    }
-
-    /* Close button for admin section */
-    .admin-close-btn {
-      position: absolute;
-      top: 1rem;
-      right: 1rem;
-      background: rgba(211, 47, 47, 0.1);
-      border: 1px solid #d32f2f;
-      border-radius: 50%;
-      width: 32px;
-      height: 32px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      font-size: 18px;
-      color: #d32f2f;
-      font-weight: bold;
-      transition: all 0.3s ease;
-    }
-
-    .admin-close-btn:hover {
-      background: rgba(211, 47, 47, 0.2);
-      transform: scale(1.1);
     }
 
     form {
@@ -419,12 +371,6 @@
       opacity: 1;
       transform: translateY(0);
       transition-delay: 0.3s;
-    }
-
-    /* Admin section inputs should be visible immediately */
-    #admin-section input[type="password"] {
-      opacity: 1;
-      transform: translateY(0);
     }
 
     input[type="text"]:focus,
@@ -551,12 +497,6 @@
       transition-delay: 0.6s;
     }
 
-    /* Admin section buttons should be visible immediately */
-    #admin-section button[type="submit"] {
-      opacity: 1;
-      transform: translateY(0) scale(1);
-    }
-
     button[type="submit"]:hover {
       background: #1b2550;
       transform: translateY(0) scale(1.02);
@@ -611,7 +551,7 @@
       width: 100%;
       border-collapse: collapse;
       margin-top: 1rem;
-      font-size: clamp(0.85rem, 2vw, 1rem);
+      font-size: clamp(0.95rem, 2.4vw, 1.15rem);
       background: rgba(255, 255, 255, 0.1);
       border-radius: 8px;
       overflow: hidden;
@@ -627,10 +567,10 @@
 
     th, td {
       border: 1px solid #2b3a67;
-      padding: clamp(0.4rem, 1.2vw, 0.6rem);
+      padding: clamp(0.5rem, 1.5vw, 0.8rem);
       text-align: left;
       word-wrap: break-word;
-      font-size: clamp(0.8rem, 1.8vw, 0.95rem);
+      font-size: clamp(0.9rem, 2.2vw, 1.1rem);
       transition: all 0.4s ease;
     }
 
@@ -661,7 +601,7 @@
 
     #total-headcount {
       font-weight: 600;
-      font-size: clamp(1rem, 2.2vw, 1.2rem);
+      font-size: clamp(1.15rem, 2.7vw, 1.45rem);
       color: #1b2550;
       margin-bottom: 1rem;
       text-align: right;
@@ -820,11 +760,6 @@
       .admin-button-wrapper {
         bottom: 2rem;
       }
-      
-      #admin-section {
-        max-width: 900px;
-        padding: 3rem;
-      }
     }
 
     /* Medium screens */
@@ -842,12 +777,6 @@
       .toggle-button {
         padding: 0.7rem 0.8rem;
         font-size: 0.9rem;
-      }
-      
-      #admin-section {
-        width: 95vw;
-        padding: 1.5rem;
-        max-height: 90vh;
       }
     }
 
@@ -871,26 +800,13 @@
       }
       
       #admin-section {
-        width: 95vw;
         padding: 1.5rem 1rem;
-        max-height: 90vh;
-      }
-      
-      table {
-        font-size: 0.8rem;
-      }
-      
-      th, td {
-        padding: 0.3rem;
-        font-size: 0.75rem;
+        max-height: 85vh;
       }
     }
   </style>
 </head>
 <body>
-  <!-- Admin backdrop -->
-  <div class="admin-backdrop" id="admin-backdrop"></div>
-
   <img src="Bismillah.png" alt="Bismillah" class="logo" />
 
   <div class="hero-container" id="hero-container">
@@ -904,29 +820,19 @@
     <!-- Invite Content -->
     <div id="invite-content" class="content-section">
       <button class="back-button" onclick="showHeroContent()">← Back</button>
-      <p class="extra-large-invitation-text">You are invited to the Nikkah Ceremony of</p>
+      <p class="large-invitation-text">You are invited to the Nikkah Ceremony of</p>
       <h2>Manal</h2> 
-      <p class="large-invitation-text">daughter of Laeeq & Uzma Ahmed</p> 
+      <p class="large-invitation-text">Daughter of Laeeq & Uzma Ahmed</p> 
       <p class="extra-large-invitation-text">with</p> 
       <h2>Safwaan</h2> 
-      <p class="large-invitation-text">son of Uzair & Maheen Khan</p> 
-      <p><strong>Date:</strong> Saturday, December 6th, 2025</p>
-      <p><strong>Time:</strong> 3:00 PM</p>
-      <p><strong>Venue:</strong> South Bay Islamic Association (SBIA)</p>
-      <p><strong>Address:</strong> <a href="https://www.google.com/maps/search/?api=1&query=2345+Harris+Way,+San+Jose,+CA+95131" target="_blank">2345 Harris Way, San Jose, CA 95131</a></p>
-      <br>
-      <p>Athaan for Asr will be at 3:10PM. Iqamah will be at 3:30PM. Inshallah, the Nikkah Ceremony will start shortly after the conclusion of Asr.</p>
+      <p class="large-invitation-text">Son of Uzair & Maheen Khan</p> 
+      <p class="large-invitation-text">on Saturday, December 6th, 2025 at 3:00PM</p> 
+      <p class="large-invitation-text">at Masjid al-Mustafa</p> 
     </div>
 
     <!-- Info Content -->
     <div id="info-content" class="content-section">
       <button class="back-button" onclick="showHeroContent()">← Back</button>
-      <p class="extra-large-invitation-text">You are invited to the Nikkah Ceremony of</p>
-      <h2>Manal</h2> 
-      <p class="large-invitation-text">daughter of Laeeq & Uzma Ahmed</p> 
-      <p class="extra-large-invitation-text">with</p> 
-      <h2>Safwaan</h2> 
-      <p class="large-invitation-text">son of Uzair & Maheen Khan</p> 
       <p><strong>Date:</strong> Saturday, December 6th, 2025</p>
       <p><strong>Time:</strong> 3:00 PM</p>
       <p><strong>Venue:</strong> South Bay Islamic Association (SBIA)</p>
@@ -982,7 +888,6 @@
   </div>
 
   <section id="admin-section">
-    <button class="admin-close-btn" id="admin-close-btn" aria-label="Close admin panel">×</button>
     <h2><center>Admin Portal</center></h2>
     <form id="admin-auth" aria-label="Admin Login Form">
       <input type="password" id="admin-password" placeholder="Admin Password" aria-required="true" autocomplete="current-password" />
@@ -1033,8 +938,6 @@
     const infoBtn = document.getElementById("info-btn");
     const rsvpBtn = document.getElementById("rsvp-btn");
     const adminBtn = document.getElementById("admin-btn");
-    const adminCloseBtn = document.getElementById("admin-close-btn");
-    const adminBackdrop = document.getElementById("admin-backdrop");
 
     const heroContent = document.getElementById("hero-content");
     const inviteContent = document.getElementById("invite-content");
@@ -1072,6 +975,8 @@
       inviteContent.classList.remove("active");
       infoContent.classList.remove("active");
       rsvpContent.classList.remove("active");
+      adminSection.style.display = "none";
+      adminSection.classList.remove("show");
 
       // Show incoming content
       if (incoming === 'hero') {
@@ -1086,6 +991,9 @@
       } else if (incoming === 'rsvp') {
         rsvpContent.classList.add("active");
         document.querySelector('.admin-button-wrapper').style.display = "none";
+      } else if (incoming === 'admin') {
+        adminSection.style.display = "block";
+        setTimeout(() => adminSection.classList.add("show"), 50);
       }
 
       // Wait for elements to be positioned
@@ -1163,21 +1071,28 @@
       adminBtn.setAttribute("aria-expanded", "false");
     }
 
-    function showAdminSection() {
-      adminBackdrop.classList.add("show");
-      adminSection.classList.add("show");
-      adminBtn.setAttribute("aria-expanded", "true");
-      
-      // Hide other button states
-      inviteBtn.setAttribute("aria-expanded", "false");
-      infoBtn.setAttribute("aria-expanded", "false");
-      rsvpBtn.setAttribute("aria-expanded", "false");
-    }
-
-    function hideAdminSection() {
-      adminBackdrop.classList.remove("show");
-      adminSection.classList.remove("show");
-      adminBtn.setAttribute("aria-expanded", "false");
+    function toggleAdminSection() {
+      const isVisible = adminSection.style.display === "block";
+      if (isVisible) {
+        adminSection.classList.remove("show");
+        setTimeout(() => {
+          adminSection.style.display = "none";
+        }, 300);
+        adminBtn.setAttribute("aria-expanded", "false");
+      } else {
+        const outgoingElements = [
+          document.querySelector('.hero-container'),
+          document.querySelector('.button-container')
+        ];
+        
+        transitionElements(outgoingElements, 'admin');
+        adminBtn.setAttribute("aria-expanded", "true");
+        
+        // Hide other content
+        inviteBtn.setAttribute("aria-expanded", "false");
+        infoBtn.setAttribute("aria-expanded", "false");
+        rsvpBtn.setAttribute("aria-expanded", "false");
+      }
     }
 
     // Reset RSVP form function
@@ -1207,16 +1122,7 @@
     });
     
     adminBtn.addEventListener("click", () => {
-      if (!isTransitioning) showAdminSection();
-    });
-
-    // Admin close functionality
-    adminCloseBtn.addEventListener("click", hideAdminSection);
-    adminBackdrop.addEventListener("click", hideAdminSection);
-
-    // Prevent admin section from closing when clicking inside it
-    adminSection.addEventListener("click", (e) => {
-      e.stopPropagation();
+      if (!isTransitioning) toggleAdminSection();
     });
 
     // Function to render party members with staggered animations
@@ -1327,24 +1233,13 @@
       const nameLower = inputName.toLowerCase();
 
       try {
-        console.log("Looking up guest:", inputName);
-
         // Fetch all guests and their party members
         const { data: guestData, error: guestError } = await supabase
           .from("guests")
           .select("*");
 
-        console.log("Guest data:", guestData, "Error:", guestError);
-
         if (guestError) {
-          console.error("Guest lookup error:", guestError);
           setMessage(lookupMessage, "Failed to lookup guests. Please try again later.", false);
-          return;
-        }
-
-        if (!guestData || guestData.length === 0) {
-          console.log("No guest data found in database");
-          setMessage(lookupMessage, "No guests found in database. Please contact the hosts.", false);
           return;
         }
 
@@ -1353,113 +1248,28 @@
           .from("party_members")
           .select("*");
 
-        console.log("Party data:", partyData, "Error:", partyError);
-
         if (partyError) {
-          console.error("Party member lookup error:", partyError);
-          // Continue without party members if this fails
+          setMessage(lookupMessage, "Failed to lookup party members. Please try again later.", false);
+          return;
         }
 
         // First, try to find the guest by their full name
-        let foundGuest = guestData.find(g => {
-          const guestName = g.full_name ? g.full_name.trim().toLowerCase() : '';
-          console.log("Comparing:", guestName, "with", nameLower);
-          return guestName === nameLower;
-        });
+        let foundGuest = guestData.find(g => g.full_name.trim().toLowerCase() === nameLower);
 
         // If not found as main guest, search in party members
-        if (!foundGuest && partyData) {
-          const foundPartyMember = partyData.find(p => {
-            const memberName = p.name ? p.name.trim().toLowerCase() : '';
-            console.log("Comparing party member:", memberName, "with", nameLower);
-            return memberName === nameLower;
-          });
-          
+        if (!foundGuest) {
+          const foundPartyMember = partyData.find(p => p.name.trim().toLowerCase() === nameLower);
           if (foundPartyMember) {
             foundGuest = guestData.find(g => g.id === foundPartyMember.guest_id);
-            console.log("Found guest via party member:", foundGuest);
           }
         }
 
         if (!foundGuest) {
-          console.log("No guest found for:", inputName);
-          console.log("Available guests:", guestData.map(g => g.full_name));
           setMessage(lookupMessage, "Guest not found. Please check the spelling and try again.", false);
           return;
         }
 
-        console.log("Found guest:", foundGuest);
         currentGuest = foundGuest;
-        
-        // Test 5: Get party members for this guest
-        console.log("Test 5: Getting party members for guest ID:", foundGuest.id);
-        
-        let guestPartyMembers = [];
-        try {
-          const { data: partyResult, error: partyError } = await supabase
-            .from("party_members")
-            .select("*")
-            .eq("guest_id", foundGuest.id);
-
-          if (partyError) {
-            console.warn("Party member fetch error:", partyError);
-          } else {
-            guestPartyMembers = partyResult || [];
-            console.log("Party members for this guest:", guestPartyMembers);
-          }
-        } catch (partyErr) {
-          console.warn("Party member fetch failed:", partyErr);
-        }
-
-        partyMembers = [...guestPartyMembers];
-        memberAttendance = {};
-
-        // Always include the main guest as a party member if not already in the list
-        const mainGuestInMembers = partyMembers.find(m => 
-          m.full_name && m.full_name.toLowerCase().trim() === foundGuest.full_name.toLowerCase().trim()
-        );
-        
-        if (!mainGuestInMembers) {
-          console.log("Adding main guest as party member");
-          const mainGuestMember = { 
-            id: -1,
-            full_name: foundGuest.full_name, 
-            guest_id: foundGuest.id,
-            is_main_guest: true
-          };
-          partyMembers.unshift(mainGuestMember);
-        }
-
-        console.log("Final party members list:", partyMembers);
-
-        // Hide the lookup form and show invitation section
-        document.getElementById("lookup-form").style.display = "none";
-        setTimeout(() => {
-          invitationSection.style.display = "block";
-          invitationSection.setAttribute("aria-hidden", "false");
-          thankYouMessage.style.display = "none";
-          rsvpForm.style.display = "flex";
-        }, 300);
-
-        // Reset messages and inputs
-        clearMessage(rsvpMessage);
-        document.getElementById("email").value = "";
-
-        // Render party members with animation
-        setTimeout(() => {
-          renderPartyMembers();
-        }, 400);
-        
-        // Update email section visibility
-        updateEmailSectionVisibility();
-
-        setMessage(lookupMessage, "Guest found! Please complete your RSVP below.", true);
-
-      } catch (err) {
-        console.error('Lookup error:', err);
-        setMessage(lookupMessage, "Error searching for guest. Please try again.", false);
-      }
-    });
         
         // Get all party members for this guest
         const guestPartyMembers = partyData.filter(p => p.guest_id === foundGuest.id);
@@ -1579,7 +1389,7 @@
         // Update thank you message based on attendance
         const attendingNames = partyMembers
           .filter(member => memberAttendance[member.id] === 'accept')
-          .map(member => member.full_name);
+          .map(member => member.name);
         
         let thankYouText;
         if (attendingNames.length > 0) {
@@ -1687,13 +1497,6 @@
       } catch (err) {
         console.error('Admin error:', err);
         setMessage(adminMessage, "Error loading guest list. Please try again.", false);
-      }
-    });
-
-    // ESC key to close admin panel
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape' && adminSection.classList.contains('show')) {
-        hideAdminSection();
       }
     });
   </script>
