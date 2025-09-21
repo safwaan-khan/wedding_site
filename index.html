@@ -1292,25 +1292,38 @@
       }
     }
 
-    // UPDATED: Enhanced message handling with persistent error messages
+    // UPDATED: Enhanced message handling with truly persistent error messages
     function setMessage(element, message, isSuccess = true) {
+      // Clear any existing timeout for this element
+      if (element.clearTimeout) {
+        clearTimeout(element.clearTimeout);
+        delete element.clearTimeout;
+      }
+      
       element.textContent = message;
       
       if (isSuccess) {
         element.className = "inline-message success show";
-        // Only auto-clear success messages after 5 seconds
-        setTimeout(() => {
+        // Only auto-clear success messages after 6 seconds
+        element.clearTimeout = setTimeout(() => {
           if (element.classList.contains('success')) {
             clearMessage(element);
           }
-        }, 5000);
+        }, 6000);
       } else {
         element.className = "inline-message error show";
-        // Error messages stay persistent - no auto-clear timeout
+        // Error messages persist indefinitely - no auto-clear timeout
+        // They will only be cleared when user takes action (typing, clicking, etc.)
       }
     }
 
     function clearMessage(element) {
+      // Clear any existing timeout
+      if (element.clearTimeout) {
+        clearTimeout(element.clearTimeout);
+        delete element.clearTimeout;
+      }
+      
       element.classList.remove('show');
       setTimeout(() => {
         element.textContent = "";
@@ -1321,8 +1334,6 @@
     // Guest Lookup Form
     document.getElementById("lookup-form").addEventListener("submit", async (e) => {
       e.preventDefault();
-      // Clear any previous messages when starting a new lookup
-      clearMessage(lookupMessage);
       
       const inputName = document.getElementById("fullName").value.trim();
 
@@ -1437,12 +1448,10 @@
       }
     });
 
-    // RSVP Form Submission - FIXED SECTION with persistent error handling
+    // RSVP Form Submission - FIXED with persistent error handling
     rsvpForm.addEventListener("submit", async (e) => {
       e.preventDefault();
-      // Clear any previous messages when starting submission
-      clearMessage(rsvpMessage);
-
+      
       const email = document.getElementById("email").value.trim();
       
       // Check if all members have responded
@@ -1599,8 +1608,6 @@
     // Admin Authentication with updated table logic and filtering
     document.getElementById("admin-auth").addEventListener("submit", async (e) => {
       e.preventDefault();
-      // Clear any previous messages when starting login attempt
-      clearMessage(adminMessage);
       
       const password = document.getElementById("admin-password").value;
 
