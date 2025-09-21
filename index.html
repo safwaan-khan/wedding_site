@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Nikkah RSVP - Manal & Safwaan</title>
+  <title>Nikkah RSVP - Safwaan & Manal</title>
 
   <!-- Favicon -->
   <link rel="icon" type="image/png" sizes="32x32" href="https://raw.githubusercontent.com/yourusername/yourrepository/main/favicon-32x32.png">
@@ -566,23 +566,61 @@
       color: #d32f2f;
       text-align: center;
       opacity: 0;
-      transform: translateY(10px);
-      transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+      transform: translateY(15px) scale(0.95);
+      transition: all 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
       font-weight: 500;
+      filter: blur(2px);
+      pointer-events: none;
     }
 
     .inline-message.show {
       opacity: 1;
-      transform: translateY(0);
+      transform: translateY(0) scale(1);
+      filter: blur(0px);
+      pointer-events: auto;
     }
 
     .inline-message.success {
       color: #2d7d32;
+      background: rgba(45, 125, 50, 0.08);
+      border: 1px solid rgba(45, 125, 50, 0.2);
+      border-radius: clamp(6px, 1.5vw, 10px);
+      padding: clamp(0.4rem, 1vw, 0.6rem) clamp(0.6rem, 1.5vw, 0.8rem);
+      box-shadow: 0 2px 12px rgba(45, 125, 50, 0.15);
+      backdrop-filter: blur(6px);
     }
 
     .inline-message.error {
       color: #d32f2f;
       font-weight: 600;
+      background: rgba(211, 47, 47, 0.08);
+      border: 1px solid rgba(211, 47, 47, 0.2);
+      border-radius: clamp(6px, 1.5vw, 10px);
+      padding: clamp(0.4rem, 1vw, 0.6rem) clamp(0.6rem, 1.5vw, 0.8rem);
+      box-shadow: 0 2px 12px rgba(211, 47, 47, 0.15);
+      backdrop-filter: blur(6px);
+      animation: gentle-shake 0.6s ease-out;
+    }
+
+    /* Gentle shake animation for error messages */
+    @keyframes gentle-shake {
+      0%, 100% { 
+        transform: translateY(0) scale(1) translateX(0);
+      }
+      10%, 30%, 50%, 70%, 90% { 
+        transform: translateY(0) scale(1) translateX(-2px);
+      }
+      20%, 40%, 60%, 80% { 
+        transform: translateY(0) scale(1) translateX(2px);
+      }
+    }
+
+    /* Enhanced fade-out animation */
+    .inline-message.fade-out {
+      opacity: 0;
+      transform: translateY(-10px) scale(0.95);
+      filter: blur(1px);
+      transition: all 0.6s cubic-bezier(0.4, 0, 1, 1);
     }
 
     #thank-you-message {
@@ -903,10 +941,10 @@
     <div id="invite-content" class="content-section">
       <p class="large-invitation-text">You are invited to the Nikkah Ceremony of</p>
       <h2>Manal</h2> 
-      <p class="large-invitation-text">Daughter of Laeeq & Uzma Ahmed</p> 
+      <p class="large-invitation-text">Daughter of Uzma & Laeeq Ahmed</p> 
       <p class="extra-large-invitation-text">&</p> 
       <h2>Safwaan</h2> 
-      <p class="large-invitation-text">Son of Uzair & Maheen Khan</p> 
+      <p class="large-invitation-text">Son of Maheen & Uzair Khan</p> 
       <p class="large-invitation-text">Saturday, December 6, 2025 at 3:00PM</p> 
       <p class="large-invitation-text">Masjid al-Mustafa</p> 
     </div>
@@ -919,7 +957,7 @@
       <p><strong>Venue:</strong> South Bay Islamic Association (SBIA)</p>
       <p><strong>Address:</strong> <a href="https://www.google.com/maps/search/?api=1&query=2345+Harris+Way,+San+Jose,+CA+95131" target="_blank">2345 Harris Way, San Jose, CA 95131</a></p>
       <br>
-      <p>Athaan for Asr will be at 3:10PM. Iqamah will be at 3:30PM. Inshallah, the Nikkah Ceremony will start shortly after the conclusion of Asr.</p>
+      <p>Athaan for Asr will be at 3:10PM. Iqamah will be at 3:30PM. Inshallah, the Nikkah Ceremony will start shortly after the conclusion of Asr prayer.</p>
     </div>
 
     <!-- RSVP Content -->
@@ -938,6 +976,7 @@
       <!-- Invitation & RSVP Form (hidden until lookup success) -->
       <div id="invitation-section" aria-live="polite" role="region" aria-hidden="true" style="display:none; margin-top:1rem;">
         <div id="guest-list-section">
+          <p><center>We kindly request your response by October 15, 2025.</center></p>
           <label><center>Please select attendance for each party member:</center></label>
           <div id="party-members-list" class="party-members-container">
             <!-- Individual guest buttons will be populated here -->
@@ -956,7 +995,7 @@
         </form>
 
         <div id="thank-you-message" style="display:none;">
-          <p><center>Thank you for RSVPing! We look forward to celebrating with you all, iA!</center></p>
+          <p><center>Thank you for RSVPing! We look forward to celebrating this occasion with you all, inshallah!</center></p>
         </div>
       </div>
     </div>
@@ -1292,7 +1331,7 @@
       }
     }
 
-    // UPDATED: Enhanced message handling with truly persistent error messages
+    // UPDATED: Enhanced message handling with beautiful fade animations
     function setMessage(element, message, isSuccess = true) {
       // Clear any existing timeout for this element
       if (element.clearTimeout) {
@@ -1300,20 +1339,47 @@
         delete element.clearTimeout;
       }
       
-      element.textContent = message;
-      
-      if (isSuccess) {
-        element.className = "inline-message success show";
-        // Only auto-clear success messages after 6 seconds
-        element.clearTimeout = setTimeout(() => {
-          if (element.classList.contains('success')) {
-            clearMessage(element);
-          }
-        }, 6000);
+      // If there's already a message showing, fade it out first
+      if (element.classList.contains('show')) {
+        element.classList.add('fade-out');
+        setTimeout(() => {
+          element.classList.remove('fade-out');
+          showNewMessage();
+        }, 300);
       } else {
-        element.className = "inline-message error show";
-        // Error messages persist indefinitely - no auto-clear timeout
-        // They will only be cleared when user takes action (typing, clicking, etc.)
+        showNewMessage();
+      }
+      
+      function showNewMessage() {
+        element.textContent = message;
+        
+        if (isSuccess) {
+          element.className = "inline-message success";
+          // Trigger reflow to ensure the transition works
+          element.offsetHeight;
+          // Add show class with a small delay for better animation
+          setTimeout(() => {
+            element.classList.add('show');
+          }, 50);
+          
+          // Only auto-clear success messages after 6 seconds
+          element.clearTimeout = setTimeout(() => {
+            if (element.classList.contains('success')) {
+              clearMessage(element);
+            }
+          }, 6000);
+        } else {
+          element.className = "inline-message error";
+          // Trigger reflow to ensure the transition works
+          element.offsetHeight;
+          // Add show class with a small delay for better animation
+          setTimeout(() => {
+            element.classList.add('show');
+          }, 50);
+          
+          // Error messages persist indefinitely - no auto-clear timeout
+          // They will only be cleared when user takes action (typing, clicking, etc.)
+        }
       }
     }
 
@@ -1324,11 +1390,14 @@
         delete element.clearTimeout;
       }
       
+      // Add fade-out class for smooth exit animation
+      element.classList.add('fade-out');
       element.classList.remove('show');
+      
       setTimeout(() => {
         element.textContent = "";
         element.className = "inline-message";
-      }, 300);
+      }, 600);
     }
 
     // Guest Lookup Form
@@ -1570,9 +1639,9 @@
         
         let thankYouText;
         if (attendingNames.length > 0) {
-          thankYouText = `Thank you for RSVPing! We can't wait to celebrate with ${attendingNames.length > 1 ? 'you all' : 'you'}, iA!`;
+          thankYouText = `Thank you for RSVPing! We look forward to celebrating this occasion with, ${attendingNames.length > 1 ? 'you all' : 'you'}, inshallah!`;
         } else {
-          thankYouText = "Thank you for letting us know. We will miss you on this special day, iA!";
+          thankYouText = "Thank you for letting us know. We will miss you on this special day!";
         }
         
         thankYouMessage.innerHTML = `<p><center>${thankYouText}</center></p>`;
@@ -1613,7 +1682,7 @@
 
       // Determine filter based on password
       let whoFilter = null;
-      if (password === "skhan") {
+      if (password === "tedbaker") {
         whoFilter = "s";
       } else if (password === "mahmed") {
         whoFilter = "m";
