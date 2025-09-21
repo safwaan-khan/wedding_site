@@ -599,20 +599,6 @@
       padding: clamp(0.4rem, 1vw, 0.6rem) clamp(0.6rem, 1.5vw, 0.8rem);
       box-shadow: 0 2px 12px rgba(211, 47, 47, 0.15);
       backdrop-filter: blur(6px);
-      animation: gentle-shake 0.6s ease-out;
-    }
-
-    /* Gentle shake animation for error messages */
-    @keyframes gentle-shake {
-      0%, 100% { 
-        transform: translateY(0) scale(1) translateX(0);
-      }
-      10%, 30%, 50%, 70%, 90% { 
-        transform: translateY(0) scale(1) translateX(-2px);
-      }
-      20%, 40%, 60%, 80% { 
-        transform: translateY(0) scale(1) translateX(2px);
-      }
     }
 
     /* Enhanced fade-out animation */
@@ -967,8 +953,7 @@
       
       <!-- Guest Lookup Form -->
       <form id="lookup-form" aria-label="Guest lookup form" style="display: flex;">
-        <p><center>We kindly request your response by October 15, 2025.</center></p>
-        <label for="fullName"><center>Enter your full name to find your invitation:</center></label>
+        <label for="fullName"><center>We kindly request your response by October 15, 2025. Please enter your full name to find your invitation:</center></label>
         <input type="text" id="fullName" name="fullName" autocomplete="name" required />
         <button type="submit">Find Invitation</button>
         <p id="lookup-message" class="inline-message" role="alert" aria-live="polite"></p>
