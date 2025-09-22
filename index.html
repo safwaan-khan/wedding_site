@@ -909,6 +909,12 @@
         font-size: 0.7rem;
       }
     }
+    /* Hide admin button on small phone screens */
+    @media (max-width: 420px) {
+      .admin-button-wrapper {
+      display: none !important;
+    }
+  }
   </style>
 </head>
 <body>
